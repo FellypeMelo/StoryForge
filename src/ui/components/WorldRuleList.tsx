@@ -21,16 +21,16 @@ export function WorldRuleList({
           <ShieldQuestion size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif text-text-main">No rules found</h3>
+          <h3 className="text-xl font-serif text-text-main">Nenhuma regra encontrada</h3>
           <p className="text-text-muted max-w-xs mx-auto">
-            Define the laws of your world. Add your first rule to begin.
+            Defina as leis do seu mundo. Adicione sua primeira regra para começar.
           </p>
         </div>
         <button
           onClick={onCreateNew}
           className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
-          Create Rule
+          Criar Regra
         </button>
       </div>
     );
@@ -40,13 +40,13 @@ export function WorldRuleList({
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
-          World Rules ({rules.length})
+          Regras do Mundo ({rules.length})
         </h2>
         <button
           onClick={onCreateNew}
           className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"
         >
-          + Add New
+          + Adicionar Novo
         </button>
       </div>
 
@@ -69,7 +69,7 @@ export function WorldRuleList({
                   </span>
                   {isInjected && (
                     <span className="text-[9px] font-bold tracking-widest uppercase text-text-main px-1.5 py-0.5 bg-text-main/10 rounded animate-pulse">
-                      Injected
+                      Injetado
                     </span>
                   )}
                 </div>

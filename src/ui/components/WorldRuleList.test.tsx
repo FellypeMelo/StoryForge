@@ -32,6 +32,6 @@ describe("WorldRuleList", () => {
 
   it("should show empty state", () => {
     render(<WorldRuleList rules={[]} />);
-    expect(screen.getByText(/No rules found/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nenhuma regra encontrada/i)).toBeInTheDocument();
   });
 });

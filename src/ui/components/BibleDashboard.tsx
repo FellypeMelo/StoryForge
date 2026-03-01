@@ -53,7 +53,7 @@ export function BibleDashboard() {
     // Only load if not searching
     if (searchQuery.trim() !== "") return;
     
-    setLoading(false); // Immediate feedback for smoother UX
+    setLoading(true);
     try {
       if (activeTab === "characters") {
         const data = await invoke<any[]>("list_characters", { projectId: currentProjectId });

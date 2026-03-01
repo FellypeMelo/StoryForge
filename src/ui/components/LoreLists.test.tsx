@@ -4,31 +4,34 @@ import { TimelineList, RelationshipList, BlacklistList } from "./LoreLists";
 import { TimelineEvent } from "../../domain/timeline-event";
 import { Relationship } from "../../domain/relationship";
 import { BlacklistEntry } from "../../domain/blacklist-entry";
-import { TimelineEventId, RelationshipId, BlacklistEntryId } from "../../domain/value-objects/bible-ids";
 import { ProjectId } from "../../domain/value-objects/project-id";
 import { CharacterId } from "../../domain/value-objects/character-id";
-
-const pId = ProjectId.generate();
+import { TimelineEventId } from "../../domain/value-objects/bible-ids";
+import { RelationshipId } from "../../domain/value-objects/bible-ids";
+import { BlacklistEntryId } from "../../domain/value-objects/bible-ids";
 
 describe("LoreLists", () => {
+  const projectId = ProjectId.create("550e8400-e29b-41d4-a716-446655440000");
+
   describe("TimelineList", () => {
     it("should render events", () => {
       const events = [
         TimelineEvent.create({
           id: TimelineEventId.generate(),
-          projectId: pId,
-          date: "2026",
-          description: "Test Event",
-        }),
+          projectId: projectId,
+          date: "1200 AC",
+          description: "O Início",
+          causalDependencies: []
+        })
       ];
       render(<TimelineList events={events} />);
-      expect(screen.getByText("2026")).toBeInTheDocument();
-      expect(screen.getByText("Test Event")).toBeInTheDocument();
+      expect(screen.getByText("1200 AC")).toBeInTheDocument();
+      expect(screen.getByText("O Início")).toBeInTheDocument();
     });
 
     it("should show empty state", () => {
       render(<TimelineList events={[]} />);
-      expect(screen.getByText(/No events found/i)).toBeInTheDocument();
+      expect(screen.getByText(/Nenhum evento encontrado/i)).toBeInTheDocument();
     });
   });
 
@@ -37,14 +40,14 @@ describe("LoreLists", () => {
       const rels = [
         Relationship.create({
           id: RelationshipId.generate(),
-          projectId: pId,
+          projectId: projectId,
           characterAId: CharacterId.generate(),
           characterBId: CharacterId.generate(),
-          type: "Friends",
-        }),
+          type: "Inimigos"
+        })
       ];
       render(<RelationshipList relationships={rels} />);
-      expect(screen.getByText("Friends")).toBeInTheDocument();
+      expect(screen.getByText("Inimigos")).toBeInTheDocument();
     });
   });
 
@@ -53,12 +56,14 @@ describe("LoreLists", () => {
       const entries = [
         BlacklistEntry.create({
           id: BlacklistEntryId.generate(),
-          projectId: pId,
-          term: "forbidden",
-        }),
+          projectId: projectId,
+          term: "clichê",
+          category: "estilo",
+          reason: "evitar"
+        })
       ];
       render(<BlacklistList entries={entries} />);
-      expect(screen.getByText("forbidden")).toBeInTheDocument();
+      expect(screen.getByText("clichê")).toBeInTheDocument();
     });
   });
 });

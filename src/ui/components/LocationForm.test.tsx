@@ -25,10 +25,10 @@ describe("LocationForm", () => {
     const onSave = vi.fn();
     render(<LocationForm location={mockLocation} onSave={onSave} onCancel={() => {}} />);
     
-    const nameInput = screen.getByLabelText(/Name/i);
+    const nameInput = screen.getByLabelText(/Nome/i);
     fireEvent.change(nameInput, { target: { value: "New City" } });
     
-    fireEvent.click(screen.getByText(/Save Location/i));
+    fireEvent.click(screen.getByText(/Salvar Local/i));
     
     expect(onSave).toHaveBeenCalled();
     const saved = onSave.mock.calls[0][0] as Location;

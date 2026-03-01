@@ -32,6 +32,6 @@ describe("LocationList", () => {
 
   it("should show empty state", () => {
     render(<LocationList locations={[]} />);
-    expect(screen.getByText(/No locations found/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nenhum local encontrado/i)).toBeInTheDocument();
   });
 });

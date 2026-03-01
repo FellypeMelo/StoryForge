@@ -39,11 +39,11 @@ describe("CharacterList", () => {
     const injectedIds = [mockCharacters[0].id.value];
     render(<CharacterList characters={mockCharacters} injectedIds={injectedIds} />);
     
-    expect(screen.getByText(/Injected/i)).toBeInTheDocument();
+    expect(screen.getByText(/Injetado/i)).toBeInTheDocument();
   });
 
   it("should show empty state when no characters are provided", () => {
     render(<CharacterList characters={[]} />);
-    expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
   });
 });

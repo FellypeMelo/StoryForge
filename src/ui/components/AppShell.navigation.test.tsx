@@ -11,7 +11,7 @@ describe("AppShell Navigation", () => {
       </AppShell>,
     );
 
-    const personasButton = screen.getByText("Personas");
+    const personasButton = screen.getByText("Personagens");
     fireEvent.click(personasButton);
 
     expect(onNavigate).toHaveBeenCalledWith("personas");

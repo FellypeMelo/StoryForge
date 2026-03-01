@@ -17,11 +17,11 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
           <ShieldQuestion size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif text-text-main">No events found</h3>
-          <p className="text-text-muted max-w-xs mx-auto">Map the history of your world.</p>
+          <h3 className="text-xl font-serif text-text-main">Nenhum evento encontrado</h3>
+          <p className="text-text-muted max-w-xs mx-auto">Mapeie a história do seu mundo.</p>
         </div>
         <button onClick={onCreateNew} className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
-          Add Event
+          Adicionar Evento
         </button>
       </div>
     );
@@ -30,8 +30,8 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">Timeline ({events.length})</h2>
-        <button onClick={onCreateNew} className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer">+ Add New</button>
+        <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">Linha do Tempo ({events.length})</h2>
+        <button onClick={onCreateNew} className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer">+ Adicionar Novo</button>
       </div>
       <div className="space-y-4">
         {events.map((event) => (
@@ -40,7 +40,7 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
               <Clock size={20} />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif text-text-main">{event.date || "Unknown Date"}</h3>
+              <h3 className="font-serif text-text-main">{event.date || "Data Desconhecida"}</h3>
               <p className="text-sm text-text-muted leading-relaxed">{event.description}</p>
             </div>
           </div>
@@ -64,11 +64,11 @@ export function RelationshipList({ relationships, onSelect, onCreateNew }: Relat
           <ShieldQuestion size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif text-text-main">No relationships found</h3>
-          <p className="text-text-muted max-w-xs mx-auto">Connect your characters.</p>
+          <h3 className="text-xl font-serif text-text-main">Nenhum relacionamento encontrado</h3>
+          <p className="text-text-muted max-w-xs mx-auto">Conecte seus personagens.</p>
         </div>
         <button onClick={onCreateNew} className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
-          Add Relationship
+          Adicionar Relacionamento
         </button>
       </div>
     );
@@ -77,8 +77,8 @@ export function RelationshipList({ relationships, onSelect, onCreateNew }: Relat
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">Relationships ({relationships.length})</h2>
-        <button onClick={onCreateNew} className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer">+ Add New</button>
+        <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">Relacionamentos ({relationships.length})</h2>
+        <button onClick={onCreateNew} className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer">+ Adicionar Novo</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {relationships.map((rel) => (
@@ -106,11 +106,11 @@ export function BlacklistList({ entries, onSelect, onCreateNew }: BlacklistListP
           <ShieldQuestion size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif text-text-main">No blacklist entries</h3>
-          <p className="text-text-muted max-w-xs mx-auto">Set guardrails for your prose.</p>
+          <h3 className="text-xl font-serif text-text-main">Nenhuma entrada na lista negra</h3>
+          <p className="text-text-muted max-w-xs mx-auto">Defina limites para sua prosa.</p>
         </div>
         <button onClick={onCreateNew} className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
-          Add Entry
+          Adicionar Entrada
         </button>
       </div>
     );
@@ -119,8 +119,8 @@ export function BlacklistList({ entries, onSelect, onCreateNew }: BlacklistListP
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">Blacklist ({entries.length})</h2>
-        <button onClick={onCreateNew} className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer">+ Add New</button>
+        <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">Lista Negra ({entries.length})</h2>
+        <button onClick={onCreateNew} className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer">+ Adicionar Novo</button>
       </div>
       <div className="flex flex-wrap gap-3">
         {entries.map((entry) => (

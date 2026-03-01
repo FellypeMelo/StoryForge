@@ -16,23 +16,23 @@ describe("BibleDashboard", () => {
     render(<BibleDashboard />);
 
     // Check for buttons in the nav
-    expect(screen.getByRole("button", { name: /Characters/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Locations/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /World Rules/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Timeline/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Relationships/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Blacklist/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Personagens/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Locais/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Regras do Mundo/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Linha do Tempo/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Relacionamentos/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Lista Negra/i })).toBeInTheDocument();
   });
 
   it("should show characters tab by default after loading", async () => {
     render(<BibleDashboard />);
     
     // Should show loading initially
-    expect(screen.getByText(/Consulting the archives/i)).toBeInTheDocument();
+    expect(screen.getByText(/Consultando os arquivos/i)).toBeInTheDocument();
     
     // Should eventually show empty state
     await waitFor(() => {
-      expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
+      expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
     });
   });
 
@@ -56,11 +56,11 @@ describe("BibleDashboard", () => {
 
     render(<BibleDashboard />);
     
-    const searchInput = screen.getByPlaceholderText(/Search lore.../i);
+    const searchInput = screen.getByPlaceholderText(/Pesquisar sabedoria.../i);
     fireEvent.change(searchInput, { target: { value: "test query" } });
     
     await waitFor(() => {
-      expect(screen.getByText(/Search results/i)).toBeInTheDocument();
+      expect(screen.getByText(/Resultados da Busca/i)).toBeInTheDocument();
       expect(screen.getByText(/Search result snippet/i)).toBeInTheDocument();
     });
   });

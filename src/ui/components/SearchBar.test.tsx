@@ -5,6 +5,6 @@ import { SearchBar } from "./SearchBar";
 describe("SearchBar", () => {
   it("should render search input", () => {
     render(<SearchBar onSearch={() => {}} />);
-    expect(screen.getByPlaceholderText(/Search lore.../i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Pesquisar sabedoria.../i)).toBeInTheDocument();
   });
 });

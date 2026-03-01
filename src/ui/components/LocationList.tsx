@@ -21,16 +21,16 @@ export function LocationList({
           <ShieldQuestion size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif text-text-main">No locations found</h3>
+          <h3 className="text-xl font-serif text-text-main">Nenhum local encontrado</h3>
           <p className="text-text-muted max-w-xs mx-auto">
-            Your world needs places. Add your first location to begin.
+            Seu mundo precisa de lugares. Adicione seu primeiro local para começar.
           </p>
         </div>
         <button
           onClick={onCreateNew}
           className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
-          Create Location
+          Criar Local
         </button>
       </div>
     );
@@ -40,13 +40,13 @@ export function LocationList({
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
-          Locations ({locations.length})
+          Locais ({locations.length})
         </h2>
         <button
           onClick={onCreateNew}
           className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"
         >
-          + Add New
+          + Adicionar Novo
         </button>
       </div>
 
@@ -69,7 +69,7 @@ export function LocationList({
                   </span>
                   {isInjected && (
                     <span className="text-[9px] font-bold tracking-widest uppercase text-text-main px-1.5 py-0.5 bg-text-main/10 rounded animate-pulse">
-                      Injected
+                      Injetado
                     </span>
                   )}
                 </div>
@@ -80,13 +80,13 @@ export function LocationList({
                   {loc.name}
                 </h3>
                 <p className="text-xs text-text-muted font-sans line-clamp-2">
-                  {loc.description || "No description"}
+                  {loc.description || "Sem descrição"}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-border-subtle flex justify-between items-center">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted italic">
-                  {loc.symbolicMeaning || "No symbolic meaning"}
+                  {loc.symbolicMeaning || "Sem significado simbólico"}
                 </span>
                 <span className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                   →

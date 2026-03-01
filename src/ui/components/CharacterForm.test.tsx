@@ -44,10 +44,10 @@ describe("CharacterForm", () => {
     const onSave = vi.fn();
     render(<CharacterForm character={mockCharacter} onSave={onSave} onCancel={() => {}} />);
 
-    const nameInput = screen.getByLabelText(/Name/i);
+    const nameInput = screen.getByLabelText(/Nome/i);
     fireEvent.change(nameInput, { target: { value: "Updated Name" } });
 
-    const saveButton = screen.getByText(/Save Changes/i);
+    const saveButton = screen.getByText(/Salvar Alterações/i);
     fireEvent.click(saveButton);
 
     expect(onSave).toHaveBeenCalled();
@@ -59,12 +59,12 @@ describe("CharacterForm", () => {
   it("should show validation error for empty name", () => {
     render(<CharacterForm character={mockCharacter} onSave={() => {}} onCancel={() => {}} />);
 
-    const nameInput = screen.getByLabelText(/Name/i);
+    const nameInput = screen.getByLabelText(/Nome/i);
     fireEvent.change(nameInput, { target: { value: "" } });
 
-    const saveButton = screen.getByText(/Save Changes/i);
+    const saveButton = screen.getByText(/Salvar Alterações/i);
     fireEvent.click(saveButton);
 
-    expect(screen.getByText(/Name is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nome é obrigatório/i)).toBeInTheDocument();
   });
 });
