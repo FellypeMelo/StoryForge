@@ -18,11 +18,11 @@
     - [x] 🟢 GREEN: Implement SqliteCharacterRepository
 - [x] Task: Conductor - User Manual Verification 'Persistence & Infrastructure' (Protocol in workflow.md)
 
-## Phase 3: IPC Bridge & Backend Application
+## Phase 3: IPC Bridge & Backend Application [checkpoint: c9f2428]
 - [x] Task: Character Use Cases & Commands (5cca231)
     - [x] 🔴 RED: Test IPC commands for Character CRUD
     - [x] 🟢 GREEN: Implement Tauri commands and application logic
-- [~] Task: Conductor - User Manual Verification 'IPC Bridge & Backend Application' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'IPC Bridge & Backend Application' (Protocol in workflow.md)
 
 ## Phase 4: UI Shell Integration & Gallery
 - [ ] Task: Sidebar & Navigation Update
