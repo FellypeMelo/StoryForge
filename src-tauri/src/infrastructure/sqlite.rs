@@ -1,8 +1,10 @@
 use rusqlite::{params, Connection, Result, Row};
 use std::path::Path;
 use std::sync::Mutex;
-use crate::domain::ports::{DatabasePort, CharacterRepository};
-use crate::domain::character::{Character, CharacterId, ProjectId, OceanScores};
+use crate::domain::ports::{DatabasePort, CharacterRepository, ProjectRepository};
+use crate::domain::character::{Character, OceanScores};
+pub use crate::domain::value_objects::{CharacterId, ProjectId};
+use crate::domain::project::Project;
 use crate::domain::error::{AppError, AppResult};
 
 pub struct SqliteDatabase {
@@ -153,6 +155,80 @@ impl DatabasePort for SqliteDatabase {
         } else {
             0
         }
+    }
+}
+
+impl ProjectRepository for SqliteDatabase {
+    fn create(&self, project: &Project) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        conn.execute(
+            "INSERT INTO projects (id, name) VALUES (?, ?)",
+            params![project.id.0, project.name],
+        ).map_err(AppError::from)?;
+        Ok(())
+    }
+
+    fn get_by_id(&self, id: &ProjectId) -> AppResult<Project> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let project = conn.query_row(
+            "SELECT id, name, created_at FROM projects WHERE id = ?",
+            [id.0.clone()],
+            |row| {
+                Ok(Project {
+                    id: ProjectId(row.get(0)?),
+                    name: row.get(1)?,
+                    created_at: row.get(2)?,
+                })
+            },
+        ).map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("Project with id {} not found", id.0)),
+            _ => AppError::from(e),
+        })?;
+        Ok(project)
+    }
+
+    fn list_all(&self) -> AppResult<Vec<Project>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let mut stmt = conn.prepare("SELECT id, name, created_at FROM projects")
+            .map_err(AppError::from)?;
+
+        let project_iter = stmt.query_map([], |row| {
+            Ok(Project {
+                id: ProjectId(row.get(0)?),
+                name: row.get(1)?,
+                created_at: row.get(2)?,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut projects = Vec::new();
+        for project in project_iter {
+            projects.push(project?);
+        }
+        Ok(projects)
+    }
+
+    fn update(&self, project: &Project) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute(
+            "UPDATE projects SET name = ? WHERE id = ?",
+            params![project.name, project.id.0],
+        ).map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("Project with id {} not found", project.id.0)));
+        }
+        Ok(())
+    }
+
+    fn delete(&self, id: &ProjectId) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute("DELETE FROM projects WHERE id = ?", [id.0.clone()])
+            .map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("Project with id {} not found", id.0)));
+        }
+        Ok(())
     }
 }
 
@@ -447,5 +523,40 @@ mod tests {
         repo.delete(&character.id).expect("Failed to delete character");
         let result = repo.get_by_id(&character.id);
         assert!(result.is_err(), "Character should be deleted");
+    }
+
+    #[test]
+    fn test_project_repository_crud() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_project_crud.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project = Project::new("My New Project".to_string()).unwrap();
+        let repo: &dyn crate::domain::ports::ProjectRepository = &db;
+        
+        // Create
+        repo.create(&project).expect("Failed to create project");
+        
+        // Get
+        let fetched = repo.get_by_id(&project.id).expect("Failed to fetch project");
+        assert_eq!(fetched.name, "My New Project");
+        
+        // List
+        let list = repo.list_all().expect("Failed to list projects");
+        assert!(list.iter().any(|p| p.id == project.id));
+        
+        // Update
+        let mut updated_project = project.clone();
+        updated_project.name = "Updated Project Name".to_string();
+        repo.update(&updated_project).expect("Failed to update project");
+        let fetched_updated = repo.get_by_id(&project.id).expect("Failed to fetch updated project");
+        assert_eq!(fetched_updated.name, "Updated Project Name");
+        
+        // Delete
+        repo.delete(&project.id).expect("Failed to delete project");
+        let result = repo.get_by_id(&project.id);
+        assert!(result.is_err(), "Project should be deleted");
     }
 }
