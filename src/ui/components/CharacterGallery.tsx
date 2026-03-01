@@ -8,11 +8,11 @@ interface CharacterGalleryProps {
   onCreateNew?: () => void;
 }
 
-export const CharacterGallery: React.FC<CharacterGalleryProps> = ({
-  characters,
+export function CharacterGallery({ 
+  characters, 
   onSelect,
-  onCreateNew,
-}) => {
+  onCreateNew 
+}: CharacterGalleryProps) {
   if (characters.length === 0) {
     return (
       <div className="py-20 border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center text-center space-y-6">

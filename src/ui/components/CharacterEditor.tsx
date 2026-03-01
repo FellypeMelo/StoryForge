@@ -8,11 +8,11 @@ interface CharacterEditorProps {
   onCancel: () => void;
 }
 
-export const CharacterEditor: React.FC<CharacterEditorProps> = ({
-  character,
-  onSave,
-  onCancel,
-}) => {
+export function CharacterEditor({ 
+  character, 
+  onSave, 
+  onCancel 
+}: CharacterEditorProps) {
   const [formData, setFormData] = useState<Character>({ ...character });
   const [errors, setErrors] = useState<{ name?: string }>({});
 

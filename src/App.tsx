@@ -14,7 +14,7 @@ interface HealthStatus {
   database: boolean;
 }
 
-function App() {
+export function App() {
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [error, setError] = useState<string | null>(null);

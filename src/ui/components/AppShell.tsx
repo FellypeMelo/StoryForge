@@ -18,39 +18,41 @@ interface AppShellProps {
   currentPath?: string;
 }
 
-const NavItem = ({
-  icon: Icon,
-  label,
-  active = false,
+function NavItem({ 
+  icon: Icon, 
+  label, 
+  active = false, 
   collapsed = false,
-  onClick,
-}: {
-  icon: any;
-  label: string;
-  active?: boolean;
+  onClick
+}: { 
+  icon: any; 
+  label: string; 
+  active?: boolean; 
   collapsed?: boolean;
   onClick?: () => void;
-}) => (
-  <button
-    onClick={onClick}
-    className={`w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer ${
-      active
-        ? "text-text-main font-bold tracking-wide"
-        : "text-text-muted hover:bg-bg-hover hover:text-text-main"
-    }`}
-  >
-    <Icon size={18} strokeWidth={active ? 2.5 : 1.5} />
-    {!collapsed && <span className="text-[13px]">{label}</span>}
-  </button>
-);
+}) {
+  return (
+    <button 
+      onClick={onClick}
+      className={`w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer ${
+        active 
+          ? "text-text-main font-bold tracking-wide" 
+          : "text-text-muted hover:bg-bg-hover hover:text-text-main"
+      }`}
+    >
+      <Icon size={18} strokeWidth={active ? 2.5 : 1.5} />
+      {!collapsed && <span className="text-[13px]">{label}</span>}
+    </button>
+  );
+}
 
-export const AppShell: React.FC<AppShellProps> = ({
-  children,
-  appVersion,
+export function AppShell({ 
+  children, 
+  appVersion, 
   dbHealthy,
   onNavigate,
-  currentPath = "dashboard",
-}) => {
+  currentPath = 'dashboard'
+}: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
