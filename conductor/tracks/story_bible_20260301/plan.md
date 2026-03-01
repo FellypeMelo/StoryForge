@@ -1,6 +1,6 @@
 # Plan: Story Bible Domain & UI (Mocks)
 
-## Phase 1: Domain Entities & Value Objects
+## Phase 1: Domain Entities & Value Objects [checkpoint: b32102f]
 - [x] Task: Create Domain Value Objects for IDs (ProjectId, CharacterId, etc.) [b6fedc7]
     - [x] 🔴 RED: Test for `ProjectId` validation and equality.
     - [x] 🟢 GREEN: Implement `ProjectId` using `uuid`.
@@ -22,7 +22,7 @@
     - [x] 🟢 GREEN: Implement `Relationship`.
     - [x] 🔴 RED: Test for `BlacklistEntry`.
     - [x] 🟢 GREEN: Implement `BlacklistEntry`.
-- [ ] Task: Conductor - User Manual Verification 'Domain Entities & Value Objects' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Domain Entities & Value Objects' (Protocol in workflow.md) [b32102f]
 
 ## Phase 2: Repository Ports (Interfaces)
 - [ ] Task: Define Repository Interfaces
