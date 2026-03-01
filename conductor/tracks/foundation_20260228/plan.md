@@ -13,7 +13,7 @@
 - [x] Task: Conductor - User Manual Verification 'Project Scaffolding & Architecture' [12286db]
 
 ## Phase 2: Persistence Engine (TDD)
-- [ ] Task: Implement SQLite Base Connection
+- [~] Task: Implement SQLite Base Connection
     - [ ] 🔴 RED: Test for DB file creation in efhemeral dir
     - [ ] 🟢 GREEN: Initialize SQLite in backend Rust
     - [ ] 🔵 REFACTOR: Extract `DatabasePort` trait in domain
