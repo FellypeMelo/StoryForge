@@ -33,7 +33,20 @@ export const CharacterSchema = z.object({
   mannerisms: z.string().default(""),
 });
 
-export type CharacterProps = z.infer<typeof CharacterSchema>;
+export interface CharacterProps {
+  id: CharacterId;
+  projectId: ProjectId;
+  name: string;
+  age: number;
+  occupation: string;
+  physical_description: string;
+  goal: string;
+  motivation: string;
+  internal_conflict: string;
+  ocean_scores: OceanScores;
+  voice: string;
+  mannerisms: string;
+}
 
 export class Character {
   private constructor(private readonly props: CharacterProps) {}
@@ -75,11 +88,15 @@ export class Character {
   }
 
   public get id(): CharacterId {
-    return this.props.id as CharacterId;
+    return this.props.id;
+  }
+
+  public toProps(): CharacterProps {
+    return { ...this.props };
   }
 
   public get projectId(): ProjectId {
-    return this.props.projectId as ProjectId;
+    return this.props.projectId;
   }
 
   public get name(): string {
@@ -88,6 +105,10 @@ export class Character {
 
   public get age(): number {
     return this.props.age;
+  }
+
+  public get occupation(): string {
+    return this.props.occupation;
   }
 
   public get ocean_scores(): OceanScores {

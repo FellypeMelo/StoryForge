@@ -8,7 +8,12 @@ export const ProjectSchema = z.object({
   createdAt: z.date().or(z.string().pipe(z.coerce.date())),
 });
 
-export type ProjectProps = z.infer<typeof ProjectSchema>;
+export interface ProjectProps {
+  id: ProjectId;
+  title: string;
+  genre: string;
+  createdAt: Date;
+}
 
 export class Project {
   private constructor(private readonly props: ProjectProps) {}
@@ -35,7 +40,11 @@ export class Project {
   }
 
   public get id(): ProjectId {
-    return this.props.id as ProjectId;
+    return this.props.id;
+  }
+
+  public toProps(): ProjectProps {
+    return { ...this.props };
   }
 
   public get title(): string {
@@ -47,6 +56,6 @@ export class Project {
   }
 
   public get createdAt(): Date {
-    return this.props.createdAt as Date;
+    return this.props.createdAt;
   }
 }

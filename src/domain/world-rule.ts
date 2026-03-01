@@ -10,7 +10,13 @@ export const WorldRuleSchema = z.object({
   hierarchy: z.number().int().min(0).default(0),
 });
 
-export type WorldRuleProps = z.infer<typeof WorldRuleSchema>;
+export interface WorldRuleProps {
+  id: WorldRuleId;
+  projectId: ProjectId;
+  category: string;
+  content: string;
+  hierarchy: number;
+}
 
 export class WorldRule {
   private constructor(private readonly props: WorldRuleProps) {}
@@ -38,7 +44,11 @@ export class WorldRule {
   }
 
   public get id(): WorldRuleId {
-    return this.props.id as WorldRuleId;
+    return this.props.id;
+  }
+
+  public toProps(): WorldRuleProps {
+    return { ...this.props };
   }
 
   public get category(): string {

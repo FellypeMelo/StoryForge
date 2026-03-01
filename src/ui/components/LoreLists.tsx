@@ -40,7 +40,7 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
               <Clock size={20} />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif text-text-main">Date Placeholder</h3>
+              <h3 className="font-serif text-text-main">{event.date || "Unknown Date"}</h3>
               <p className="text-sm text-text-muted leading-relaxed">{event.description}</p>
             </div>
           </div>

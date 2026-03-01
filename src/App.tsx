@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { AppShell } from "./ui/components/AppShell";
-import { CharacterGallery } from "./ui/components/CharacterGallery";
-import { CharacterEditor } from "./ui/components/CharacterEditor";
+import { CharacterList } from "./ui/components/CharacterList";
+import { CharacterForm } from "./ui/components/CharacterForm";
 import { Character } from "./domain/character";
 
 interface AppInfo {
@@ -93,7 +93,7 @@ export function App() {
       case "personas":
         if (editingCharacter) {
           return (
-            <CharacterEditor
+            <CharacterForm
               character={editingCharacter}
               onSave={handleSaveCharacter}
               onCancel={() => setEditingCharacter(null)}
@@ -118,7 +118,7 @@ export function App() {
                 </span>
               </div>
             ) : (
-              <CharacterGallery
+              <CharacterList
                 characters={characters}
                 onCreateNew={handleCreateCharacter}
                 onSelect={(char) => setEditingCharacter(char)}

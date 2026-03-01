@@ -1,12 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { Relationship, RelationshipSchema } from "./relationship";
-import { RelationshipId, CharacterId } from "./value-objects/bible-ids";
-import { ProjectId } from "./value-objects/project-id";
-
-// Note: CharacterId is imported from bible-ids but also exists in character-id.ts
-// I'll ensure I'm using the one from character-id.ts for consistency if possible, 
-// but since I put it in bible-ids too, I'll check.
+import { RelationshipId } from "./value-objects/bible-ids";
 import { CharacterId as CharId } from "./value-objects/character-id";
+import { ProjectId } from "./value-objects/project-id";
 
 describe("Relationship Entity", () => {
   it("should create a valid Relationship", () => {

@@ -11,7 +11,13 @@ export const RelationshipSchema = z.object({
   type: z.string().min(1, "Relationship type cannot be empty"),
 });
 
-export type RelationshipProps = z.infer<typeof RelationshipSchema>;
+export interface RelationshipProps {
+  id: RelationshipId;
+  projectId: ProjectId;
+  characterAId: CharacterId;
+  characterBId: CharacterId;
+  type: string;
+}
 
 export class Relationship {
   private constructor(private readonly props: RelationshipProps) {}
@@ -41,7 +47,11 @@ export class Relationship {
   }
 
   public get id(): RelationshipId {
-    return this.props.id as RelationshipId;
+    return this.props.id;
+  }
+
+  public toProps(): RelationshipProps {
+    return { ...this.props };
   }
 
   public get type(): string {

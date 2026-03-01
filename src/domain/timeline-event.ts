@@ -10,7 +10,13 @@ export const TimelineEventSchema = z.object({
   causalDependencies: z.array(TimelineEventIdSchema).default([]),
 });
 
-export type TimelineEventProps = z.infer<typeof TimelineEventSchema>;
+export interface TimelineEventProps {
+  id: TimelineEventId;
+  projectId: ProjectId;
+  date: string;
+  description: string;
+  causalDependencies: TimelineEventId[];
+}
 
 export class TimelineEvent {
   private constructor(private readonly props: TimelineEventProps) {}
@@ -39,7 +45,15 @@ export class TimelineEvent {
   }
 
   public get id(): TimelineEventId {
-    return this.props.id as TimelineEventId;
+    return this.props.id;
+  }
+
+  public get date(): string {
+    return this.props.date;
+  }
+
+  public toProps(): TimelineEventProps {
+    return { ...this.props };
   }
 
   public get description(): string {

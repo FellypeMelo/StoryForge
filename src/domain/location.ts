@@ -10,7 +10,13 @@ export const LocationSchema = z.object({
   symbolicMeaning: z.string().default(""),
 });
 
-export type LocationProps = z.infer<typeof LocationSchema>;
+export interface LocationProps {
+  id: LocationId;
+  projectId: ProjectId;
+  name: string;
+  description: string;
+  symbolicMeaning: string;
+}
 
 export class Location {
   private constructor(private readonly props: LocationProps) {}
@@ -38,11 +44,15 @@ export class Location {
   }
 
   public get id(): LocationId {
-    return this.props.id as LocationId;
+    return this.props.id;
+  }
+
+  public toProps(): LocationProps {
+    return { ...this.props };
   }
 
   public get projectId(): ProjectId {
-    return this.props.projectId as ProjectId;
+    return this.props.projectId;
   }
 
   public get name(): string {

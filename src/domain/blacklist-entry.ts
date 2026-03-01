@@ -10,7 +10,13 @@ export const BlacklistEntrySchema = z.object({
   reason: z.string().default(""),
 });
 
-export type BlacklistEntryProps = z.infer<typeof BlacklistEntrySchema>;
+export interface BlacklistEntryProps {
+  id: BlacklistEntryId;
+  projectId: ProjectId;
+  term: string;
+  category: string;
+  reason: string;
+}
 
 export class BlacklistEntry {
   private constructor(private readonly props: BlacklistEntryProps) {}
@@ -38,7 +44,11 @@ export class BlacklistEntry {
   }
 
   public get id(): BlacklistEntryId {
-    return this.props.id as BlacklistEntryId;
+    return this.props.id;
+  }
+
+  public toProps(): BlacklistEntryProps {
+    return { ...this.props };
   }
 
   public get term(): string {
