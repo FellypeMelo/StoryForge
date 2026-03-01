@@ -1,0 +1,8 @@
+{
+  "track_id": "foundation_20260228",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-02-28T23:53:00Z",
+  "updated_at": "2026-02-28T23:53:00Z",
+  "description": "# 🏗️ Milestone 1 — Fundação & Scaffold\n\n> **Fase:** Zero to MVP Foundation  \n> **Objetivo:** Estabelecer o esqueleto arquitetural com Tauri + React + SQLite, Clean Architecture rigorosa e pipeline TDD funcional.  \n> **Compliance:** Lei 1 (TDD), Lei 2 (Clean Arch), Lei 5 (YAGNI+KISS) Based on Milestone1.md file"
+}
