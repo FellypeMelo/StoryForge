@@ -1,16 +1,16 @@
 # Implementation Plan: Milestone 1 — Fundação & Scaffold
 
 ## Phase 1: Project Scaffolding & Architecture
-- [ ] Task: Initialize Tauri v2 + React/TypeScript project
-    - [ ] Run initialization command with React template
-    - [ ] Configure `tauri.conf.json` with least privilege
-    - [ ] Clean up default boilerplate (logos, styles)
-    - [ ] Verify build opens "StoryForge" window
-- [ ] Task: Establish Clean Architecture directory structure
-    - [ ] Create `src/domain`, `src/application`, `src/infrastructure`, `src/ui`
-    - [ ] Create `src-tauri/src/domain`, `src-tauri/src/application`, `src-tauri/src/infrastructure`, `src-tauri/src/commands`
-    - [ ] Add `README.md` in domain folders documenting dependency rules
-- [ ] Task: Conductor - User Manual Verification 'Project Scaffolding & Architecture' (Protocol in workflow.md)
+- [x] Task: Initialize Tauri v2 + React/TypeScript project
+    - [x] Run initialization command with React template
+    - [x] Configure `tauri.conf.json` with least privilege
+    - [x] Clean up default boilerplate (logos, styles)
+    - [x] Verify build opens "StoryForge" window
+- [x] Task: Establish Clean Architecture directory structure
+    - [x] Create `src/domain`, `src/application`, `src/infrastructure`, `src/ui`
+    - [x] Create `src-tauri/src/domain`, `src-tauri/src/application`, `src-tauri/src/infrastructure`, `src-tauri/src/commands`
+    - [x] Add `README.md` in domain folders documenting dependency rules
+- [~] Task: Conductor - User Manual Verification 'Project Scaffolding & Architecture' (Protocol in workflow.md)
 
 ## Phase 2: Persistence Engine (TDD)
 - [ ] Task: Implement SQLite Base Connection
