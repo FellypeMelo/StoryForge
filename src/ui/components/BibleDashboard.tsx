@@ -19,46 +19,68 @@ export function BibleDashboard() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [rules, setRules] = useState<WorldRule[]>([]);
   
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  
   // Mock project ID for now (until Milestone 1 full project management is active)
   const currentProjectId = "default-project";
 
   useEffect(() => {
-    loadData();
-  }, [activeTab]);
+    if (searchQuery.trim() === "") {
+      setIsSearching(false);
+      loadData();
+    } else {
+      setIsSearching(true);
+      handleSearch(searchQuery);
+    }
+  }, [activeTab, searchQuery]);
 
   const loadData = async () => {
+    // Only load if not searching
+    if (searchQuery.trim() !== "") return;
+    
     setLoading(true);
     try {
       if (activeTab === "characters") {
         const data = await invoke<any[]>("list_characters", { projectId: currentProjectId });
-        // Em um projeto real, converteríamos os POJOs em instâncias da classe Character
-        // mas aqui os Lists esperam as instâncias para chamarem .id.value etc.
-        // Como o invoke retorna objetos planos, precisamos ter cuidado.
-        // A CharacterList usa char.id.value, então os mocks devem ser compatíveis.
         setCharacters(data.map(d => Character.create({
           ...d,
           id: { value: d.id },
-          projectId: { value: d.project_id }
+          projectId: { value: d.project_id },
+          name: d.name || "Unnamed",
         } as any)));
       } else if (activeTab === "locations") {
         const data = await invoke<any[]>("list_locations", { projectId: currentProjectId });
         setLocations(data.map(d => Location.create({
           ...d,
           id: { value: d.id },
-          projectId: { value: d.project_id }
+          projectId: { value: d.project_id },
+          name: d.name || "Unnamed",
         } as any)));
       } else if (activeTab === "rules") {
         const data = await invoke<any[]>("list_world_rules", { projectId: currentProjectId });
         setRules(data.map(d => WorldRule.create({
           ...d,
           id: { value: d.id },
-          projectId: { value: d.project_id }
+          projectId: { value: d.project_id },
+          category: d.category || "General",
+          content: d.content || "",
         } as any)));
       }
     } catch (error) {
       console.error("Failed to load lore data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearch = async (query: string) => {
+    try {
+      const results = await invoke<any[]>("search_lore", { projectId: currentProjectId, query });
+      setSearchResults(results);
+    } catch (error) {
+      console.error("Search failed:", error);
     }
   };
 
@@ -95,7 +117,7 @@ export function BibleDashboard() {
           <h1 className="text-3xl font-serif text-text-main">Story Bible</h1>
           <p className="text-text-muted text-sm font-sans">The definitive guide to your story's lore and logic.</p>
         </div>
-        <SearchBar onSearch={(q) => console.log("Searching for:", q)} />
+        <SearchBar onSearch={setSearchQuery} />
       </header>
 
       <nav className="flex flex-wrap gap-2">
@@ -119,7 +141,31 @@ export function BibleDashboard() {
       </nav>
 
       <main className="min-h-[400px]">
-        {loading ? (
+        {isSearching ? (
+          <div className="space-y-6">
+            <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
+              Search Results ({searchResults.length})
+            </h2>
+            {searchResults.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4">
+                {searchResults.map((res) => (
+                  <div key={res.entity_id} className="bg-bg-hover p-4 rounded-lg border border-border-subtle hover:border-text-main transition-colors">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted px-2 py-0.5 bg-bg-base rounded">
+                        {res.entity_type}
+                      </span>
+                    </div>
+                    <p className="text-sm font-serif text-text-main">{res.snippet}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-20 text-center text-text-muted font-sans">
+                No matching lore entries found.
+              </div>
+            )}
+          </div>
+        ) : loading ? (
           <div className="py-20 text-center font-mono text-text-muted animate-pulse">
             Consulting the archives...
           </div>
