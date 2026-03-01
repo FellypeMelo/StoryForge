@@ -34,51 +34,55 @@ function App() {
 
   return (
     <AppShell appVersion={appInfo?.version} dbHealthy={health?.database}>
-      <div className="space-y-8 py-12">
-        <div className="space-y-4">
-          <h2 className="text-4xl font-bold tracking-tight text-slate-100">
+      <div className="space-y-16 py-8">
+        <header className="space-y-6">
+          <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
             Welcome to the Forge
-          </h2>
-          <p className="text-slate-400 text-lg max-w-2xl">
+          </h1>
+          <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
             This is your workspace. Here, you'll craft worlds, breathe life into characters, and weave intricate narratives.
           </p>
-        </div>
+        </header>
 
         {error && (
-          <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-red-400">
-            Error: {error}
+          <div className="py-4 border-b border-border-subtle text-text-muted font-mono text-sm">
+            <span className="font-bold">System Error:</span> {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-blue-500/50 transition-colors group">
-            <h3 className="text-slate-200 font-semibold mb-2 group-hover:text-blue-400 transition-colors">Project Status</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Database</span>
-                <span className={health?.database ? "text-green-400" : "text-yellow-400"}>
-                  {health ? (health.database ? "Connected" : "Disconnected") : "Loading..."}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-16 font-sans">
+          {/* Project Status - Borderless, typography driven */}
+          <div className="space-y-6">
+            <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">Project Status</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-end border-b border-border-subtle pb-2">
+                <span className="text-text-muted text-sm tracking-wide">Database Connection</span>
+                <span className={`text-sm font-medium ${health?.database ? "text-text-main" : "text-text-muted opacity-50"}`}>
+                  {health ? (health.database ? "Synchronized" : "Offline") : "Checking..."}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Version</span>
-                <span className="text-slate-300">{appInfo?.version || "..."}</span>
+              <div className="flex justify-between items-end border-b border-border-subtle pb-2">
+                <span className="text-text-muted text-sm tracking-wide">Client Version</span>
+                <span className="text-text-main text-sm font-mono">{appInfo?.version || "..."}</span>
               </div>
             </div>
           </div>
 
-          <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-indigo-500/50 transition-colors group">
-            <h3 className="text-slate-200 font-semibold mb-2 group-hover:text-indigo-400 transition-colors">Quick Actions</h3>
-            <div className="flex gap-2">
-              <button className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition-colors">
-                New Chapter
+          {/* Quick Actions - Soft backgrounds instead of hard buttons */}
+          <div className="space-y-6">
+            <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">Quick Actions</h3>
+            <div className="flex flex-col gap-3">
+              <button className="text-left bg-bg-hover hover:bg-border-subtle px-5 py-4 rounded transition-colors text-text-main font-medium text-sm flex items-center justify-between group">
+                Begin a New Chapter
+                <span className="text-text-muted group-hover:text-text-main transition-colors font-serif">→</span>
               </button>
-              <button className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition-colors">
-                Add Character
+              <button className="text-left bg-transparent hover:bg-bg-hover px-5 py-4 rounded transition-colors text-text-muted hover:text-text-main font-medium text-sm flex items-center justify-between group">
+                Develop a Character Profile
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">→</span>
               </button>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </AppShell>
   );

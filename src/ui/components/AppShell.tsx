@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { 
   BookOpen, 
   Users, 
@@ -16,59 +16,80 @@ interface AppShellProps {
   dbHealthy?: boolean;
 }
 
-const NavItem = ({ icon: Icon, label, active = false }: { icon: any, label: string, active?: boolean }) => (
-  <button className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+const NavItem = ({ icon: Icon, label, active = false, collapsed = false }: { icon: any, label: string, active?: boolean, collapsed?: boolean }) => (
+  <button className={`w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans ${
     active 
-      ? "bg-blue-600/20 text-blue-400" 
-      : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+      ? "text-text-main font-bold tracking-wide" 
+      : "text-text-muted hover:bg-bg-hover hover:text-text-main"
   }`}>
-    <Icon size={20} />
-    <span className="font-medium text-sm">{label}</span>
+    <Icon size={18} strokeWidth={active ? 2.5 : 1.5} />
+    {!collapsed && <span className="text-[13px]">{label}</span>}
   </button>
 );
 
 export const AppShell: React.FC<AppShellProps> = ({ children, appVersion, dbHealthy }) => {
-  const [collapsed, setCollapsed] = React.useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  // Auto-dimming logic for flow state
+  // We simulate it by intercepting global keyboard events
+  useEffect(() => {
+    let timeoutId: number;
+    const handleKeyDown = () => {
+      setIsTyping(true);
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => setIsTyping(false), 2000);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
-      {/* Sidebar */}
-      <aside className={`${collapsed ? "w-16" : "w-64"} border-r border-slate-800 flex flex-col transition-all duration-300 ease-in-out bg-slate-900/50 backdrop-blur-xl`}>
-        <div className="p-4 flex items-center justify-between">
+    <div className="flex h-screen bg-bg-base text-text-main overflow-hidden transition-colors duration-300">
+      {/* Sidebar - Auto dims when typing rapidly */}
+      <aside 
+        className={`${collapsed ? "w-20" : "w-64"} border-r border-border-subtle flex flex-col transition-all duration-500 ease-in-out bg-bg-base z-10`}
+        style={{ opacity: isTyping ? 0.1 : 1.0 }}
+        onMouseEnter={() => setIsTyping(false)}
+      >
+        <div className="p-6 flex items-center justify-between font-sans">
           {!collapsed && (
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="text-sm font-bold tracking-[0.15em] uppercase text-text-main">
               StoryForge
             </span>
           )}
           <button 
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400"
+            className="p-1.5 rounded hover:bg-bg-hover text-text-muted transition-colors mx-auto"
           >
-            {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
-        <nav className="flex-1 px-3 space-y-1 mt-4">
-          <NavItem icon={Home} label={collapsed ? "" : "Dashboard"} active />
-          <NavItem icon={BookOpen} label={collapsed ? "" : "Story Bible"} />
-          <NavItem icon={Users} label={collapsed ? "" : "Characters"} />
-          <NavItem icon={Layout} label={collapsed ? "" : "Structure"} />
+        <nav className="flex-1 px-4 space-y-2 mt-8">
+          <NavItem icon={Home} label="Dashboard" active collapsed={collapsed} />
+          <NavItem icon={BookOpen} label="Manuscript" collapsed={collapsed} />
+          <NavItem icon={Users} label="Personas" collapsed={collapsed} />
+          <NavItem icon={Layout} label="Architecture" collapsed={collapsed} />
         </nav>
 
-        <div className="p-3 border-t border-slate-800 space-y-1">
-          <NavItem icon={ShieldCheck} label={collapsed ? "" : "DevSecOps"} />
-          <NavItem icon={Settings} label={collapsed ? "" : "Settings"} />
+        <div className="p-4 border-t border-border-subtle space-y-2">
+          <NavItem icon={ShieldCheck} label="Verification" collapsed={collapsed} />
+          <NavItem icon={Settings} label="Preferences" collapsed={collapsed} />
           
           {!collapsed && (
-            <div className="mt-4 px-3 py-2 bg-slate-900/80 rounded-lg border border-slate-800/50">
-              <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-slate-500 font-bold">
-                <span>System</span>
-                <span className={dbHealthy ? "text-green-500" : "text-yellow-500"}>
-                  {dbHealthy ? "Online" : "Syncing"}
-                </span>
+            <div className="mt-6 px-4 py-3 font-mono text-[10px] tracking-widest text-text-muted space-y-1">
+              <div className="flex justify-between">
+                <span>SYS</span>
+                <span style={{ opacity: dbHealthy ? 1.0 : 0.5 }}>{dbHealthy ? "OK" : "ERR"}</span>
               </div>
-              <div className="text-[11px] text-slate-400 mt-1">
-                v{appVersion || "0.0.0"}
+              <div className="flex justify-between">
+                <span>VER</span>
+                <span>{appVersion || "0.0.0"}</span>
               </div>
             </div>
           )}
@@ -77,7 +98,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children, appVersion, dbHeal
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto relative">
-        <div className="max-w-5xl mx-auto p-8">
+        <div className="max-w-[720px] mx-auto p-12 md:p-24 transition-all duration-500">
           {children}
         </div>
       </main>

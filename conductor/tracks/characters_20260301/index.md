@@ -1,4 +1,4 @@
-# Track foundation_20260228 Context
+# Track characters_20260301 Context
 
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
