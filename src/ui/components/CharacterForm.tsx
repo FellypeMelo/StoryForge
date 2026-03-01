@@ -43,7 +43,7 @@ export function CharacterForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      setErrors({ name: "Name is required" });
+      setErrors({ name: "Nome é obrigatório" });
       return;
     }
     onSave(Character.create({
@@ -54,11 +54,11 @@ export function CharacterForm({
   };
 
   const oceanTraits: { key: keyof OceanScores; label: string }[] = [
-    { key: "openness", label: "Openness" },
-    { key: "conscientiousness", label: "Conscientiousness" },
-    { key: "extraversion", label: "Extraversion" },
-    { key: "agreeableness", label: "Agreeableness" },
-    { key: "neuroticism", label: "Neuroticism" },
+    { key: "openness", label: "Abertura" },
+    { key: "conscientiousness", label: "Consciência" },
+    { key: "extraversion", label: "Extroversão" },
+    { key: "agreeableness", label: "Amabilidade" },
+    { key: "neuroticism", label: "Neuroticismo" },
   ];
 
   return (
@@ -75,14 +75,14 @@ export function CharacterForm({
           >
             <X size={20} />
           </button>
-          <h2 className="text-xl font-serif text-text-main">Editing Profile</h2>
+          <h2 className="text-xl font-serif text-text-main">Editando Perfil</h2>
         </div>
         <button
           type="submit"
           className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
           <Save size={16} />
-          Save Changes
+          Salvar Alterações
         </button>
       </div>
 
@@ -90,13 +90,13 @@ export function CharacterForm({
       <section className="space-y-6">
         <div className="flex items-center gap-3 text-text-muted">
           <User size={18} />
-          <h3 className="text-xs font-bold tracking-widest uppercase">Core Attributes</h3>
+          <h3 className="text-xs font-bold tracking-widest uppercase">Atributos Principais</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-2">
             <label htmlFor="name" className="text-xs font-medium text-text-muted">
-              Name
+              Nome
             </label>
             <input
               id="name"
@@ -105,13 +105,13 @@ export function CharacterForm({
               value={formData.name}
               onChange={handleChange}
               className={`w-full bg-bg-hover border ${errors.name ? "border-red-500" : "border-border-subtle"} p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors`}
-              placeholder="Character Name"
+              placeholder="Nome do Personagem"
             />
             {errors.name && <p className="text-[10px] text-red-500 font-sans">{errors.name}</p>}
           </div>
           <div className="space-y-2">
             <label htmlFor="age" className="text-xs font-medium text-text-muted">
-              Age
+              Idade
             </label>
             <input
               id="age"
@@ -124,7 +124,7 @@ export function CharacterForm({
           </div>
           <div className="md:col-span-3 space-y-2">
             <label htmlFor="occupation" className="text-xs font-medium text-text-muted">
-              Occupation
+              Ocupação
             </label>
             <input
               id="occupation"
@@ -133,12 +133,12 @@ export function CharacterForm({
               value={formData.occupation}
               onChange={handleChange}
               className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-              placeholder="e.g. Reluctant Hero, Archivist, Former Spy"
+              placeholder="ex. Herói Relutante, Arquivista, Antigo Espião"
             />
           </div>
           <div className="md:col-span-3 space-y-2">
             <label htmlFor="physical_description" className="text-xs font-medium text-text-muted">
-              Physical Description
+              Descrição Física
             </label>
             <textarea
               id="physical_description"
@@ -147,7 +147,7 @@ export function CharacterForm({
               onChange={handleChange}
               rows={3}
               className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
-              placeholder="Visual traits, style, presence..."
+              placeholder="Traços visuais, estilo, presença..."
             />
           </div>
         </div>
@@ -158,7 +158,7 @@ export function CharacterForm({
         <div className="flex items-center gap-3 text-text-muted">
           <Brain size={18} />
           <h3 className="text-xs font-bold tracking-widest uppercase">
-            Psychological Profile (OCEAN)
+            Perfil Psicológico (OCEAN)
           </h3>
         </div>
 
@@ -188,13 +188,13 @@ export function CharacterForm({
       <section className="space-y-6 pb-12">
         <div className="flex items-center gap-3 text-text-muted">
           <ScrollText size={18} />
-          <h3 className="text-xs font-bold tracking-widest uppercase">Narrative Core</h3>
+          <h3 className="text-xs font-bold tracking-widest uppercase">Núcleo Narrativo</h3>
         </div>
 
         <div className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="goal" className="text-xs font-medium text-text-muted">
-              Concrete Goal
+              Objetivo Concreto
             </label>
             <input
               id="goal"
@@ -203,12 +203,12 @@ export function CharacterForm({
               value={formData.goal}
               onChange={handleChange}
               className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-              placeholder="What do they want right now?"
+              placeholder="O que eles querem agora?"
             />
           </div>
           <div className="space-y-2">
             <label htmlFor="motivation" className="text-xs font-medium text-text-muted">
-              Motivation
+              Motivação
             </label>
             <input
               id="motivation"
@@ -217,12 +217,12 @@ export function CharacterForm({
               value={formData.motivation}
               onChange={handleChange}
               className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-              placeholder="Why do they want it?"
+              placeholder="Por que eles querem isso?"
             />
           </div>
           <div className="space-y-2">
             <label htmlFor="internal_conflict" className="text-xs font-medium text-text-muted">
-              Internal Conflict (The Wound)
+              Conflito Interno (A Ferida)
             </label>
             <textarea
               id="internal_conflict"
@@ -231,14 +231,14 @@ export function CharacterForm({
               onChange={handleChange}
               rows={2}
               className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
-              placeholder="The internal force holding them back..."
+              placeholder="A força interna que os impede de avançar..."
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
             <div className="space-y-2">
               <label htmlFor="voice" className="text-xs font-medium text-text-muted">
-                Voice & Diction
+                Voz e Dicção
               </label>
               <input
                 id="voice"
@@ -247,12 +247,12 @@ export function CharacterForm({
                 value={formData.voice}
                 onChange={handleChange}
                 className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                placeholder="How do they speak?"
+                placeholder="Como eles falam?"
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="mannerisms" className="text-xs font-medium text-text-muted">
-                Mannerisms
+                Maneirismos
               </label>
               <input
                 id="mannerisms"
@@ -261,7 +261,7 @@ export function CharacterForm({
                 value={formData.mannerisms}
                 onChange={handleChange}
                 className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                placeholder="Physical quirks, unconscious acts..."
+                placeholder="Peculiaridades físicas, atos inconscientes..."
               />
             </div>
           </div>

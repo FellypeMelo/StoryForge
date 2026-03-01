@@ -63,6 +63,13 @@ impl Character {
             mannerisms: String::new(),
         })
     }
+
+    pub fn to_snapshot(&self) -> String {
+        format!(
+            "{}, {} anos. {}. Objetivos: {}. Conflito: {}.",
+            self.name, self.age, self.occupation, self.goal, self.internal_conflict
+        )
+    }
 }
 
 #[cfg(test)]

@@ -63,7 +63,7 @@ export function App() {
 
   const handleCreateCharacter = async () => {
     try {
-      const name = prompt("Enter character name:");
+      const name = prompt("Digite o nome do personagem:");
       if (!name) return;
 
       const newChar = await invoke<Character>("create_character", {
@@ -73,7 +73,7 @@ export function App() {
       setEditingCharacter(newChar);
     } catch (err) {
       console.error("Failed to create character:", err);
-      alert("Failed to create character: " + err);
+      alert("Falha ao criar o personagem: " + err);
     }
   };
 
@@ -84,7 +84,7 @@ export function App() {
       await fetchCharacters();
     } catch (err) {
       console.error("Failed to update character:", err);
-      alert("Failed to update character: " + err);
+      alert("Falha ao atualizar o personagem: " + err);
     }
   };
 
@@ -104,17 +104,17 @@ export function App() {
           <div className="space-y-12 py-8">
             <header className="space-y-6">
               <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
-                Personas
+                Personagens
               </h1>
               <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
-                Manage your characters and their psychological depth.
+                Gerencie seus personagens e a profundidade psicológica deles.
               </p>
             </header>
 
             {isLoading ? (
               <div className="py-20 flex justify-center">
                 <span className="text-text-muted font-mono animate-pulse">
-                  Consulting the archives...
+                  Consultando os arquivos...
                 </span>
               </div>
             ) : (
@@ -132,38 +132,38 @@ export function App() {
           <div className="space-y-16 py-8">
             <header className="space-y-6">
               <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
-                Welcome to the Forge
+                Bem-vindo à Forja
               </h1>
               <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
-                This is your workspace. Here, you'll craft worlds, breathe life into characters, and
-                weave intricate narratives.
+                Este é o seu espaço de trabalho. Aqui, você forjará mundos, dará vida a personagens e
+                tecerá narrativas intrincadas.
               </p>
             </header>
 
             {error && (
               <div className="py-4 border-b border-border-subtle text-text-muted font-mono text-sm">
-                <span className="font-bold">System Error:</span> {error}
+                <span className="font-bold">Erro no Sistema:</span> {error}
               </div>
             )}
 
             <section className="grid grid-cols-1 md:grid-cols-2 gap-16 font-sans">
               <div className="space-y-6">
                 <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">
-                  Project Status
+                  Status do Projeto
                 </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-end border-b border-border-subtle pb-2">
                     <span className="text-text-muted text-sm tracking-wide">
-                      Database Connection
+                      Conexão com Banco de Dados
                     </span>
                     <span
                       className={`text-sm font-medium ${health?.database ? "text-text-main" : "text-text-muted opacity-50"}`}
                     >
-                      {health ? (health.database ? "Synchronized" : "Offline") : "Checking..."}
+                      {health ? (health.database ? "Sincronizado" : "Desconectado") : "Verificando..."}
                     </span>
                   </div>
                   <div className="flex justify-between items-end border-b border-border-subtle pb-2">
-                    <span className="text-text-muted text-sm tracking-wide">Client Version</span>
+                    <span className="text-text-muted text-sm tracking-wide">Versão do Cliente</span>
                     <span className="text-text-main text-sm font-mono">
                       {appInfo?.version || "..."}
                     </span>
@@ -173,11 +173,11 @@ export function App() {
 
               <div className="space-y-6">
                 <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">
-                  Quick Actions
+                  Ações Rápidas
                 </h3>
                 <div className="flex flex-col gap-3">
                   <button className="text-left bg-bg-hover hover:bg-border-subtle px-5 py-4 rounded transition-colors text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer">
-                    Begin a New Chapter
+                    Iniciar um Novo Capítulo
                     <span className="text-text-muted group-hover:text-text-main transition-colors font-serif">
                       →
                     </span>
@@ -186,7 +186,7 @@ export function App() {
                     onClick={() => setCurrentPath("personas")}
                     className="text-left bg-transparent hover:bg-bg-hover px-5 py-4 rounded transition-colors text-text-muted hover:text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
                   >
-                    Develop a Character Profile
+                    Desenvolver Perfil de Personagem
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                       →
                     </span>

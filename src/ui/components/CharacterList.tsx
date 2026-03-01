@@ -21,16 +21,16 @@ export function CharacterList({
           <ShieldQuestion size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif text-text-main">No characters found</h3>
+          <h3 className="text-xl font-serif text-text-main">Nenhum personagem encontrado</h3>
           <p className="text-text-muted max-w-xs mx-auto">
-            Your story is waiting for its cast. Create your first character to begin.
+            Sua história aguarda seu elenco. Crie seu primeiro personagem para começar.
           </p>
         </div>
         <button
           onClick={onCreateNew}
           className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
-          Create Character
+          Criar Personagem
         </button>
       </div>
     );
@@ -40,13 +40,13 @@ export function CharacterList({
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
-          Cast of Characters ({characters.length})
+          Elenco de Personagens ({characters.length})
         </h2>
         <button
           onClick={onCreateNew}
           className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"
         >
-          + Add New
+          + Adicionar Novo
         </button>
       </div>
 
@@ -69,7 +69,7 @@ export function CharacterList({
                   </span>
                   {isInjected && (
                     <span className="text-[9px] font-bold tracking-widest uppercase text-text-main px-1.5 py-0.5 bg-text-main/10 rounded animate-pulse">
-                      Injected
+                      Injetado
                     </span>
                   )}
                 </div>
@@ -80,13 +80,16 @@ export function CharacterList({
                   {char.name}
                 </h3>
                 <p className="text-xs text-text-muted font-sans line-clamp-1">
-                  {char.occupation || "No occupation"}
+                  {char.occupation || "Sem ocupação"}
+                </p>
+                <p className="text-[10px] text-text-muted italic mt-2 line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                  {char.toSnapshot()}
                 </p>
               </div>
 
               <div className="pt-4 border-t border-border-subtle flex justify-between items-center">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted">
-                  Age {char.age}
+                  Idade {char.age}
                 </span>
                 <span className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                   →

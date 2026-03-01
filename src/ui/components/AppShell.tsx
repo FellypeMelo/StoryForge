@@ -115,28 +115,28 @@ export function AppShell({
         <nav className="flex-1 px-4 space-y-2 mt-8">
           <NavItem
             icon={Home}
-            label="Dashboard"
+            label="Painel"
             active={currentPath === "dashboard"}
             collapsed={collapsed}
             onClick={() => onNavigate?.("dashboard")}
           />
           <NavItem
             icon={BookOpen}
-            label="Manuscript"
+            label="Manuscrito"
             active={currentPath === "manuscript"}
             collapsed={collapsed}
             onClick={() => onNavigate?.("manuscript")}
           />
           <NavItem
             icon={Users}
-            label="Personas"
+            label="Personagens"
             active={currentPath === "personas"}
             collapsed={collapsed}
             onClick={() => onNavigate?.("personas")}
           />
           <NavItem
             icon={Layout}
-            label="Architecture"
+            label="Arquitetura"
             active={currentPath === "architecture"}
             collapsed={collapsed}
             onClick={() => onNavigate?.("architecture")}
@@ -144,8 +144,8 @@ export function AppShell({
         </nav>
 
         <div className="p-4 border-t border-border-subtle space-y-2">
-          <NavItem icon={ShieldCheck} label="Verification" collapsed={collapsed} />
-          <NavItem icon={Settings} label="Preferences" collapsed={collapsed} />
+          <NavItem icon={ShieldCheck} label="Verificação" collapsed={collapsed} />
+          <NavItem icon={Settings} label="Preferências" collapsed={collapsed} />
 
           {!collapsed && (
             <div className="mt-6 px-4 py-3 font-mono text-[10px] tracking-widest text-text-muted space-y-1">

@@ -4,9 +4,24 @@ use std::sync::{Mutex, Once};
 use crate::domain::ports::{
     DatabasePort, CharacterRepository, ProjectRepository, LocationRepository, WorldRuleRepository,
     TimelineRepository, RelationshipRepository, BlacklistRepository, SearchPort, SearchResult, EntityType,
-    VectorSearchPort
+    VectorSearchPort, EmbeddingPort
 };
 use zerocopy::AsBytes;
+
+pub struct MockEmbeddingPort;
+
+impl EmbeddingPort for MockEmbeddingPort {
+    fn generate_embedding(&self, text: &str) -> AppResult<Vec<f32>> {
+        // Gera um vetor determinístico baseado no texto para testes
+        let mut embedding = vec![0.0f32; 1536];
+        for (i, char) in text.chars().enumerate() {
+            if i < 1536 {
+                embedding[i] = (char as u32 as f32) / 255.0;
+            }
+        }
+        Ok(embedding)
+    }
+}
 
 static SQLITE_VEC_INIT: Once = Once::new();
 
@@ -24,6 +39,7 @@ use crate::domain::error::{AppError, AppResult};
 
 pub struct SqliteDatabase {
     pub connection: Mutex<Connection>,
+    pub embedding_port: Box<dyn EmbeddingPort + Send + Sync>,
 }
 
 impl SqliteDatabase {
@@ -42,7 +58,10 @@ impl SqliteDatabase {
         // Enable WAL mode for better concurrency
         connection.pragma_update(None, "journal_mode", &"WAL")?;
         
-        Ok(SqliteDatabase { connection: Mutex::new(connection) })
+        Ok(SqliteDatabase { 
+            connection: Mutex::new(connection),
+            embedding_port: Box::new(MockEmbeddingPort),
+        })
     }
 
     pub fn run_migrations(&self) -> Result<()> {

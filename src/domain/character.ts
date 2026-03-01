@@ -114,4 +114,8 @@ export class Character {
   public get ocean_scores(): OceanScores {
     return this.props.ocean_scores;
   }
+
+  public toSnapshot(): string {
+    return `${this.name}, ${this.age} anos. ${this.props.occupation}. Objetivos: ${this.props.goal}. Conflito: ${this.props.internal_conflict}.`;
+  }
 }
