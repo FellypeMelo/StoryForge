@@ -30,11 +30,11 @@
     - [x] 🔴 RED: Test for `health_check` (DB status)
     - [x] 🟢 GREEN: Implement `health_check` command
     - [x] 🔵 REFACTOR: Standardize `Result<T, AppError>` return types
-- [~] Task: Configure CI/CD Quality Pipeline
-    - [ ] Set up Vitest (frontend) and Cargo Test (backend)
-    - [ ] Configure ESLint/Prettier and Clippy (deny warnings)
-    - [ ] Create `pnpm test:all` root script
-- [ ] Task: Conductor - User Manual Verification 'IPC & Infrastructure Integration' (Protocol in workflow.md)
+- [x] Task: Configure CI/CD Quality Pipeline [27e94fd]
+    - [x] Set up Vitest (frontend) and Cargo Test (backend)
+    - [x] Configure ESLint/Prettier and Clippy (deny warnings)
+    - [x] Create `pnpm test:all` root script
+- [~] Task: Conductor - User Manual Verification 'IPC & Infrastructure Integration' (Protocol in workflow.md)
 
 ## Phase 4: UI Shell & Finalization
 - [ ] Task: Initialize UI Foundation
