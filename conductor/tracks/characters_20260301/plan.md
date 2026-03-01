@@ -10,10 +10,10 @@
 - [x] Task: Conductor - User Manual Verification 'Domain Entities & Validation' (Protocol in workflow.md)
 
 ## Phase 2: Persistence & Infrastructure
-- [ ] Task: Character Database Schema & Migration
-    - [ ] 🔴 RED: Test migration creates characters table
-    - [ ] 🟢 GREEN: Implement SQLite migration for characters
-- [ ] Task: CharacterRepository Implementation
+- [x] Task: Character Database Schema & Migration (b81851c)
+    - [x] 🔴 RED: Test migration creates characters table
+    - [x] 🟢 GREEN: Implement SQLite migration for characters
+- [~] Task: CharacterRepository Implementation
     - [ ] 🔴 RED: Test CRUD operations via Repository
     - [ ] 🟢 GREEN: Implement SqliteCharacterRepository
 - [ ] Task: Conductor - User Manual Verification 'Persistence & Infrastructure' (Protocol in workflow.md)
