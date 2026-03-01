@@ -28,10 +28,10 @@
 - [x] Task: Integrate `sqlite-vec` extension [3a3b6b2]
     - [x] 🔴 RED: Test vector table creation without extension.
     - [x] 🟢 GREEN: Configure `libsqlite3-sys` and load `sqlite-vec` in Rust.
-- [ ] Task: Implement `SqliteVectorSearchPort`
-    - [ ] 🔴 RED: Test cosine similarity retrieval.
-    - [ ] 🟢 GREEN: Create embedding mapping table and implement search logic.
-- [ ] Task: Conductor - User Manual Verification 'Vector Search (sqlite-vec)' (Protocol in workflow.md)
+- [x] Task: Implement `SqliteVectorSearchPort` [9ceae9f]
+    - [x] 🔴 RED: Test cosine similarity retrieval.
+    - [x] 🟢 GREEN: Create embedding mapping table and implement search logic.
+- [x] Task: Conductor - User Manual Verification 'Vector Search (sqlite-vec)' (Protocol in workflow.md) [9ceae9f]
 
 ## Phase 4: RAG Pipeline & Context Management
 - [ ] Task: Implement `TokenBudgetCalculator`
