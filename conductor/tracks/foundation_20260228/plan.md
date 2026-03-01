@@ -17,11 +17,11 @@
     - [x] 🔴 RED: Test for DB file creation in efhemeral dir
     - [x] 🟢 GREEN: Initialize SQLite in backend Rust
     - [x] 🔵 REFACTOR: Extract `DatabasePort` trait in domain
-- [~] Task: Migration System
-    - [ ] 🔴 RED: Test for schema migration execution
-    - [ ] 🟢 GREEN: Implement versioned/incremental migration logic
-    - [ ] Configure WAL mode and `app_data_dir` persistence
-- [ ] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' (Protocol in workflow.md)
+- [x] Task: Migration System [7222110]
+    - [x] 🔴 RED: Test for schema migration execution
+    - [x] 🟢 GREEN: Implement versioned/incremental migration logic
+    - [x] Configure WAL mode and `app_data_dir` persistence
+- [~] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' (Protocol in workflow.md)
 
 ## Phase 3: IPC & Infrastructure Integration
 - [ ] Task: Implement IPC Bridge Commands
