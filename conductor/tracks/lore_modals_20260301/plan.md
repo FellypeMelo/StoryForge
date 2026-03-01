@@ -12,9 +12,9 @@
 - [x] Task: Integrate `LocationForm` into Modal [bfb63d6]
     - [x] 🔴 RED: Test that clicking "Adicionar Local" in `BibleDashboard` opens the `SlideOver` with `LocationForm`.
     - [x] 🟢 GREEN: Update `handleCreateLocation` to manage modal visibility state instead of using `prompt`.
-- [ ] Task: Integrate `WorldRuleForm` into Modal
-    - [ ] 🔴 RED: Test that clicking "Adicionar Regra" in `BibleDashboard` opens the `SlideOver` with `WorldRuleForm`.
-    - [ ] 🟢 GREEN: Update `handleCreateRule` to manage modal visibility state.
+- [x] Task: Integrate `WorldRuleForm` into Modal [6df5125]
+    - [x] 🔴 RED: Test that clicking "Adicionar Regra" in `BibleDashboard` opens the `SlideOver` with `WorldRuleForm`.
+    - [x] 🟢 GREEN: Update `handleCreateRule` to manage modal visibility state.
 - [ ] Task: Integrate `CharacterWizard` into Modal
     - [ ] 🔴 RED: Test that clicking "Novo Personagem" opens the `SlideOver` containing the existing `CharacterWizard`.
     - [ ] 🟢 GREEN: Refactor `BibleDashboard` to show `CharacterWizard` inside the modal system.
