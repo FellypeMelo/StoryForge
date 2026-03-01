@@ -11,6 +11,9 @@ pub enum AppError {
     
     #[error("Internal error: {0}")]
     Internal(String),
+
+    #[error("Validation error: {0}")]
+    Validation(String),
 }
 
 pub type AppResult<T> = Result<T, AppError>;
