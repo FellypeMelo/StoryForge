@@ -1,6 +1,6 @@
 # Implementation Plan: Milestone 1 — Fundação & Scaffold
 
-## Phase 1: Project Scaffolding & Architecture
+## Phase 1: Project Scaffolding & Architecture [checkpoint: 12286db]
 - [x] Task: Initialize Tauri v2 + React/TypeScript project [7a20f42]
     - [x] Run initialization command with React template
     - [x] Configure `tauri.conf.json` with least privilege
@@ -10,7 +10,7 @@
     - [x] Create `src/domain`, `src/application`, `src/infrastructure`, `src/ui`
     - [x] Create `src-tauri/src/domain`, `src-tauri/src/application`, `src-tauri/src/infrastructure`, `src-tauri/src/commands`
     - [x] Add `README.md` in domain folders documenting dependency rules
-- [~] Task: Conductor - User Manual Verification 'Project Scaffolding & Architecture' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Project Scaffolding & Architecture' [12286db]
 
 ## Phase 2: Persistence Engine (TDD)
 - [ ] Task: Implement SQLite Base Connection
