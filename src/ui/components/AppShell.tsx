@@ -14,20 +14,43 @@ interface AppShellProps {
   children: ReactNode;
   appVersion?: string;
   dbHealthy?: boolean;
+  onNavigate?: (path: string) => void;
+  currentPath?: string;
 }
 
-const NavItem = ({ icon: Icon, label, active = false, collapsed = false }: { icon: any, label: string, active?: boolean, collapsed?: boolean }) => (
-  <button className={`w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans ${
-    active 
-      ? "text-text-main font-bold tracking-wide" 
-      : "text-text-muted hover:bg-bg-hover hover:text-text-main"
-  }`}>
+const NavItem = ({ 
+  icon: Icon, 
+  label, 
+  active = false, 
+  collapsed = false,
+  onClick
+}: { 
+  icon: any, 
+  label: string, 
+  active?: boolean, 
+  collapsed?: boolean,
+  onClick?: () => void
+}) => (
+  <button 
+    onClick={onClick}
+    className={`w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer ${
+      active 
+        ? "text-text-main font-bold tracking-wide" 
+        : "text-text-muted hover:bg-bg-hover hover:text-text-main"
+    }`}
+  >
     <Icon size={18} strokeWidth={active ? 2.5 : 1.5} />
     {!collapsed && <span className="text-[13px]">{label}</span>}
   </button>
 );
 
-export const AppShell: React.FC<AppShellProps> = ({ children, appVersion, dbHealthy }) => {
+export const AppShell: React.FC<AppShellProps> = ({ 
+  children, 
+  appVersion, 
+  dbHealthy,
+  onNavigate,
+  currentPath = 'dashboard'
+}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -48,11 +71,9 @@ export const AppShell: React.FC<AppShellProps> = ({ children, appVersion, dbHeal
   }, []);
 
   // Auto-dimming logic for flow state
-  // We simulate it by intercepting global keyboard events
   useEffect(() => {
     let timeoutId: number;
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger auto-dimming when pressing shortcuts
       if (e.ctrlKey || e.altKey || e.metaKey) return;
       
       setIsTyping(true);
@@ -83,17 +104,41 @@ export const AppShell: React.FC<AppShellProps> = ({ children, appVersion, dbHeal
           )}
           <button 
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded hover:bg-bg-hover text-text-muted transition-colors mx-auto"
+            className="p-1.5 rounded hover:bg-bg-hover text-text-muted transition-colors mx-auto cursor-pointer"
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-8">
-          <NavItem icon={Home} label="Dashboard" active collapsed={collapsed} />
-          <NavItem icon={BookOpen} label="Manuscript" collapsed={collapsed} />
-          <NavItem icon={Users} label="Personas" collapsed={collapsed} />
-          <NavItem icon={Layout} label="Architecture" collapsed={collapsed} />
+          <NavItem 
+            icon={Home} 
+            label="Dashboard" 
+            active={currentPath === 'dashboard'} 
+            collapsed={collapsed}
+            onClick={() => onNavigate?.('dashboard')}
+          />
+          <NavItem 
+            icon={BookOpen} 
+            label="Manuscript" 
+            active={currentPath === 'manuscript'}
+            collapsed={collapsed} 
+            onClick={() => onNavigate?.('manuscript')}
+          />
+          <NavItem 
+            icon={Users} 
+            label="Personas" 
+            active={currentPath === 'personas'}
+            collapsed={collapsed} 
+            onClick={() => onNavigate?.('personas')}
+          />
+          <NavItem 
+            icon={Layout} 
+            label="Architecture" 
+            active={currentPath === 'architecture'}
+            collapsed={collapsed} 
+            onClick={() => onNavigate?.('architecture')}
+          />
         </nav>
 
         <div className="p-4 border-t border-border-subtle space-y-2">
