@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { AppShell } from "./ui/components/AppShell";
 
 interface AppInfo {
   name: string;
@@ -32,14 +33,14 @@ function App() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full text-center space-y-8">
-        <div className="space-y-2">
-          <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-            StoryForge
-          </h1>
-          <p className="text-slate-400 text-lg">
-            Building the future of storytelling.
+    <AppShell appVersion={appInfo?.version} dbHealthy={health?.database}>
+      <div className="space-y-8 py-12">
+        <div className="space-y-4">
+          <h2 className="text-4xl font-bold tracking-tight text-slate-100">
+            Welcome to the Forge
+          </h2>
+          <p className="text-slate-400 text-lg max-w-2xl">
+            This is your workspace. Here, you'll craft worlds, breathe life into characters, and weave intricate narratives.
           </p>
         </div>
 
@@ -49,26 +50,37 @@ function App() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg text-left">
-            <h3 className="text-slate-500 text-sm font-medium uppercase tracking-wider">Version</h3>
-            <p className="text-xl font-semibold text-slate-200">{appInfo?.version || "Loading..."}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-blue-500/50 transition-colors group">
+            <h3 className="text-slate-200 font-semibold mb-2 group-hover:text-blue-400 transition-colors">Project Status</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Database</span>
+                <span className={health?.database ? "text-green-400" : "text-yellow-400"}>
+                  {health ? (health.database ? "Connected" : "Disconnected") : "Loading..."}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500">Version</span>
+                <span className="text-slate-300">{appInfo?.version || "..."}</span>
+              </div>
+            </div>
           </div>
-          <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg text-left">
-            <h3 className="text-slate-500 text-sm font-medium uppercase tracking-wider">DB Status</h3>
-            <p className={`text-xl font-semibold ${health?.database ? 'text-green-400' : 'text-yellow-400'}`}>
-              {health ? (health.database ? "Healthy" : "Unhealthy") : "Loading..."}
-            </p>
-          </div>
-        </div>
 
-        <div className="pt-8">
-          <p className="text-slate-500 text-sm italic">
-            "Every story begins with a single word."
-          </p>
+          <div className="p-6 bg-slate-900/50 border border-slate-800 rounded-xl hover:border-indigo-500/50 transition-colors group">
+            <h3 className="text-slate-200 font-semibold mb-2 group-hover:text-indigo-400 transition-colors">Quick Actions</h3>
+            <div className="flex gap-2">
+              <button className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition-colors">
+                New Chapter
+              </button>
+              <button className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition-colors">
+                Add Character
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </main>
+    </AppShell>
   );
 }
 
