@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Story Bible Persistence, Search & RAG Pipeline**
+- [x] **Track: Story Bible Persistence, Search & RAG Pipeline**
 *Link: [./tracks/story_bible_rag_20260301/](./tracks/story_bible_rag_20260301/)*
