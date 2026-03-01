@@ -10,19 +10,19 @@
 - [x] Task: Implement Lore repositories (Characters, Locations, Rules) [49c6785]
     - [x] 🔴 RED: Tests for character and location persistence.
     - [x] 🟢 GREEN: Implement repositories with project-level isolation.
-- [x] Task: Implement Secondary repositories (Timeline, Relationship, Blacklist) [f3cb1cf]
+- [x] Task: Implement Secondary repositories (Timeline, Relationship, Blacklist) [7d7aba5]
     - [x] 🔴 RED: Tests for timeline ordering and relationship graph queries.
     - [x] 🟢 GREEN: Implement remaining repositories.
 - [x] Task: Conductor - User Manual Verification 'SQLite Persistence & CRUD Repositories' (Protocol in workflow.md) [48abb36]
 
-## Phase 2: Full-Text Search (FTS5)
+## Phase 2: Full-Text Search (FTS5) [checkpoint: 7d7aba5]
 - [x] Task: Setup FTS5 Virtual Tables [e447d58]
     - [x] 🔴 RED: Test that queries to non-existent virtual tables fail.
     - [x] 🟢 GREEN: Implement virtual tables for characters and lore content.
-- [ ] Task: Implement `SqliteSearchPort`
-    - [ ] 🔴 RED: Test ranked keyword search for entities.
-    - [ ] 🟢 GREEN: Implement FTS5 query logic in Infrastructure layer.
-- [ ] Task: Conductor - User Manual Verification 'Full-Text Search (FTS5)' (Protocol in workflow.md)
+- [x] Task: Implement `SqliteSearchPort` [7d7aba5]
+    - [x] 🔴 RED: Test ranked keyword search for entities.
+    - [x] 🟢 GREEN: Implement FTS5 query logic in Infrastructure layer.
+- [x] Task: Conductor - User Manual Verification 'Full-Text Search (FTS5)' (Protocol in workflow.md) [7d7aba5]
 
 ## Phase 3: Vector Search (sqlite-vec)
 - [ ] Task: Integrate `sqlite-vec` extension
