@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { AppShell } from "./ui/components/AppShell";
 import { CharacterGallery } from "./ui/components/CharacterGallery";
+import { CharacterEditor } from "./ui/components/CharacterEditor";
 import { Character } from "./domain/character";
 
 interface AppInfo {
@@ -20,6 +21,7 @@ function App() {
   const [currentPath, setCurrentPath] = useState<string>('dashboard');
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
 
   // Initializing with a default project for now
   const activeProjectId = 'project-1';
@@ -31,7 +33,6 @@ function App() {
       setCharacters(list);
     } catch (err) {
       console.error("Failed to fetch characters:", err);
-      // We don't set global error here to not block the whole app if one view fails
     } finally {
       setIsLoading(false);
     }
@@ -56,6 +57,7 @@ function App() {
   useEffect(() => {
     if (currentPath === 'personas') {
       fetchCharacters();
+      setEditingCharacter(null); // Reset edit state when navigating back to gallery
     }
   }, [currentPath]);
 
@@ -64,17 +66,37 @@ function App() {
       const name = prompt("Enter character name:");
       if (!name) return;
 
-      await invoke("create_character", { projectId: activeProjectId, name });
-      await fetchCharacters();
+      const newChar = await invoke<Character>("create_character", { projectId: activeProjectId, name });
+      setEditingCharacter(newChar);
     } catch (err) {
       console.error("Failed to create character:", err);
       alert("Failed to create character: " + err);
     }
   };
 
+  const handleSaveCharacter = async (char: Character) => {
+    try {
+      await invoke("update_character", { character: char });
+      setEditingCharacter(null);
+      await fetchCharacters();
+    } catch (err) {
+      console.error("Failed to update character:", err);
+      alert("Failed to update character: " + err);
+    }
+  };
+
   const renderContent = () => {
     switch (currentPath) {
       case 'personas':
+        if (editingCharacter) {
+          return (
+            <CharacterEditor 
+              character={editingCharacter} 
+              onSave={handleSaveCharacter} 
+              onCancel={() => setEditingCharacter(null)} 
+            />
+          );
+        }
         return (
           <div className="space-y-12 py-8">
             <header className="space-y-6">
@@ -94,7 +116,7 @@ function App() {
               <CharacterGallery 
                 characters={characters} 
                 onCreateNew={handleCreateCharacter}
-                onSelect={(char) => console.log('Selected:', char)}
+                onSelect={(char) => setEditingCharacter(char)}
               />
             )}
           </div>
