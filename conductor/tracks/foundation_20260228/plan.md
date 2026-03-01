@@ -36,9 +36,9 @@
     - [x] Create `pnpm test:all` root script
 - [x] Task: Conductor - User Manual Verification 'IPC & Infrastructure Integration' [188d25e]
 
-## Phase 4: UI Shell & Finalization
+## Phase 4: UI Shell & Finalization [checkpoint: 49c8f3b]
 - [x] Task: Initialize UI Foundation [861a279]
     - [x] Install and configure Tailwind CSS
     - [x] Create responsive `<AppShell>` with Dark Theme
     - [x] Implement layout with sidebar and main content area
-- [~] Task: Conductor - User Manual Verification 'UI Shell & Finalization' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'UI Shell & Finalization' [49c8f3b]
