@@ -7,9 +7,9 @@
 - [x] Task: Implement `SqliteProjectRepository` [bcd85c5]
     - [x] 🔴 RED: Test for project creation and retrieval.
     - [x] 🟢 GREEN: Implement basic CRUD in `infrastructure/sqlite/project-repository.rs`.
-- [ ] Task: Implement Lore repositories (Characters, Locations, Rules)
-    - [ ] 🔴 RED: Tests for character and location persistence.
-    - [ ] 🟢 GREEN: Implement repositories with project-level isolation.
+- [x] Task: Implement Lore repositories (Characters, Locations, Rules) [49c6785]
+    - [x] 🔴 RED: Tests for character and location persistence.
+    - [x] 🟢 GREEN: Implement repositories with project-level isolation.
 - [ ] Task: Implement Secondary repositories (Timeline, Relationship, Blacklist)
     - [ ] 🔴 RED: Tests for timeline ordering and relationship graph queries.
     - [ ] 🟢 GREEN: Implement remaining repositories.
