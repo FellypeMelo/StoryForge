@@ -16,9 +16,9 @@
 - [x] Task: Conductor - User Manual Verification 'SQLite Persistence & CRUD Repositories' (Protocol in workflow.md) [48abb36]
 
 ## Phase 2: Full-Text Search (FTS5)
-- [ ] Task: Setup FTS5 Virtual Tables
-    - [ ] 🔴 RED: Test that queries to non-existent virtual tables fail.
-    - [ ] 🟢 GREEN: Implement virtual tables for characters and lore content.
+- [x] Task: Setup FTS5 Virtual Tables [e447d58]
+    - [x] 🔴 RED: Test that queries to non-existent virtual tables fail.
+    - [x] 🟢 GREEN: Implement virtual tables for characters and lore content.
 - [ ] Task: Implement `SqliteSearchPort`
     - [ ] 🔴 RED: Test ranked keyword search for entities.
     - [ ] 🟢 GREEN: Implement FTS5 query logic in Infrastructure layer.
