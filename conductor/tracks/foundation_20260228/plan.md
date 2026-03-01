@@ -12,7 +12,7 @@
     - [x] Add `README.md` in domain folders documenting dependency rules
 - [x] Task: Conductor - User Manual Verification 'Project Scaffolding & Architecture' [12286db]
 
-## Phase 2: Persistence Engine (TDD)
+## Phase 2: Persistence Engine (TDD) [checkpoint: 2bafec7]
 - [x] Task: Implement SQLite Base Connection [1866473]
     - [x] 🔴 RED: Test for DB file creation in efhemeral dir
     - [x] 🟢 GREEN: Initialize SQLite in backend Rust
@@ -21,7 +21,7 @@
     - [x] 🔴 RED: Test for schema migration execution
     - [x] 🟢 GREEN: Implement versioned/incremental migration logic
     - [x] Configure WAL mode and `app_data_dir` persistence
-- [~] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' [2bafec7]
 
 ## Phase 3: IPC & Infrastructure Integration
 - [ ] Task: Implement IPC Bridge Commands
