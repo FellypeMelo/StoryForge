@@ -1,12 +1,12 @@
 # Implementation Plan: Milestone 1 — Fundação & Scaffold
 
 ## Phase 1: Project Scaffolding & Architecture
-- [x] Task: Initialize Tauri v2 + React/TypeScript project
+- [x] Task: Initialize Tauri v2 + React/TypeScript project [7a20f42]
     - [x] Run initialization command with React template
     - [x] Configure `tauri.conf.json` with least privilege
     - [x] Clean up default boilerplate (logos, styles)
     - [x] Verify build opens "StoryForge" window
-- [x] Task: Establish Clean Architecture directory structure
+- [x] Task: Establish Clean Architecture directory structure [7a20f42]
     - [x] Create `src/domain`, `src/application`, `src/infrastructure`, `src/ui`
     - [x] Create `src-tauri/src/domain`, `src-tauri/src/application`, `src-tauri/src/infrastructure`, `src-tauri/src/commands`
     - [x] Add `README.md` in domain folders documenting dependency rules
