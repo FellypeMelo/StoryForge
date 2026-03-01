@@ -37,10 +37,10 @@
 - [x] Task: Implement `TokenBudgetCalculator` [8923272]
     - [x] 🔴 RED: Test budget overflow detection.
     - [x] 🟢 GREEN: Implement pure domain service for token estimation.
-- [ ] Task: Implement `ContextInjector` Use Case
-    - [ ] 🔴 RED: Test automated entity detection and snippet retrieval.
-    - [ ] 🟢 GREEN: Orchestrate Search/Vector ports to build the continuity block.
-- [ ] Task: Conductor - User Manual Verification 'RAG Pipeline & Context Management' (Protocol in workflow.md)
+- [x] Task: Implement `ContextInjector` Use Case [e9bf81c]
+    - [x] 🔴 RED: Test automated entity detection and snippet retrieval.
+    - [x] 🟢 GREEN: Orchestrate Search/Vector ports to build the continuity block.
+- [x] Task: Conductor - User Manual Verification 'RAG Pipeline & Context Management' (Protocol in workflow.md) [e9bf81c]
 
 ## Phase 5: Story Bible UI Dashboard
 - [ ] Task: Implement Bible Tabbed Interface
