@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Implement Story Bible Domain Entities, Repository Ports, and UI Dashboard with Mocks.**
+- [x] **Track: Implement Story Bible Domain Entities, Repository Ports, and UI Dashboard with Mocks.**
 *Link: [./tracks/story_bible_20260301/](./tracks/story_bible_20260301/)*
