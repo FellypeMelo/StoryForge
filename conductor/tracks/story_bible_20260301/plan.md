@@ -6,13 +6,13 @@
     - [x] 🟢 GREEN: Implement `ProjectId` using `uuid`.
     - [x] 🔴 RED: Test for `CharacterId` validation.
     - [x] 🟢 GREEN: Implement `CharacterId`.
-- [ ] Task: Implement Core Entities (Project, Character, Location)
-    - [ ] 🔴 RED: Test for `Project` entity validation.
-    - [ ] 🟢 GREEN: Implement `Project` entity.
-    - [ ] 🔴 RED: Test for `Character` entity (OCEAN scores).
-    - [ ] 🟢 GREEN: Implement `Character` entity.
-    - [ ] 🔴 RED: Test for `Location` entity.
-    - [ ] 🟢 GREEN: Implement `Location` entity.
+- [x] Task: Implement Core Entities (Project, Character, Location) [350082c]
+    - [x] 🔴 RED: Test for `Project` entity validation.
+    - [x] 🟢 GREEN: Implement `Project` entity.
+    - [x] 🔴 RED: Test for `Character` entity (OCEAN scores).
+    - [x] 🟢 GREEN: Implement `Character` entity.
+    - [x] 🔴 RED: Test for `Location` entity.
+    - [x] 🟢 GREEN: Implement `Location` entity.
 - [ ] Task: Implement Secondary Entities (WorldRule, TimelineEvent, Relationship, BlacklistEntry)
     - [ ] 🔴 RED: Test for `WorldRule` validation.
     - [ ] 🟢 GREEN: Implement `WorldRule`.
