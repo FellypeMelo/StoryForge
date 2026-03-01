@@ -25,10 +25,10 @@
 - [x] Task: Conductor - User Manual Verification 'IPC Bridge & Backend Application' (Protocol in workflow.md)
 
 ## Phase 4: UI Shell Integration & Gallery
-- [ ] Task: Sidebar & Navigation Update
-    - [ ] 🔴 RED: Test navigation to Character view
-    - [ ] 🟢 GREEN: Update AppShell sidebar and routing
-- [ ] Task: Character Gallery View
+- [x] Task: Sidebar & Navigation Update (4fcaf28)
+    - [x] 🔴 RED: Test navigation to Character view
+    - [x] 🟢 GREEN: Update AppShell sidebar and routing
+- [~] Task: Character Gallery View
     - [ ] 🔴 RED: Test rendering of character list
     - [ ] 🟢 GREEN: Implement responsive grid with character cards
 - [ ] Task: Conductor - User Manual Verification 'UI Shell Integration & Gallery' (Protocol in workflow.md)
