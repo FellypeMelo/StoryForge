@@ -1,12 +1,17 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { CharacterEditor } from "./CharacterEditor";
+import { CharacterForm } from "./CharacterForm";
 import { Character } from "../../domain/character";
-import React from "react";
 
-const mockCharacter: Character = {
-  id: "char-123",
-  project_id: "proj-123",
+import { CharacterId } from "../../domain/value-objects/character-id";
+import { ProjectId } from "../../domain/value-objects/project-id";
+
+const charId = CharacterId.generate();
+const projectId = ProjectId.generate();
+
+const mockCharacter = Character.create({
+  id: charId,
+  projectId: projectId,
   name: "Original Name",
   age: 30,
   occupation: "Writer",
@@ -23,11 +28,11 @@ const mockCharacter: Character = {
   },
   voice: "Formal",
   mannerisms: "Scratches chin",
-};
+});
 
-describe("CharacterEditor", () => {
+describe("CharacterForm", () => {
   it("should render all form fields with initial data", () => {
-    render(<CharacterEditor character={mockCharacter} onSave={() => {}} onCancel={() => {}} />);
+    render(<CharacterForm character={mockCharacter} onSave={() => {}} onCancel={() => {}} />);
 
     expect(screen.getByDisplayValue("Original Name")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Writer")).toBeInTheDocument();
@@ -37,7 +42,7 @@ describe("CharacterEditor", () => {
 
   it("should call onSave with updated data when form is submitted", async () => {
     const onSave = vi.fn();
-    render(<CharacterEditor character={mockCharacter} onSave={onSave} onCancel={() => {}} />);
+    render(<CharacterForm character={mockCharacter} onSave={onSave} onCancel={() => {}} />);
 
     const nameInput = screen.getByLabelText(/Name/i);
     fireEvent.change(nameInput, { target: { value: "Updated Name" } });
@@ -45,16 +50,14 @@ describe("CharacterEditor", () => {
     const saveButton = screen.getByText(/Save Changes/i);
     fireEvent.click(saveButton);
 
-    expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: "Updated Name",
-        id: "char-123",
-      }),
-    );
+    expect(onSave).toHaveBeenCalled();
+    const savedCharacter = onSave.mock.calls[0][0] as Character;
+    expect(savedCharacter.name).toBe("Updated Name");
+    expect(savedCharacter.id.equals(charId)).toBe(true);
   });
 
   it("should show validation error for empty name", () => {
-    render(<CharacterEditor character={mockCharacter} onSave={() => {}} onCancel={() => {}} />);
+    render(<CharacterForm character={mockCharacter} onSave={() => {}} onCancel={() => {}} />);
 
     const nameInput = screen.getByLabelText(/Name/i);
     fireEvent.change(nameInput, { target: { value: "" } });

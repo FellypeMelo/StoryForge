@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import { Character, OceanScores } from "../../domain/character";
+import { Character, CharacterProps, OceanScores } from "../../domain/character";
 import { Save, X, User, Brain, ScrollText } from "lucide-react";
 
-interface CharacterEditorProps {
+interface CharacterFormProps {
   character: Character;
   onSave: (character: Character) => void;
   onCancel: () => void;
 }
 
-export function CharacterEditor({ 
+export function CharacterForm({ 
   character, 
   onSave, 
   onCancel 
-}: CharacterEditorProps) {
-  const [formData, setFormData] = useState<Character>({ ...character });
+}: CharacterFormProps) {
+  const [formData, setFormData] = useState<CharacterProps>(character.toProps());
   const [errors, setErrors] = useState<{ name?: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -46,7 +46,11 @@ export function CharacterEditor({
       setErrors({ name: "Name is required" });
       return;
     }
-    onSave(formData);
+    onSave(Character.create({
+      ...formData,
+      id: formData.id,
+      projectId: formData.projectId
+    }));
   };
 
   const oceanTraits: { key: keyof OceanScores; label: string }[] = [

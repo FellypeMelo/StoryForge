@@ -1,18 +1,17 @@
-import React from "react";
 import { Character } from "../../domain/character";
 import { User, ShieldQuestion } from "lucide-react";
 
-interface CharacterGalleryProps {
+interface CharacterListProps {
   characters: Character[];
   onSelect?: (character: Character) => void;
   onCreateNew?: () => void;
 }
 
-export function CharacterGallery({ 
+export function CharacterList({ 
   characters, 
   onSelect,
   onCreateNew 
-}: CharacterGalleryProps) {
+}: CharacterListProps) {
   if (characters.length === 0) {
     return (
       <div className="py-20 border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center text-center space-y-6">
@@ -52,7 +51,7 @@ export function CharacterGallery({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {characters.map((char) => (
           <div
-            key={char.id}
+            key={char.id.value}
             onClick={() => onSelect?.(char)}
             className="group bg-bg-base border border-border-subtle p-6 rounded-lg space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full"
           >
@@ -61,7 +60,7 @@ export function CharacterGallery({
                 <User size={24} strokeWidth={1.5} />
               </div>
               <span className="text-[10px] font-mono tracking-tighter text-text-muted opacity-50 uppercase">
-                {char.id.slice(0, 8)}
+                {char.id.value.slice(0, 8)}
               </span>
             </div>
 
