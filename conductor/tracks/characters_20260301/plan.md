@@ -4,10 +4,10 @@
 - [x] Task: Define Character Value Objects & Entity (Backend) (2b429ea)
     - [x] 🔴 RED: Test CharacterId and Character validation
     - [x] 🟢 GREEN: Implement Character entity with strict validation
-- [~] Task: Define Character Value Objects & Entity (Frontend)
-    - [ ] 🔴 RED: Test Character schema validation (Zod/etc)
-    - [ ] 🟢 GREEN: Implement TypeScript entities and types
-- [ ] Task: Conductor - User Manual Verification 'Domain Entities & Validation' (Protocol in workflow.md)
+- [x] Task: Define Character Value Objects & Entity (Frontend) (1982026)
+    - [x] 🔴 RED: Test Character schema validation (Zod/etc)
+    - [x] 🟢 GREEN: Implement TypeScript entities and types
+- [~] Task: Conductor - User Manual Verification 'Domain Entities & Validation' (Protocol in workflow.md)
 
 ## Phase 2: Persistence & Infrastructure
 - [ ] Task: Character Database Schema & Migration
