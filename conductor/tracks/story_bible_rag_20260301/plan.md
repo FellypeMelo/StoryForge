@@ -4,9 +4,9 @@
 - [x] Task: Implement SQL Migrations [55c6243]
     - [x] Create migration for `projects`, `characters`, and `locations` tables.
     - [x] Create migration for `world_rules`, `timeline_events`, `relationships`, and `blacklist_entries`.
-- [ ] Task: Implement `SqliteProjectRepository`
-    - [ ] 🔴 RED: Test for project creation and retrieval.
-    - [ ] 🟢 GREEN: Implement basic CRUD in `infrastructure/sqlite/project-repository.rs`.
+- [x] Task: Implement `SqliteProjectRepository` [bcd85c5]
+    - [x] 🔴 RED: Test for project creation and retrieval.
+    - [x] 🟢 GREEN: Implement basic CRUD in `infrastructure/sqlite/project-repository.rs`.
 - [ ] Task: Implement Lore repositories (Characters, Locations, Rules)
     - [ ] 🔴 RED: Tests for character and location persistence.
     - [ ] 🟢 GREEN: Implement repositories with project-level isolation.
