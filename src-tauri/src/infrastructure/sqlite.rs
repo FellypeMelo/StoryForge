@@ -138,6 +138,45 @@ impl SqliteDatabase {
                  COMMIT;"
             )?;
         }
+
+        let current_version: i32 = conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;
+        if current_version < 4 {
+            conn.execute_batch(
+                "BEGIN;
+                 -- Virtual table for unified Lore search
+                 CREATE VIRTUAL TABLE IF NOT EXISTS lore_search USING fts5(
+                    entity_id UNINDEXED,
+                    project_id UNINDEXED,
+                    type UNINDEXED,
+                    title,
+                    content
+                 );
+                 
+                 -- Trigger to keep lore_search updated when a character is added/updated
+                 CREATE TRIGGER IF NOT EXISTS trg_characters_ai AFTER INSERT ON characters BEGIN
+                    INSERT INTO lore_search (entity_id, project_id, type, title, content)
+                    VALUES (new.id, new.project_id, 'character', new.name, new.occupation || ' ' || new.physical_description);
+                 END;
+                 
+                 CREATE TRIGGER IF NOT EXISTS trg_locations_ai AFTER INSERT ON locations BEGIN
+                    INSERT INTO lore_search (entity_id, project_id, type, title, content)
+                    VALUES (new.id, new.project_id, 'location', new.name, new.description);
+                 END;
+
+                 CREATE TRIGGER IF NOT EXISTS trg_world_rules_ai AFTER INSERT ON world_rules BEGIN
+                    INSERT INTO lore_search (entity_id, project_id, type, title, content)
+                    VALUES (new.id, new.project_id, 'world_rule', new.category, new.content);
+                 END;
+
+                 CREATE TRIGGER IF NOT EXISTS trg_timeline_events_ai AFTER INSERT ON timeline_events BEGIN
+                    INSERT INTO lore_search (entity_id, project_id, type, title, content)
+                    VALUES (new.id, new.project_id, 'timeline_event', new.date, new.description);
+                 END;
+
+                 PRAGMA user_version = 4;
+                 COMMIT;"
+            )?;
+        }
         
         Ok(())
     }
@@ -1139,5 +1178,23 @@ mod tests {
         repo.delete(&entry.id).expect("Failed to delete entry");
         let result = repo.get_by_id(&entry.id);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_fts5_tables_exist() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_fts5.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        let table_exists: bool = conn.query_row(
+            "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='lore_search'",
+            [],
+            |row| row.get(0),
+        ).map(|count: i32| count > 0).expect("Failed to query sqlite_master");
+        
+        assert!(table_exists, "FTS5 virtual table lore_search should exist after migration");
     }
 }
