@@ -10,9 +10,9 @@
 - [x] Task: Implement Lore repositories (Characters, Locations, Rules) [49c6785]
     - [x] 🔴 RED: Tests for character and location persistence.
     - [x] 🟢 GREEN: Implement repositories with project-level isolation.
-- [ ] Task: Implement Secondary repositories (Timeline, Relationship, Blacklist)
-    - [ ] 🔴 RED: Tests for timeline ordering and relationship graph queries.
-    - [ ] 🟢 GREEN: Implement remaining repositories.
+- [x] Task: Implement Secondary repositories (Timeline, Relationship, Blacklist) [f3cb1cf]
+    - [x] 🔴 RED: Tests for timeline ordering and relationship graph queries.
+    - [x] 🟢 GREEN: Implement remaining repositories.
 - [ ] Task: Conductor - User Manual Verification 'SQLite Persistence & CRUD Repositories' (Protocol in workflow.md)
 
 ## Phase 2: Full-Text Search (FTS5)
