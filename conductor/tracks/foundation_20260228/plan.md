@@ -24,13 +24,13 @@
 - [x] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' [2bafec7]
 
 ## Phase 3: IPC & Infrastructure Integration
-- [~] Task: Implement IPC Bridge Commands
-    - [ ] 🔴 RED: Test for `get_app_info` command
-    - [ ] 🟢 GREEN: Implement `get_app_info` returning version
-    - [ ] 🔴 RED: Test for `health_check` (DB status)
-    - [ ] 🟢 GREEN: Implement `health_check` command
-    - [ ] 🔵 REFACTOR: Standardize `Result<T, AppError>` return types
-- [ ] Task: Configure CI/CD Quality Pipeline
+- [x] Task: Implement IPC Bridge Commands [5611c8a]
+    - [x] 🔴 RED: Test for `get_app_info` command
+    - [x] 🟢 GREEN: Implement `get_app_info` returning version
+    - [x] 🔴 RED: Test for `health_check` (DB status)
+    - [x] 🟢 GREEN: Implement `health_check` command
+    - [x] 🔵 REFACTOR: Standardize `Result<T, AppError>` return types
+- [~] Task: Configure CI/CD Quality Pipeline
     - [ ] Set up Vitest (frontend) and Cargo Test (backend)
     - [ ] Configure ESLint/Prettier and Clippy (deny warnings)
     - [ ] Create `pnpm test:all` root script
