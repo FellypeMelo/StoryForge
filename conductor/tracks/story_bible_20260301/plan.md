@@ -13,15 +13,15 @@
     - [x] 🟢 GREEN: Implement `Character` entity.
     - [x] 🔴 RED: Test for `Location` entity.
     - [x] 🟢 GREEN: Implement `Location` entity.
-- [ ] Task: Implement Secondary Entities (WorldRule, TimelineEvent, Relationship, BlacklistEntry)
-    - [ ] 🔴 RED: Test for `WorldRule` validation.
-    - [ ] 🟢 GREEN: Implement `WorldRule`.
-    - [ ] 🔴 RED: Test for `TimelineEvent`.
-    - [ ] 🟢 GREEN: Implement `TimelineEvent`.
-    - [ ] 🔴 RED: Test for `Relationship`.
-    - [ ] 🟢 GREEN: Implement `Relationship`.
-    - [ ] 🔴 RED: Test for `BlacklistEntry`.
-    - [ ] 🟢 GREEN: Implement `BlacklistEntry`.
+- [x] Task: Implement Secondary Entities (WorldRule, TimelineEvent, Relationship, BlacklistEntry) [46755b7]
+    - [x] 🔴 RED: Test for `WorldRule` validation.
+    - [x] 🟢 GREEN: Implement `WorldRule`.
+    - [x] 🔴 RED: Test for `TimelineEvent`.
+    - [x] 🟢 GREEN: Implement `TimelineEvent`.
+    - [x] 🔴 RED: Test for `Relationship`.
+    - [x] 🟢 GREEN: Implement `Relationship`.
+    - [x] 🔴 RED: Test for `BlacklistEntry`.
+    - [x] 🟢 GREEN: Implement `BlacklistEntry`.
 - [ ] Task: Conductor - User Manual Verification 'Domain Entities & Value Objects' (Protocol in workflow.md)
 
 ## Phase 2: Repository Ports (Interfaces)
