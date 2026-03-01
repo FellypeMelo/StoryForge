@@ -1,11 +1,11 @@
 # Plan: Story Bible Domain & UI (Mocks)
 
 ## Phase 1: Domain Entities & Value Objects
-- [ ] Task: Create Domain Value Objects for IDs (ProjectId, CharacterId, etc.)
-    - [ ] 🔴 RED: Test for `ProjectId` validation and equality.
-    - [ ] 🟢 GREEN: Implement `ProjectId` using `uuid`.
-    - [ ] 🔴 RED: Test for `CharacterId` validation.
-    - [ ] 🟢 GREEN: Implement `CharacterId`.
+- [x] Task: Create Domain Value Objects for IDs (ProjectId, CharacterId, etc.) [b6fedc7]
+    - [x] 🔴 RED: Test for `ProjectId` validation and equality.
+    - [x] 🟢 GREEN: Implement `ProjectId` using `uuid`.
+    - [x] 🔴 RED: Test for `CharacterId` validation.
+    - [x] 🟢 GREEN: Implement `CharacterId`.
 - [ ] Task: Implement Core Entities (Project, Character, Location)
     - [ ] 🔴 RED: Test for `Project` entity validation.
     - [ ] 🟢 GREEN: Implement `Project` entity.
