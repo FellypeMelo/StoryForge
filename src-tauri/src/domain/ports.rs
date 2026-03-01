@@ -34,6 +34,10 @@ pub trait SearchPort {
     fn search(&self, project_id: &ProjectId, query: &str, types: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>>;
 }
 
+pub trait VectorSearchPort {
+    fn find_similar(&self, project_id: &ProjectId, embedding: Vec<f32>, top_k: usize, types: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>>;
+}
+
 pub trait ProjectRepository {
     fn create(&self, project: &Project) -> AppResult<()>;
     fn get_by_id(&self, id: &ProjectId) -> AppResult<Project>;

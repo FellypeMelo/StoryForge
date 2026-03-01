@@ -3,8 +3,10 @@ use std::path::Path;
 use std::sync::{Mutex, Once};
 use crate::domain::ports::{
     DatabasePort, CharacterRepository, ProjectRepository, LocationRepository, WorldRuleRepository,
-    TimelineRepository, RelationshipRepository, BlacklistRepository, SearchPort, SearchResult, EntityType
+    TimelineRepository, RelationshipRepository, BlacklistRepository, SearchPort, SearchResult, EntityType,
+    VectorSearchPort
 };
+use zerocopy::AsBytes;
 
 static SQLITE_VEC_INIT: Once = Once::new();
 
@@ -189,6 +191,21 @@ impl SqliteDatabase {
                  COMMIT;"
             )?;
         }
+
+        let current_version: i32 = conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;
+        if current_version < 5 {
+            conn.execute_batch(
+                "BEGIN;
+                 -- Virtual table for vector search (1536 dims for OpenAI standard, can be adjusted)
+                 -- We use primary key to link back to entities
+                 CREATE VIRTUAL TABLE IF NOT EXISTS lore_vectors USING vec0(
+                    entity_id TEXT PRIMARY KEY,
+                    embedding float[1536]
+                 );
+                 PRAGMA user_version = 5;
+                 COMMIT;"
+            )?;
+        }
         
         Ok(())
     }
@@ -216,6 +233,74 @@ impl DatabasePort for SqliteDatabase {
         } else {
             0
         }
+    }
+}
+
+impl VectorSearchPort for SqliteDatabase {
+    fn find_similar(&self, project_id: &ProjectId, embedding: Vec<f32>, top_k: usize, types: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        
+        // We join lore_search to filter by project_id and get snippets
+        // BM25 is not used here, we use vector distance
+        let mut sql = "SELECT v.entity_id, s.type, s.title || ': ' || s.content, v.distance 
+                       FROM lore_vectors v
+                       JOIN lore_search s ON v.entity_id = s.entity_id
+                       WHERE s.project_id = ? AND v.embedding MATCH ? AND k = ?".to_string();
+        
+        if let Some(ref t) = types {
+            if !t.is_empty() {
+                let type_placeholders: Vec<String> = t.iter().map(|_| "?".to_string()).collect();
+                sql.push_str(&format!(" AND s.type IN ({})", type_placeholders.join(",")));
+            }
+        }
+        
+        sql.push_str(" ORDER BY v.distance ASC");
+        
+        let mut stmt = conn.prepare(&sql).map_err(AppError::from)?;
+        
+        let mut params: Vec<Box<dyn rusqlite::ToSql>> = vec![
+            Box::new(project_id.0.clone()),
+            Box::new(embedding.as_bytes().to_vec()),
+            Box::new(top_k as i64),
+        ];
+        
+        if let Some(t) = types {
+            for entity_type in t {
+                let type_str = match entity_type {
+                    EntityType::Character => "character",
+                    EntityType::Location => "location",
+                    EntityType::WorldRule => "world_rule",
+                    EntityType::TimelineEvent => "timeline_event",
+                };
+                params.push(Box::new(type_str.to_string()));
+            }
+        }
+
+        let params_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|b| b.as_ref()).collect();
+
+        let results_iter = stmt.query_map(rusqlite::params_from_iter(params_refs), |row: &Row| {
+            let type_str: String = row.get(1)?;
+            let entity_type = match type_str.as_str() {
+                "character" => EntityType::Character,
+                "location" => EntityType::Location,
+                "world_rule" => EntityType::WorldRule,
+                "timeline_event" => EntityType::TimelineEvent,
+                _ => EntityType::WorldRule,
+            };
+            
+            Ok(SearchResult {
+                entity_id: row.get(0)?,
+                entity_type,
+                snippet: row.get(2)?,
+                score: row.get(3)?, // distance acts as score (smaller is better for distance)
+            })
+        }).map_err(AppError::from)?;
+
+        let mut results = Vec::new();
+        for res in results_iter {
+            results.push(res?);
+        }
+        Ok(results)
     }
 }
 
@@ -1315,5 +1400,47 @@ mod tests {
             [],
         );
         assert!(result.is_ok(), "Vector table creation failed: {:?}", result.err());
+    }
+
+    #[test]
+    fn test_vector_search_cosine() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_vector_search.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project_id = ProjectId("proj-1".to_string());
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+            conn.execute("INSERT INTO characters (id, project_id, name, occupation) VALUES (?, ?, ?, ?)", ["char-1", &project_id.0, "Hero", "Warrior"]).unwrap();
+            
+            // Insert vectors (must be 1536 dimensions)
+            let mut v1 = vec![0.0f32; 1536];
+            v1[0] = 1.0;
+            
+            let mut v2 = vec![0.0f32; 1536];
+            v2[1] = 1.0;
+            
+            // vec0 expects bytes. For float[1536], it should be 1536 * 4 = 6144 bytes.
+            // zerocopy::AsBytes::as_bytes() on &[f32] should work if correctly handled.
+            // Actually, we can just use the provided utility if possible or cast.
+            let v1_bytes = zerocopy::AsBytes::as_bytes(v1.as_slice());
+            
+            conn.execute("INSERT INTO lore_vectors(entity_id, embedding) VALUES (?, ?)", params!["char-1", v1_bytes]).unwrap();
+        }
+
+        let repo: &dyn crate::domain::ports::VectorSearchPort = &db;
+        
+        // Search with vector similar to v1
+        let mut query_vec = vec![0.0; 1536];
+        query_vec[0] = 0.9;
+        query_vec[1] = 0.1;
+        
+        let results = repo.find_similar(&project_id, query_vec, 1, None).expect("Vector search failed");
+        
+        assert!(!results.is_empty(), "Results should not be empty");
+        assert_eq!(results[0].entity_id, "char-1");
     }
 }
