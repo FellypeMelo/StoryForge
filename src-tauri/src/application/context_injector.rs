@@ -72,7 +72,6 @@ impl SearchResultExt for SearchResult {
 mod tests {
     use super::*;
     use crate::domain::ports::SearchResult;
-    use crate::domain::error::AppError;
 
     struct MockSearchPort;
     impl SearchPort for MockSearchPort {

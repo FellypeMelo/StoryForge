@@ -3,10 +3,8 @@ pub mod application;
 pub mod infrastructure;
 pub mod commands;
 
-use std::sync::Arc;
 use tauri::Manager;
 use crate::infrastructure::sqlite::SqliteDatabase;
-use crate::domain::ports::{DatabasePort, CharacterRepository};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

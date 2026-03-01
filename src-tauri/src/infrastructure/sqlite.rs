@@ -240,8 +240,6 @@ impl VectorSearchPort for SqliteDatabase {
     fn find_similar(&self, project_id: &ProjectId, embedding: Vec<f32>, top_k: usize, types: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         
-        // We join lore_search to filter by project_id and get snippets
-        // BM25 is not used here, we use vector distance
         let mut sql = "SELECT v.entity_id, s.type, s.title || ': ' || s.content, v.distance 
                        FROM lore_vectors v
                        JOIN lore_search s ON v.entity_id = s.entity_id
@@ -292,7 +290,7 @@ impl VectorSearchPort for SqliteDatabase {
                 entity_id: row.get(0)?,
                 entity_type,
                 snippet: row.get(2)?,
-                score: row.get(3)?, // distance acts as score (smaller is better for distance)
+                score: row.get(3)?,
             })
         }).map_err(AppError::from)?;
 
@@ -305,7 +303,7 @@ impl VectorSearchPort for SqliteDatabase {
 }
 
 impl ProjectRepository for SqliteDatabase {
-    fn create(&self, project: &Project) -> AppResult<()> {
+    fn create_project(&self, project: &Project) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         conn.execute(
             "INSERT INTO projects (id, name) VALUES (?, ?)",
@@ -314,7 +312,7 @@ impl ProjectRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &ProjectId) -> AppResult<Project> {
+    fn get_project_by_id(&self, id: &ProjectId) -> AppResult<Project> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let project = conn.query_row(
             "SELECT id, name, created_at FROM projects WHERE id = ?",
@@ -333,7 +331,7 @@ impl ProjectRepository for SqliteDatabase {
         Ok(project)
     }
 
-    fn list_all(&self) -> AppResult<Vec<Project>> {
+    fn list_all_projects(&self) -> AppResult<Vec<Project>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare("SELECT id, name, created_at FROM projects")
             .map_err(AppError::from)?;
@@ -353,7 +351,7 @@ impl ProjectRepository for SqliteDatabase {
         Ok(projects)
     }
 
-    fn update(&self, project: &Project) -> AppResult<()> {
+    fn update_project(&self, project: &Project) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute(
             "UPDATE projects SET name = ? WHERE id = ?",
@@ -366,7 +364,7 @@ impl ProjectRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &ProjectId) -> AppResult<()> {
+    fn delete_project(&self, id: &ProjectId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM projects WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -379,7 +377,7 @@ impl ProjectRepository for SqliteDatabase {
 }
 
 impl CharacterRepository for SqliteDatabase {
-    fn create(&self, character: &Character) -> AppResult<()> {
+    fn create_character(&self, character: &Character) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         conn.execute(
             "INSERT INTO characters (
@@ -410,7 +408,7 @@ impl CharacterRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &CharacterId) -> AppResult<Character> {
+    fn get_character_by_id(&self, id: &CharacterId) -> AppResult<Character> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let character = conn.query_row(
             "SELECT 
@@ -449,7 +447,7 @@ impl CharacterRepository for SqliteDatabase {
         Ok(character)
     }
 
-    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Character>> {
+    fn list_characters_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Character>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare(
             "SELECT 
@@ -490,7 +488,7 @@ impl CharacterRepository for SqliteDatabase {
         Ok(characters)
     }
 
-    fn update(&self, character: &Character) -> AppResult<()> {
+    fn update_character(&self, character: &Character) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute(
             "UPDATE characters SET 
@@ -524,7 +522,7 @@ impl CharacterRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &CharacterId) -> AppResult<()> {
+    fn delete_character(&self, id: &CharacterId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM characters WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -537,7 +535,7 @@ impl CharacterRepository for SqliteDatabase {
 }
 
 impl LocationRepository for SqliteDatabase {
-    fn create(&self, location: &Location) -> AppResult<()> {
+    fn create_location(&self, location: &Location) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         conn.execute(
             "INSERT INTO locations (id, project_id, name, description, symbolic_meaning) VALUES (?, ?, ?, ?, ?)",
@@ -546,7 +544,7 @@ impl LocationRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &LocationId) -> AppResult<Location> {
+    fn get_location_by_id(&self, id: &LocationId) -> AppResult<Location> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let location = conn.query_row(
             "SELECT id, project_id, name, description, symbolic_meaning FROM locations WHERE id = ?",
@@ -567,7 +565,7 @@ impl LocationRepository for SqliteDatabase {
         Ok(location)
     }
 
-    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Location>> {
+    fn list_locations_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Location>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare("SELECT id, project_id, name, description, symbolic_meaning FROM locations WHERE project_id = ?")
             .map_err(AppError::from)?;
@@ -589,7 +587,7 @@ impl LocationRepository for SqliteDatabase {
         Ok(locations)
     }
 
-    fn update(&self, location: &Location) -> AppResult<()> {
+    fn update_location(&self, location: &Location) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute(
             "UPDATE locations SET name = ?, description = ?, symbolic_meaning = ? WHERE id = ?",
@@ -602,7 +600,7 @@ impl LocationRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &LocationId) -> AppResult<()> {
+    fn delete_location(&self, id: &LocationId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM locations WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -615,7 +613,7 @@ impl LocationRepository for SqliteDatabase {
 }
 
 impl WorldRuleRepository for SqliteDatabase {
-    fn create(&self, rule: &WorldRule) -> AppResult<()> {
+    fn create_world_rule(&self, rule: &WorldRule) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         conn.execute(
             "INSERT INTO world_rules (id, project_id, category, content, hierarchy) VALUES (?, ?, ?, ?, ?)",
@@ -624,7 +622,7 @@ impl WorldRuleRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &WorldRuleId) -> AppResult<WorldRule> {
+    fn get_world_rule_by_id(&self, id: &WorldRuleId) -> AppResult<WorldRule> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rule = conn.query_row(
             "SELECT id, project_id, category, content, hierarchy FROM world_rules WHERE id = ?",
@@ -645,7 +643,7 @@ impl WorldRuleRepository for SqliteDatabase {
         Ok(rule)
     }
 
-    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<WorldRule>> {
+    fn list_world_rules_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<WorldRule>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare("SELECT id, project_id, category, content, hierarchy FROM world_rules WHERE project_id = ? ORDER BY hierarchy ASC")
             .map_err(AppError::from)?;
@@ -667,7 +665,7 @@ impl WorldRuleRepository for SqliteDatabase {
         Ok(rules)
     }
 
-    fn update(&self, rule: &WorldRule) -> AppResult<()> {
+    fn update_world_rule(&self, rule: &WorldRule) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute(
             "UPDATE world_rules SET category = ?, content = ?, hierarchy = ? WHERE id = ?",
@@ -680,7 +678,7 @@ impl WorldRuleRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &WorldRuleId) -> AppResult<()> {
+    fn delete_world_rule(&self, id: &WorldRuleId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM world_rules WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -693,7 +691,7 @@ impl WorldRuleRepository for SqliteDatabase {
 }
 
 impl TimelineRepository for SqliteDatabase {
-    fn create(&self, event: &TimelineEvent) -> AppResult<()> {
+    fn create_timeline_event(&self, event: &TimelineEvent) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let deps_json = serde_json::to_string(&event.causal_dependencies).unwrap_or_else(|_| "[]".to_string());
         conn.execute(
@@ -703,7 +701,7 @@ impl TimelineRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &TimelineEventId) -> AppResult<TimelineEvent> {
+    fn get_timeline_event_by_id(&self, id: &TimelineEventId) -> AppResult<TimelineEvent> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let event = conn.query_row(
             "SELECT id, project_id, date, description, causal_dependencies FROM timeline_events WHERE id = ?",
@@ -726,7 +724,7 @@ impl TimelineRepository for SqliteDatabase {
         Ok(event)
     }
 
-    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<TimelineEvent>> {
+    fn list_timeline_events_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<TimelineEvent>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare("SELECT id, project_id, date, description, causal_dependencies FROM timeline_events WHERE project_id = ?")
             .map_err(AppError::from)?;
@@ -750,7 +748,7 @@ impl TimelineRepository for SqliteDatabase {
         Ok(events)
     }
 
-    fn update(&self, event: &TimelineEvent) -> AppResult<()> {
+    fn update_timeline_event(&self, event: &TimelineEvent) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let deps_json = serde_json::to_string(&event.causal_dependencies).unwrap_or_else(|_| "[]".to_string());
         let rows_affected = conn.execute(
@@ -764,7 +762,7 @@ impl TimelineRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &TimelineEventId) -> AppResult<()> {
+    fn delete_timeline_event(&self, id: &TimelineEventId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM timeline_events WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -777,7 +775,7 @@ impl TimelineRepository for SqliteDatabase {
 }
 
 impl RelationshipRepository for SqliteDatabase {
-    fn create(&self, relationship: &Relationship) -> AppResult<()> {
+    fn create_relationship(&self, relationship: &Relationship) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         conn.execute(
             "INSERT INTO relationships (id, project_id, character_a, character_b, type) VALUES (?, ?, ?, ?, ?)",
@@ -786,7 +784,7 @@ impl RelationshipRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &RelationshipId) -> AppResult<Relationship> {
+    fn get_relationship_by_id(&self, id: &RelationshipId) -> AppResult<Relationship> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let relationship = conn.query_row(
             "SELECT id, project_id, character_a, character_b, type FROM relationships WHERE id = ?",
@@ -807,7 +805,7 @@ impl RelationshipRepository for SqliteDatabase {
         Ok(relationship)
     }
 
-    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Relationship>> {
+    fn list_relationships_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Relationship>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare("SELECT id, project_id, character_a, character_b, type FROM relationships WHERE project_id = ?")
             .map_err(AppError::from)?;
@@ -829,7 +827,7 @@ impl RelationshipRepository for SqliteDatabase {
         Ok(relationships)
     }
 
-    fn update(&self, relationship: &Relationship) -> AppResult<()> {
+    fn update_relationship(&self, relationship: &Relationship) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute(
             "UPDATE relationships SET character_a = ?, character_b = ?, type = ? WHERE id = ?",
@@ -842,7 +840,7 @@ impl RelationshipRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &RelationshipId) -> AppResult<()> {
+    fn delete_relationship(&self, id: &RelationshipId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM relationships WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -855,7 +853,7 @@ impl RelationshipRepository for SqliteDatabase {
 }
 
 impl BlacklistRepository for SqliteDatabase {
-    fn create(&self, entry: &BlacklistEntry) -> AppResult<()> {
+    fn create_blacklist_entry(&self, entry: &BlacklistEntry) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         conn.execute(
             "INSERT INTO blacklist_entries (id, project_id, term, category, reason) VALUES (?, ?, ?, ?, ?)",
@@ -864,7 +862,7 @@ impl BlacklistRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn get_by_id(&self, id: &BlacklistEntryId) -> AppResult<BlacklistEntry> {
+    fn get_blacklist_entry_by_id(&self, id: &BlacklistEntryId) -> AppResult<BlacklistEntry> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let entry = conn.query_row(
             "SELECT id, project_id, term, category, reason FROM blacklist_entries WHERE id = ?",
@@ -885,7 +883,7 @@ impl BlacklistRepository for SqliteDatabase {
         Ok(entry)
     }
 
-    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<BlacklistEntry>> {
+    fn list_blacklist_entries_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<BlacklistEntry>> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let mut stmt = conn.prepare("SELECT id, project_id, term, category, reason FROM blacklist_entries WHERE project_id = ?")
             .map_err(AppError::from)?;
@@ -907,7 +905,7 @@ impl BlacklistRepository for SqliteDatabase {
         Ok(entries)
     }
 
-    fn update(&self, entry: &BlacklistEntry) -> AppResult<()> {
+    fn update_blacklist_entry(&self, entry: &BlacklistEntry) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute(
             "UPDATE blacklist_entries SET term = ?, category = ?, reason = ? WHERE id = ?",
@@ -920,7 +918,7 @@ impl BlacklistRepository for SqliteDatabase {
         Ok(())
     }
 
-    fn delete(&self, id: &BlacklistEntryId) -> AppResult<()> {
+    fn delete_blacklist_entry(&self, id: &BlacklistEntryId) -> AppResult<()> {
         let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
         let rows_affected = conn.execute("DELETE FROM blacklist_entries WHERE id = ?", [id.0.clone()])
             .map_err(AppError::from)?;
@@ -980,7 +978,7 @@ impl SearchPort for SqliteDatabase {
                 "timeline_event" => EntityType::TimelineEvent,
                 _ => EntityType::WorldRule, // Fallback
             };
-            
+
             Ok(SearchResult {
                 entity_id: row.get(0)?,
                 entity_type,
@@ -1109,27 +1107,27 @@ mod tests {
         let repo: &dyn crate::domain::ports::CharacterRepository = &db;
         
         // Create
-        repo.create(&character).expect("Failed to create character");
+        repo.create_character(&character).expect("Failed to create character");
         
         // Get
-        let fetched = repo.get_by_id(&character.id).expect("Failed to fetch character");
+        let fetched = repo.get_character_by_id(&character.id).expect("Failed to fetch character");
         assert_eq!(fetched.name, "John Doe");
         assert_eq!(fetched.age, 30);
         
         // List
-        let list = repo.list_by_project(&project_id).expect("Failed to list characters");
+        let list = repo.list_characters_by_project(&project_id).expect("Failed to list characters");
         assert_eq!(list.len(), 1);
         assert_eq!(list[0].id, character.id);
         
         // Update
         character.name = "Jane Doe".to_string();
-        repo.update(&character).expect("Failed to update character");
-        let updated = repo.get_by_id(&character.id).expect("Failed to fetch updated character");
+        repo.update_character(&character).expect("Failed to update character");
+        let updated = repo.get_character_by_id(&character.id).expect("Failed to fetch updated character");
         assert_eq!(updated.name, "Jane Doe");
         
         // Delete
-        repo.delete(&character.id).expect("Failed to delete character");
-        let result = repo.get_by_id(&character.id);
+        repo.delete_character(&character.id).expect("Failed to delete character");
+        let result = repo.get_character_by_id(&character.id);
         assert!(result.is_err(), "Character should be deleted");
     }
 
@@ -1145,26 +1143,26 @@ mod tests {
         let repo: &dyn crate::domain::ports::ProjectRepository = &db;
         
         // Create
-        repo.create(&project).expect("Failed to create project");
+        repo.create_project(&project).expect("Failed to create project");
         
         // Get
-        let fetched = repo.get_by_id(&project.id).expect("Failed to fetch project");
+        let fetched = repo.get_project_by_id(&project.id).expect("Failed to fetch project");
         assert_eq!(fetched.name, "My New Project");
         
         // List
-        let list = repo.list_all().expect("Failed to list projects");
+        let list = repo.list_all_projects().expect("Failed to list projects");
         assert!(list.iter().any(|p| p.id == project.id));
         
         // Update
         let mut updated_project = project.clone();
         updated_project.name = "Updated Project Name".to_string();
-        repo.update(&updated_project).expect("Failed to update project");
-        let fetched_updated = repo.get_by_id(&project.id).expect("Failed to fetch updated project");
+        repo.update_project(&updated_project).expect("Failed to update project");
+        let fetched_updated = repo.get_project_by_id(&project.id).expect("Failed to fetch updated project");
         assert_eq!(fetched_updated.name, "Updated Project Name");
         
         // Delete
-        repo.delete(&project.id).expect("Failed to delete project");
-        let result = repo.get_by_id(&project.id);
+        repo.delete_project(&project.id).expect("Failed to delete project");
+        let result = repo.get_project_by_id(&project.id);
         assert!(result.is_err(), "Project should be deleted");
     }
 
@@ -1186,19 +1184,19 @@ mod tests {
         let repo: &dyn crate::domain::ports::LocationRepository = &db;
         
         // Create
-        repo.create(&location).expect("Failed to create location");
+        repo.create_location(&location).expect("Failed to create location");
         
         // Get
-        let fetched = repo.get_by_id(&location.id).expect("Failed to fetch location");
+        let fetched = repo.get_location_by_id(&location.id).expect("Failed to fetch location");
         assert_eq!(fetched.name, "The Dark Forest");
         
         // List
-        let list = repo.list_by_project(&project_id).expect("Failed to list locations");
+        let list = repo.list_locations_by_project(&project_id).expect("Failed to list locations");
         assert_eq!(list.len(), 1);
         
         // Delete
-        repo.delete(&location.id).expect("Failed to delete location");
-        let result = repo.get_by_id(&location.id);
+        repo.delete_location(&location.id).expect("Failed to delete location");
+        let result = repo.get_location_by_id(&location.id);
         assert!(result.is_err());
     }
 
@@ -1220,19 +1218,19 @@ mod tests {
         let repo: &dyn crate::domain::ports::WorldRuleRepository = &db;
         
         // Create
-        repo.create(&rule).expect("Failed to create rule");
+        repo.create_world_rule(&rule).expect("Failed to create rule");
         
         // Get
-        let fetched = repo.get_by_id(&rule.id).expect("Failed to fetch rule");
+        let fetched = repo.get_world_rule_by_id(&rule.id).expect("Failed to fetch rule");
         assert_eq!(fetched.category, "Magic");
         
         // List
-        let list = repo.list_by_project(&project_id).expect("Failed to list rules");
+        let list = repo.list_world_rules_by_project(&project_id).expect("Failed to list rules");
         assert_eq!(list.len(), 1);
         
         // Delete
-        repo.delete(&rule.id).expect("Failed to delete rule");
-        let result = repo.get_by_id(&rule.id);
+        repo.delete_world_rule(&rule.id).expect("Failed to delete rule");
+        let result = repo.get_world_rule_by_id(&rule.id);
         assert!(result.is_err());
     }
 
@@ -1254,19 +1252,19 @@ mod tests {
         let repo: &dyn crate::domain::ports::TimelineRepository = &db;
         
         // Create
-        repo.create(&event).expect("Failed to create event");
+        repo.create_timeline_event(&event).expect("Failed to create event");
         
         // Get
-        let fetched = repo.get_by_id(&event.id).expect("Failed to fetch event");
+        let fetched = repo.get_timeline_event_by_id(&event.id).expect("Failed to fetch event");
         assert_eq!(fetched.description, "The War Started");
         
         // List
-        let list = repo.list_by_project(&project_id).expect("Failed to list events");
+        let list = repo.list_timeline_events_by_project(&project_id).expect("Failed to list events");
         assert_eq!(list.len(), 1);
         
         // Delete
-        repo.delete(&event.id).expect("Failed to delete event");
-        let result = repo.get_by_id(&event.id);
+        repo.delete_timeline_event(&event.id).expect("Failed to delete event");
+        let result = repo.get_timeline_event_by_id(&event.id);
         assert!(result.is_err());
     }
 
@@ -1293,19 +1291,19 @@ mod tests {
         let repo: &dyn crate::domain::ports::RelationshipRepository = &db;
         
         // Create
-        repo.create(&rel).expect("Failed to create relationship");
+        repo.create_relationship(&rel).expect("Failed to create relationship");
         
         // Get
-        let fetched = repo.get_by_id(&rel.id).expect("Failed to fetch relationship");
+        let fetched = repo.get_relationship_by_id(&rel.id).expect("Failed to fetch relationship");
         assert_eq!(fetched.r#type, "Siblings");
         
         // List
-        let list = repo.list_by_project(&project_id).expect("Failed to list relationships");
+        let list = repo.list_relationships_by_project(&project_id).expect("Failed to list relationships");
         assert_eq!(list.len(), 1);
         
         // Delete
-        repo.delete(&rel.id).expect("Failed to delete relationship");
-        let result = repo.get_by_id(&rel.id);
+        repo.delete_relationship(&rel.id).expect("Failed to delete relationship");
+        let result = repo.get_relationship_by_id(&rel.id);
         assert!(result.is_err());
     }
 
@@ -1327,19 +1325,19 @@ mod tests {
         let repo: &dyn crate::domain::ports::BlacklistRepository = &db;
         
         // Create
-        repo.create(&entry).expect("Failed to create entry");
+        repo.create_blacklist_entry(&entry).expect("Failed to create entry");
         
         // Get
-        let fetched = repo.get_by_id(&entry.id).expect("Failed to fetch entry");
+        let fetched = repo.get_blacklist_entry_by_id(&entry.id).expect("Failed to fetch entry");
         assert_eq!(fetched.term, "cliché");
         
         // List
-        let list = repo.list_by_project(&project_id).expect("Failed to list entries");
+        let list = repo.list_blacklist_entries_by_project(&project_id).expect("Failed to list entries");
         assert_eq!(list.len(), 1);
         
         // Delete
-        repo.delete(&entry.id).expect("Failed to delete entry");
-        let result = repo.get_by_id(&entry.id);
+        repo.delete_blacklist_entry(&entry.id).expect("Failed to delete entry");
+        let result = repo.get_blacklist_entry_by_id(&entry.id);
         assert!(result.is_err());
     }
 
@@ -1383,7 +1381,7 @@ mod tests {
         let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
         let conn = db.connection.lock().expect("Failed to lock connection");
         
-        let version: String = conn.query_row("SELECT vec_version()", [], |row| row.get(0)).expect("sqlite-vec not loaded");
+        let version: String = conn.query_row("SELECT vec_version()", [], |row: &Row| row.get(0)).expect("sqlite-vec not loaded");
         assert!(!version.is_empty());
     }
 
@@ -1424,8 +1422,6 @@ mod tests {
             v2[1] = 1.0;
             
             // vec0 expects bytes. For float[1536], it should be 1536 * 4 = 6144 bytes.
-            // zerocopy::AsBytes::as_bytes() on &[f32] should work if correctly handled.
-            // Actually, we can just use the provided utility if possible or cast.
             let v1_bytes = zerocopy::AsBytes::as_bytes(v1.as_slice());
             
             conn.execute("INSERT INTO lore_vectors(entity_id, embedding) VALUES (?, ?)", params!["char-1", v1_bytes]).unwrap();
@@ -1434,7 +1430,7 @@ mod tests {
         let repo: &dyn crate::domain::ports::VectorSearchPort = &db;
         
         // Search with vector similar to v1
-        let mut query_vec = vec![0.0; 1536];
+        let mut query_vec = vec![0.0f32; 1536];
         query_vec[0] = 0.9;
         query_vec[1] = 0.1;
         
