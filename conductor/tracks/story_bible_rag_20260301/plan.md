@@ -34,9 +34,9 @@
 - [x] Task: Conductor - User Manual Verification 'Vector Search (sqlite-vec)' (Protocol in workflow.md) [9ceae9f]
 
 ## Phase 4: RAG Pipeline & Context Management
-- [ ] Task: Implement `TokenBudgetCalculator`
-    - [ ] 🔴 RED: Test budget overflow detection.
-    - [ ] 🟢 GREEN: Implement pure domain service for token estimation.
+- [x] Task: Implement `TokenBudgetCalculator` [8923272]
+    - [x] 🔴 RED: Test budget overflow detection.
+    - [x] 🟢 GREEN: Implement pure domain service for token estimation.
 - [ ] Task: Implement `ContextInjector` Use Case
     - [ ] 🔴 RED: Test automated entity detection and snippet retrieval.
     - [ ] 🟢 GREEN: Orchestrate Search/Vector ports to build the continuity block.
