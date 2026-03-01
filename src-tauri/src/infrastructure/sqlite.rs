@@ -1,9 +1,10 @@
-use rusqlite::{Connection, Result};
+use rusqlite::{Connection, Result, Row};
 use std::path::Path;
+use std::sync::Mutex;
 use crate::domain::ports::DatabasePort;
 
 pub struct SqliteDatabase {
-    connection: Connection,
+    connection: Mutex<Connection>,
 }
 
 impl SqliteDatabase {
@@ -13,14 +14,15 @@ impl SqliteDatabase {
         // Enable WAL mode for better concurrency
         connection.pragma_update(None, "journal_mode", &"WAL")?;
         
-        Ok(SqliteDatabase { connection })
+        Ok(SqliteDatabase { connection: Mutex::new(connection) })
     }
 
     pub fn run_migrations(&self) -> Result<()> {
-        let current_version: i32 = self.connection.query_row("PRAGMA user_version", [], |row| row.get(0))?;
+        let conn = self.connection.lock().map_err(|e| rusqlite::Error::ToSqlConversionFailure(Box::new(std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))))?;
+        let current_version: i32 = conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;
         
         if current_version < 1 {
-            self.connection.execute_batch(
+            conn.execute_batch(
                 "BEGIN;
                  CREATE TABLE IF NOT EXISTS story_bible (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,11 +41,21 @@ impl SqliteDatabase {
 
 impl DatabasePort for SqliteDatabase {
     fn is_healthy(&self) -> bool {
-        self.connection.query_row("SELECT 1", [], |_| Ok(())).is_ok()
+        let conn_result = self.connection.lock();
+        if let Ok(conn) = conn_result {
+            conn.query_row("SELECT 1", [], |_| Ok(())).is_ok()
+        } else {
+            false
+        }
     }
 
     fn get_version(&self) -> i32 {
-        self.connection.query_row("PRAGMA user_version", [], |row| row.get(0)).unwrap_or(0)
+        let conn_result = self.connection.lock();
+        if let Ok(conn) = conn_result {
+            conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0)).unwrap_or(0)
+        } else {
+            0
+        }
     }
 }
 
@@ -82,7 +94,8 @@ mod tests {
         let db_path = dir.path().join("test_wal.db");
         
         let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
-        let journal_mode: String = db.connection.query_row("PRAGMA journal_mode", [], |row| row.get(0)).expect("Failed to get journal mode");
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        let journal_mode: String = conn.query_row("PRAGMA journal_mode", [], |row: &Row| row.get(0)).expect("Failed to get journal mode");
         assert_eq!(journal_mode.to_uppercase(), "WAL");
     }
 }

@@ -24,7 +24,7 @@
 - [x] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' [2bafec7]
 
 ## Phase 3: IPC & Infrastructure Integration
-- [ ] Task: Implement IPC Bridge Commands
+- [~] Task: Implement IPC Bridge Commands
     - [ ] 🔴 RED: Test for `get_app_info` command
     - [ ] 🟢 GREEN: Implement `get_app_info` returning version
     - [ ] 🔴 RED: Test for `health_check` (DB status)

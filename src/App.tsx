@@ -1,13 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+interface AppInfo {
+  name: string;
+  version: string;
+}
 
-  async function greet() {
-    setGreetMsg(await invoke("greet", { name }));
-  }
+interface HealthStatus {
+  database: boolean;
+}
+
+function App() {
+  const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
+  const [health, setHealth] = useState<HealthStatus | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const info = await invoke<AppInfo>("get_app_info");
+        const healthStatus = await invoke<HealthStatus>("health_check");
+        setAppInfo(info);
+        setHealth(healthStatus);
+      } catch (err) {
+        console.error("Failed to fetch app data:", err);
+        setError(String(err));
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 font-sans">
@@ -21,32 +43,30 @@ function App() {
           </p>
         </div>
 
-        <form
-          className="flex gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            greet();
-          }}
-        >
-          <input
-            id="greet-input"
-            className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-slate-100"
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="Enter a name..."
-          />
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-6 py-2 rounded-lg transition-colors"
-          >
-            Greet
-          </button>
-        </form>
-
-        {greetMsg && (
-          <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg animate-in fade-in slide-in-from-bottom-2">
-            <p className="text-blue-400">{greetMsg}</p>
+        {error && (
+          <div className="p-4 bg-red-900/20 border border-red-900/50 rounded-lg text-red-400">
+            Error: {error}
           </div>
         )}
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg text-left">
+            <h3 className="text-slate-500 text-sm font-medium uppercase tracking-wider">Version</h3>
+            <p className="text-xl font-semibold text-slate-200">{appInfo?.version || "Loading..."}</p>
+          </div>
+          <div className="p-4 bg-slate-900 border border-slate-800 rounded-lg text-left">
+            <h3 className="text-slate-500 text-sm font-medium uppercase tracking-wider">DB Status</h3>
+            <p className={`text-xl font-semibold ${health?.database ? 'text-green-400' : 'text-yellow-400'}`}>
+              {health ? (health.database ? "Healthy" : "Unhealthy") : "Loading..."}
+            </p>
+          </div>
+        </div>
+
+        <div className="pt-8">
+          <p className="text-slate-500 text-sm italic">
+            "Every story begins with a single word."
+          </p>
+        </div>
       </div>
     </main>
   );

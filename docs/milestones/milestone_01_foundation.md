@@ -122,13 +122,13 @@ Erros de infra são mapeados para AppError (Value Object).
 - [ ] Configurar `cargo test` para testes unitários do backend Rust
 - [ ] Configurar ESLint + Prettier com regras estritas (no-any, etc.)
 - [ ] Configurar `clippy` com `deny(warnings)` no Rust
-- [ ] Criar script `pnpm test:all` que roda ambos os lados
+- [ ] Criar script `npm test:all` que roda ambos os lados
 - [ ] Garantir que TODOS os testes passam antes de qualquer commit
 
 ### Critério de Aceite
 
 ```
-`pnpm test:all` executa suítes frontend + backend.
+`npm test:all` executa suítes frontend + backend.
 Zero warnings em clippy e ESLint.
 Coverage report gerado (mínimo framework funcional).
 ```
