@@ -35,3 +35,6 @@
     - [x] 🔴 RED: Test accessibility (tab order through wizard).
     - [x] 🟢 GREEN: Add smooth transitions between steps and refine monochrome aesthetic.
 - [x] Task: Conductor - User Manual Verification 'Polish & Finalization' (Protocol in workflow.md) [e57b01e]
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions [75f5ee2]
