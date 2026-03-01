@@ -1,0 +1,1535 @@
+[90mstderr[2m | src/ui/components/BibleDashboard.test.tsx[2m > [22m[2mBibleDashboard[2m > [22m[2mshould render all lore tabs
+[22m[39mAn update to BibleDashboard inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to BibleDashboard inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 6 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/ui/components/AppShell.navigation.test.tsx[2m > [22mAppShell Navigation[2m > [22mshould call onNavigate when a nav item is clicked
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Personas. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"flex h-screen bg-bg-base text-text-main overflow-hidden transition-colors duration-300"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"w-64 border-r border-border-subtle flex flex-col transition-all duration-500 ease-in-out bg-bg-base z-10"[39m
+        [33mstyle[39m=[32m"opacity: 1;"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"p-6 flex items-center justify-between font-sans"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"text-sm font-bold tracking-[0.15em] uppercase text-text-main"[39m
+          [36m>[39m
+            [0mStoryForge[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"p-1.5 rounded hover:bg-bg-hover text-text-muted transition-colors mx-auto cursor-pointer"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-chevron-left"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"16"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"16"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m15 18-6-6 6-6"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33mclass[39m=[32m"flex-1 px-4 space-y-2 mt-8"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer text-text-main font-bold tracking-wide"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-house"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[13px]"[39m
+            [36m>[39m
+              [0mPainel[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer text-text-muted hover:bg-bg-hover hover:text-text-main"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-book-open"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 7v14"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[13px]"[39m
+            [36m>[39m
+              [0mManuscrito[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer text-text-muted hover:bg-bg-hover hover:text-text-main"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-users"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 3.128a4 4 0 0 1 0 7.744"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M22 21v-2a4 4 0 0 0-3-3.87"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"9"[39m
+                [33mcy[39m=[32m"7"[39m
+                [33mr[39m=[32m"4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[13px]"[39m
+            [36m>[39m
+              [0mPersonagens[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer text-text-muted hover:bg-bg-hover hover:text-text-main"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-panels-top-left"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"3"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M3 9h18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9 21V9"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[13px]"[39m
+            [36m>[39m
+              [0mArquitetura[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</nav>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"p-4 border-t border-border-subtle space-y-2"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer text-text-muted hover:bg-bg-hover hover:text-text-main"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-shield-check"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m9 12 2 2 4-4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[13px]"[39m
+            [36m>[39m
+              [0mVerificação[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer text-text-muted hover:bg-bg-hover hover:text-text-main"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-settings"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"3"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[13px]"[39m
+            [36m>[39m
+              [0mPreferências[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mt-6 px-4 py-3 font-mono text-[10px] tracking-widest text-text-muted space-y-1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex justify-between"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mSYS[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mstyle[39m=[32m"opacity: 0.5;"[39m
+              [36m>[39m
+                [0mERR[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex justify-between"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mVER[0m
+              [36m</span>[39m
+              [36m<span>[39m
+                [0m0.0.0[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"flex-1 overflow-auto relative"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"max-w-[720px] mx-auto p-12 md:p-24 transition-all duration-500"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [0mContent[0m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/ui/components/AppShell.navigation.test.tsx:[2m14:35[22m[39m
+    [90m 12| [39m    )[33m;[39m
+    [90m 13| [39m
+    [90m 14| [39m    [35mconst[39m personasButton [33m=[39m screen[33m.[39m[34mgetByText[39m([32m"Personas"[39m)[33m;[39m
+    [90m   | [39m                                  [31m^[39m
+    [90m 15| [39m    fireEvent[33m.[39m[34mclick[39m(personasButton)[33m;[39m
+    [90m 16| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/ui/components/BibleDashboard.test.tsx[2m > [22mBibleDashboard[2m > [22mshould show characters tab by default after loading
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /No characters found/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-8 animate-in fade-in duration-700"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-subtle pb-6"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"text-3xl font-serif text-text-main"[39m
+          [36m>[39m
+            [0mStory Bible[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-text-muted text-sm font-sans"[39m
+          [36m>[39m
+            [0mThe definitive guide to your story's lore and logic.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"relative group"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-text-main transition-colors"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"18"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"18"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"m21 21-4.34-4.34"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"11"[39m
+              [33mcy[39m=[32m"11"[39m
+              [33mr[39m=[32m"8"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"bg-bg-hover border border-border-subtle pl-10 pr-4 py-2 rounded-lg font-sans text-sm focus:border-text-main outline-none w-full md:w-64 transition-all"[39m
+            [33mplaceholder[39m=[32m"Search lore..."[39m
+            [33mtype[39m=[32m"text"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<nav[39m
+        [33mclass[39m=[32m"flex flex-wrap gap-2"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-text-main text-bg-base shadow-lg shadow-text-main/10"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-users"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M16 3.128a4 4 0 0 1 0 7.744"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M22 21v-2a4 4 0 0 0-3-3.87"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"9"[39m
+              [33mcy[39m=[32m"7"[39m
+              [33mr[39m=[32m"4"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCharacters[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-map-pin"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"10"[39m
+              [33mr[39m=[32m"3"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mLocations[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-scroll"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M19 17V5a2 2 0 0 0-2-2H4"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mWorld Rules[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-clock"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"12"[39m
+              [33mr[39m=[32m"10"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M12 6v6l4 2"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mTimeline[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-git-branch"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15 6a9 9 0 0 0-9 9V3"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"18"[39m
+              [33mcy[39m=[32m"6"[39m
+              [33mr[39m=[32m"3"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"6"[39m
+              [33mcy[39m=[32m"18"[39m
+              [33mr[39m=[32m"3"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mRelationships[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-ban"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"14"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"14"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"12"[39m
+              [33mr[39m=[32m"10"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M4.929 4.929 19.07 19.071"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mBlacklist[0m
+        [36m</button>[39m
+      [36m</nav>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"min-h-[400px]"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"py-20 border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center text-center space-y-6"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"p-4 bg-bg-hover rounded-full text-text-muted"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-shield-question-mark"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"40"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.5"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"40"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 17h.01"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-2"[39m
+          [36m>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-xl font-serif text-text-main"[39m
+            [36m>[39m
+              [0mNenhum personagem encontrado[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-text-muted max-w-xs mx-auto"[39m
+            [36m>[39m
+              [0mSua história aguarda seu elenco. Crie seu primeiro personagem para começar.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"[39m
+          [36m>[39m
+            [0mCriar Personagem[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"space-y-8 animate-in fade-in duration-700"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-subtle pb-6"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1[39m
+              [33mclass[39m=[32m"text-3xl font-serif text-text-main"[39m
+            [36m>[39m
+              [0mStory Bible[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-text-muted text-sm font-sans"[39m
+            [36m>[39m
+              [0mThe definitive guide to your story's lore and logic.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"relative group"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-text-main transition-colors"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"18"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"18"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m21 21-4.34-4.34"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"11"[39m
+                [33mcy[39m=[32m"11"[39m
+                [33mr[39m=[32m"8"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"bg-bg-hover border border-border-subtle pl-10 pr-4 py-2 rounded-lg font-sans text-sm focus:border-text-main outline-none w-full md:w-64 transition-all"[39m
+              [33mplaceholder[39m=[32m"Search lore..."[39m
+              [33mtype[39m=[32m"text"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<nav[39m
+          [33mclass[39m=[32m"flex flex-wrap gap-2"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-text-main text-bg-base shadow-lg shadow-text-main/10"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-users"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M16 3.128a4 4 0 0 1 0 7.744"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M22 21v-2a4 4 0 0 0-3-3.87"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"9"[39m
+                [33mcy[39m=[32m"7"[39m
+                [33mr[39m=[32m"4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mCharacters[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-map-pin"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"10"[39m
+                [33mr[39m=[32m"3"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mLocations[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-scroll"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M19 17V5a2 2 0 0 0-2-2H4"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWorld Rules[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-clock"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 6v6l4 2"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mTimeline[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-git-branch"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M15 6a9 9 0 0 0-9 9V3"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"18"[39m
+                [33mcy[39m=[32m"6"[39m
+                [33mr[39m=[32m"3"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"6"[39m
+                [33mcy[39m=[32m"18"[39m
+                [33mr[39m=[32m"3"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mRelationships[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all cursor-pointer bg-bg-hover text-text-muted hover:text-text-main hover:bg-border-subtle"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-ban"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"14"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"14"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"12"[39m
+                [33mcy[39m=[32m"12"[39m
+                [33mr[39m=[32m"10"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M4.929 4.929 19.07 19.071"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mBlacklist[0m
+          [36m</button>[39m
+        [36m</nav>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"min-h-[400px]"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"py-20 border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center text-center space-y-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-4 bg-bg-hover rounded-full text-text-muted"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-shield-question-mark"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"40"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"40"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M12 17h.01"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<h3[39m
+                [33mclass[39m=[32m"text-xl font-serif text-text-main"[39m
+              [36m>[39m
+                [0mNenhum personagem encontrado[0m
+              [36m</h3>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"text-text-muted max-w-xs mx-auto"[39m
+              [36m>[39m
+                [0mSua história aguarda seu elenco. Crie seu primeiro personagem para começar.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"[39m
+            [36m>[39m
+              [0mCriar Personagem[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</main>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+[90m [2m❯[22m Proxy.waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[36m [2m❯[22m src/ui/components/BibleDashboard.test.tsx:[2m34:11[22m[39m
+    [90m 32| [39m    
+    [90m 33| [39m    [90m// Should eventually show empty state[39m
+    [90m 34| [39m    [35mawait[39m [34mwaitFor[39m(() [33m=>[39m {
+    [90m   | [39m          [31m^[39m
+    [90m 35| [39m      expect(screen.getByText(/No characters found/i)).toBeInTheDocume…
+    [90m 36| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/ui/components/CharacterForm.test.tsx[2m > [22mCharacterForm[2m > [22mshould call onSave with updated data when form is submitted
+[31m[1mTestingLibraryElementError[22m[39m: Found a label with the text of: /Name/i, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex justify-between items-center sticky top-0 bg-bg-base/80 backdrop-blur-md py-4 z-20 border-b border-border-subtle"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-4"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"p-2 hover:bg-bg-hover rounded-full transition-colors cursor-pointer"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-x"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M18 6 6 18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m6 6 12 12"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"text-xl font-serif text-text-main"[39m
+          [36m>[39m
+            [0mEditando Perfil[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-save"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mSalvar Alterações[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"space-y-6"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-3 text-text-muted"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-user"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"18"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"18"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"7"[39m
+              [33mr[39m=[32m"4"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"text-xs font-bold tracking-widest uppercase"[39m
+          [36m>[39m
+            [0mAtributos Principais[0m
+          [36m</h3>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-3 gap-6"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"md:col-span-2 space-y-2"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"text-xs font-medium text-text-muted"[39m
+              [33mfor[39m=[32m"name"[39m
+            [36m>[39m
+              [0mNome[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"[39m
+              [33mid[39m=[32m"name"[39m
+              [33mname[39m=[32m"name"[39m
+              [33mplaceholder[39m=[32m"Nome do Personagem"[39m
+              [33mtype[39m=[32m"text"[39m
+              [33mvalue[39m=[32m"Original Name"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-2"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"text-xs font-medium text-text-muted"[39m
+              [33mfor[39m=[32m"age"[39m
+            [36m>[39m
+              [0mIdade[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"[39m
+              [33mid[39m=[32m"age"[39m
+              [33mname[39m=[32m"age"[39m
+              [33mtype[39m=[32m"number"[39m
+              [33mvalue[39m=[32m"30"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"md:col-span-3 space-y-2"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"text-xs font-medium text-text-muted"[39m
+              [33mfor[39m=[32m"occupation"[39m
+            [36m>[39m
+              [0mOcupação[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"[39m
+              [33mid[39m=[32m"occupatio...
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m getAllByLabelText node_modules/@testing-library/dom/dist/queries/label-text.js:[2m108:40[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/ui/components/CharacterForm.test.tsx:[2m47:30[22m[39m
+    [90m 45| [39m    render(<CharacterForm character={mockCharacter} onSave={onSave} on…
+    [90m 46| [39m
+    [90m 47| [39m    [35mconst[39m nameInput [33m=[39m screen[33m.[39m[34mgetByLabelText[39m([36m/Name/i[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m 48| [39m    fireEvent[33m.[39m[34mchange[39m(nameInput[33m,[39m { target[33m:[39m { value[33m:[39m [32m"Updated Name"[39m } })[33m;[39m
+    [90m 49| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/ui/components/CharacterForm.test.tsx[2m > [22mCharacterForm[2m > [22mshould show validation error for empty name
+[31m[1mTestingLibraryElementError[22m[39m: Found a label with the text of: /Name/i, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex justify-between items-center sticky top-0 bg-bg-base/80 backdrop-blur-md py-4 z-20 border-b border-border-subtle"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-4"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"p-2 hover:bg-bg-hover rounded-full transition-colors cursor-pointer"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-x"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M18 6 6 18"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m6 6 12 12"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"text-xl font-serif text-text-main"[39m
+          [36m>[39m
+            [0mEditando Perfil[0m
+          [36m</h2>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-save"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"16"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"16"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"[39m
+            [36m/>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M7 3v4a1 1 0 0 0 1 1h7"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mSalvar Alterações[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"space-y-6"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-3 text-text-muted"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"lucide lucide-user"[39m
+            [33mfill[39m=[32m"none"[39m
+            [33mheight[39m=[32m"18"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+            [33mviewBox[39m=[32m"0 0 24 24"[39m
+            [33mwidth[39m=[32m"18"[39m
+            [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+          [36m>[39m
+            [36m<path[39m
+              [33md[39m=[32m"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"[39m
+            [36m/>[39m
+            [36m<circle[39m
+              [33mcx[39m=[32m"12"[39m
+              [33mcy[39m=[32m"7"[39m
+              [33mr[39m=[32m"4"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"text-xs font-bold tracking-widest uppercase"[39m
+          [36m>[39m
+            [0mAtributos Principais[0m
+          [36m</h3>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-3 gap-6"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"md:col-span-2 space-y-2"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"text-xs font-medium text-text-muted"[39m
+              [33mfor[39m=[32m"name"[39m
+            [36m>[39m
+              [0mNome[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"[39m
+              [33mid[39m=[32m"name"[39m
+              [33mname[39m=[32m"name"[39m
+              [33mplaceholder[39m=[32m"Nome do Personagem"[39m
+              [33mtype[39m=[32m"text"[39m
+              [33mvalue[39m=[32m"Original Name"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-2"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"text-xs font-medium text-text-muted"[39m
+              [33mfor[39m=[32m"age"[39m
+            [36m>[39m
+              [0mIdade[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"[39m
+              [33mid[39m=[32m"age"[39m
+              [33mname[39m=[32m"age"[39m
+              [33mtype[39m=[32m"number"[39m
+              [33mvalue[39m=[32m"30"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"md:col-span-3 space-y-2"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"text-xs font-medium text-text-muted"[39m
+              [33mfor[39m=[32m"occupation"[39m
+            [36m>[39m
+              [0mOcupação[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"[39m
+              [33mid[39m=[32m"occupatio...
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m getAllByLabelText node_modules/@testing-library/dom/dist/queries/label-text.js:[2m108:40[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/ui/components/CharacterForm.test.tsx:[2m62:30[22m[39m
+    [90m 60| [39m    render(<CharacterForm character={mockCharacter} onSave={() => {}} …
+    [90m 61| [39m
+    [90m 62| [39m    [35mconst[39m nameInput [33m=[39m screen[33m.[39m[34mgetByLabelText[39m([36m/Name/i[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m 63| [39m    fireEvent[33m.[39m[34mchange[39m(nameInput[33m,[39m { target[33m:[39m { value[33m:[39m [32m""[39m } })[33m;[39m
+    [90m 64| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/ui/components/CharacterList.test.tsx[2m > [22mCharacterList[2m > [22mshould highlight injected characters
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: /Injected/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"space-y-8"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"flex justify-between items-center"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"text-xs font-bold tracking-widest uppercase text-text-muted"[39m
+        [36m>[39m
+          [0mElenco de Personagens ([0m
+          [0m2[0m
+          [0m)[0m
+        [36m</h2>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"[39m
+        [36m>[39m
+          [0m+ Adicionar Novo[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"group bg-bg-base border border-text-main shadow-lg shadow-text-main/5 p-6 rounded-lg space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-start justify-between"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-3 rounded group-hover:bg-text-main group-hover:text-bg-base transition-colors duration-300 bg-text-main text-bg-base"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-user"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"12"[39m
+                  [33mcy[39m=[32m"7"[39m
+                  [33mr[39m=[32m"4"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-right flex flex-col items-end gap-1"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-[10px] font-mono tracking-tighter text-text-muted opacity-50 uppercase"[39m
+              [36m>[39m
+                [0mc6464e5f[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-[9px] font-bold tracking-widest uppercase text-text-main px-1.5 py-0.5 bg-text-main/10 rounded animate-pulse"[39m
+              [36m>[39m
+                [0mInjetado[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-1 flex-1"[39m
+          [36m>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-lg font-serif text-text-main group-hover:tracking-tight transition-all duration-300"[39m
+            [36m>[39m
+              [0mJohn Doe[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-xs text-text-muted font-sans line-clamp-1"[39m
+            [36m>[39m
+              [0mWriter[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[10px] text-text-muted italic mt-2 line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity"[39m
+            [36m>[39m
+              [0mJohn Doe, 30 anos. Writer. Objetivos: . Conflito: .[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"pt-4 border-t border-border-subtle flex justify-between items-center"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[10px] font-bold tracking-widest uppercase text-text-muted"[39m
+            [36m>[39m
+              [0mIdade [0m
+              [0m30[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-text-muted opacity-0 group-hover:opacity-100 transition-opacity font-serif"[39m
+            [36m>[39m
+              [0m→[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"group bg-bg-base border border-border-subtle p-6 rounded-lg space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"flex items-start justify-between"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-3 rounded group-hover:bg-text-main group-hover:text-bg-base transition-colors duration-300 bg-bg-hover"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-user"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"1.5"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"12"[39m
+                  [33mcy[39m=[32m"7"[39m
+                  [33mr[39m=[32m"4"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"text-right flex flex-col items-end gap-1"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-[10px] font-mono tracking-tighter text-text-muted opacity-50 uppercase"[39m
+              [36m>[39m
+                [0mb6fa8e39[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-1 flex-1"[39m
+          [36m>[39m
+            [36m<h3[39m
+              [33mclass[39m=[32m"text-lg font-serif text-text-main group-hover:tracking-tight transition-all duration-300"[39m
+            [36m>[39m
+              [0mJane Smith[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-xs text-text-muted font-sans line-clamp-1"[39m
+            [36m>[39m
+              [0mArtist[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[10px] text-text-muted italic mt-2 line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity"[39m
+            [36m>[39m
+              [0mJane Smith, 25 anos. Artist. Objetivos: . Conflito: .[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"pt-4 border-t border-border-subtle flex justify-between items-center"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-[10px] font-bold tracking-widest uppercase text-text-muted"[39m
+            [36m>[39m
+              [0mIdade [0m
+              [0m25[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"text-text-muted opacity-0 group-hover:opacity-100 transition-opacity font-serif"[39m
+            [36m>[39m
+              [0m→[0m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/ui/components/CharacterList.test.tsx:[2m42:19[22m[39m
+    [90m 40| [39m    render(<CharacterList characters={mockCharacters} injectedIds={inj…
+    [90m 41| [39m    
+    [90m 42| [39m    [34mexpect[39m(screen[33m.[39m[34mgetByText[39m([36m/Injected/i[39m))[33m.[39m[34mtoBeInTheDocument[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m 43| [39m  })[33m;[39m
+    [90m 44| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m src/ui/components/CharacterList.test.tsx[2m > [22mCharacterList[2m > [22mshould show empty state when no characters are provided
+[31m[1mTestingLibraryElementError[22m: Unable to find an element with the text: /No characters found/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div>[31m
+    [36m<div[31m
+      [33mclass[31m=[32m"py-20 border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center text-center space-y-6"[31m
+    [36m>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"p-4 bg-bg-hover rounded-full text-text-muted"[31m
+      [36m>[31m
+        [36m<svg[31m
+          [33maria-hidden[31m=[32m"true"[31m
+          [33mclass[31m=[32m"lucide lucide-shield-question-mark"[31m
+          [33mfill[31m=[32m"none"[31m
+          [33mheight[31m=[32m"40"[31m
+          [33mstroke[31m=[32m"currentColor"[31m
+          [33mstroke-linecap[31m=[32m"round"[31m
+          [33mstroke-linejoin[31m=[32m"round"[31m
+          [33mstroke-width[31m=[32m"1.5"[31m
+          [33mviewBox[31m=[32m"0 0 24 24"[31m
+          [33mwidth[31m=[32m"40"[31m
+          [33mxmlns[31m=[32m"http://www.w3.org/2000/svg"[31m
+        [36m>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"[31m
+          [36m/>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"[31m
+          [36m/>[31m
+          [36m<path[31m
+            [33md[31m=[32m"M12 17h.01"[31m
+          [36m/>[31m
+        [36m</svg>[31m
+      [36m</div>[31m
+      [36m<div[31m
+        [33mclass[31m=[32m"space-y-2"[31m
+      [36m>[31m
+        [36m<h3[31m
+          [33mclass[31m=[32m"text-xl font-serif text-text-main"[31m
+        [36m>[31m
+          [0mNenhum personagem encontrado[0m
+        [36m</h3>[31m
+        [36m<p[31m
+          [33mclass[31m=[32m"text-text-muted max-w-xs mx-auto"[31m
+        [36m>[31m
+          [0mSua história aguarda seu elenco. Crie seu primeiro personagem para começar.[0m
+        [36m</p>[31m
+      [36m</div>[31m
+      [36m<button[31m
+        [33mclass[31m=[32m"bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"[31m
+      [36m>[31m
+        [0mCriar Personagem[0m
+      [36m</button>[31m
+    [36m</div>[31m
+  [36m</div>[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m src/ui/components/CharacterList.test.tsx:[2m47:19[22m[39m
+    [90m 45| [39m  [34mit[39m([32m"should show empty state when no characters are provided"[39m[33m,[39m () [33m=>[39m {
+    [90m 46| [39m    [34mrender[39m([33m<[39m[33mCharacterList[39m [33mcharacters[39m[33m=[39m[33m{[39m[][33m}[39m [33m/[39m[33m>[39m)[33m;[39m
+    [90m 47| [39m    expect(screen.getByText(/No characters found/i)).toBeInTheDocument…
+    [90m   | [39m                  [31m^[39m
+    [90m 48| [39m  })[33m;[39m
+    [90m 49| [39m})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+

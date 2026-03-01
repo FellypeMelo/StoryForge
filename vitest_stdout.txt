@@ -1,0 +1,41 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mG:/Programas/StoryForge[39m
+
+ [31m❯[39m src/ui/components/AppShell.navigation.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 104[2mms[22m[39m
+[31m     [31m×[31m should call onNavigate when a nav item is clicked[39m[32m 101[2mms[22m[39m
+ [32m✓[39m src/ui/components/AppShell.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 78[2mms[22m[39m
+ [32m✓[39m src/ui/components/LocationList.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 138[2mms[22m[39m
+ [32m✓[39m src/ui/components/WorldRuleList.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 171[2mms[22m[39m
+ [32m✓[39m src/App.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 159[2mms[22m[39m
+ [31m❯[39m src/ui/components/CharacterList.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 298[2mms[22m[39m
+     [32m✓[39m should render a list of characters[32m 222[2mms[22m[39m
+[31m     [31m×[31m should highlight injected characters[39m[32m 64[2mms[22m[39m
+[31m     [31m×[31m should show empty state when no characters are provided[39m[32m 8[2mms[22m[39m
+ [32m✓[39m src/ui/components/WorldRuleForm.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+ [32m✓[39m src/ui/components/LocationForm.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 161[2mms[22m[39m
+ [31m❯[39m src/ui/components/CharacterForm.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 346[2mms[22m[39m
+     [32m✓[39m should render all form fields with initial data[32m 99[2mms[22m[39m
+[31m     [31m×[31m should call onSave with updated data when form is submitted[39m[32m 123[2mms[22m[39m
+[31m     [31m×[31m should show validation error for empty name[39m[32m 121[2mms[22m[39m
+ [32m✓[39m src/ui/components/LoreLists.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 261[2mms[22m[39m
+ [31m❯[39m src/ui/components/BibleDashboard.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 2466[2mms[22m[39m
+     [33m[2m✓[22m[39m should render all lore tabs [33m 1159[2mms[22m[39m
+[31m     [31m×[31m should show characters tab by default after loading[39m[33m 1199[2mms[22m[39m
+     [32m✓[39m should show search results panel when searching[32m 104[2mms[22m[39m
+ [32m✓[39m src/domain/character.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/ui/components/SearchBar.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m src/domain/value-objects/character-id.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/domain/blacklist-entry.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/domain/world-rule.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/domain/value-objects/bible-ids.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/domain/value-objects/project-id.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/domain/location.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/domain/project.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/domain/timeline-event.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/domain/relationship.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m18 passed[39m[22m[90m (22)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[2m | [22m[1m[32m43 passed[39m[22m[90m (49)[39m
+[2m   Start at [22m 15:18:25
+[2m   Duration [22m 21.85s[2m (transform 22.20s, setup 27.70s, import 71.74s, tests 4.43s, environment 104.67s)[22m
+

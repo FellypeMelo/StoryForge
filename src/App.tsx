@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { AppShell } from "./ui/components/AppShell";
-import { CharacterList } from "./ui/components/CharacterList";
-import { CharacterForm } from "./ui/components/CharacterForm";
+import { AppShell } from "./ui/components/layout/AppShell";
+import { CharacterList } from "./ui/components/character/CharacterList";
+import { CharacterForm } from "./ui/components/character/CharacterForm";
 import { Character } from "./domain/character";
 
 interface AppInfo {
