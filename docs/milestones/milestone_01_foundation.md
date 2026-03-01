@@ -157,14 +157,14 @@ Sem bibliotecas de componentes externas (YAGNI).
 
 ## Entregáveis do Milestone 1
 
-| Artefato | Descrição |
-|----------|-----------|
-| Projeto Tauri funcional | Build dev + build release |
-| Estrutura Clean Architecture | Ambos frontend e backend |
-| SQLite inicializado | Com sistema de migrations e WAL mode |
-| IPC Bridge | Commands tipados com tratamento de erro |
-| Pipeline de testes | Vitest + cargo test + linting |
-| UI Shell | Layout base com tema escuro |
+| Artefato                     | Descrição                               |
+| ---------------------------- | --------------------------------------- |
+| Projeto Tauri funcional      | Build dev + build release               |
+| Estrutura Clean Architecture | Ambos frontend e backend                |
+| SQLite inicializado          | Com sistema de migrations e WAL mode    |
+| IPC Bridge                   | Commands tipados com tratamento de erro |
+| Pipeline de testes           | Vitest + cargo test + linting           |
+| UI Shell                     | Layout base com tema escuro             |
 
 ---
 

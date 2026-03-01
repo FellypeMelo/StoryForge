@@ -9,6 +9,7 @@
 ## 1. Problema Central
 
 Instruir a IA com "escreva o Capítulo 1" resulta em:
+
 - Fluxo de consciência sem ritmo, **ou**
 - Resumo apressado dos eventos.
 
@@ -24,19 +25,19 @@ O ritmo e a tensão são criados alternando **ação implacável** com **process
 
 Move a trama **externamente**.
 
-| Componente | Função | Regra |
-|------------|--------|-------|
-| **Objetivo (Goal)** | O que o personagem quer nesta cena | Deve ser específico e mensurável |
-| **Conflito (Conflict)** | Obstáculo tangível ou humano | Deve ser ativo, não passivo |
-| **Desastre (Disaster)** | Resultado da cena | **NUNCA** termina em sucesso absoluto |
+| Componente              | Função                             | Regra                                 |
+| ----------------------- | ---------------------------------- | ------------------------------------- |
+| **Objetivo (Goal)**     | O que o personagem quer nesta cena | Deve ser específico e mensurável      |
+| **Conflito (Conflict)** | Obstáculo tangível ou humano       | Deve ser ativo, não passivo           |
+| **Desastre (Disaster)** | Resultado da cena                  | **NUNCA** termina em sucesso absoluto |
 
 ### Resultados Permitidos para o Desastre
 
-| Tipo | Descrição |
-|------|-----------|
-| **"Não"** | Fracasso direto |
+| Tipo                 | Descrição                        |
+| -------------------- | -------------------------------- |
+| **"Não"**            | Fracasso direto                  |
 | **"Não, e pior..."** | Fracasso + complicação adicional |
-| **"Sim, mas..."** | Sucesso parcial com custo grave |
+| **"Sim, mas..."**    | Sucesso parcial com custo grave  |
 
 > ⛔ **Proibido:** Sucesso limpo sem consequências.
 
@@ -44,10 +45,10 @@ Move a trama **externamente**.
 
 Move o arco **interno** e ajusta o ritmo.
 
-| Componente | Função | Regra |
-|------------|--------|-------|
-| **Reação (Reaction)** | Choque emocional visceral ao Desastre | Deve ser fisiológico, não intelectual |
-| **Dilema (Dilemma)** | Análise das opções disponíveis | **Todas as opções devem ser péssimas** |
+| Componente             | Função                                  | Regra                                  |
+| ---------------------- | --------------------------------------- | -------------------------------------- |
+| **Reação (Reaction)**  | Choque emocional visceral ao Desastre   | Deve ser fisiológico, não intelectual  |
+| **Dilema (Dilemma)**   | Análise das opções disponíveis          | **Todas as opções devem ser péssimas** |
 | **Decisão (Decision)** | A escolha que define o próximo Objetivo | Deve gerar consequências irreversíveis |
 
 ---
@@ -56,11 +57,11 @@ Move o arco **interno** e ajusta o ritmo.
 
 A IA tende a fornecer "lições de moral" no fim dos capítulos. Use estas tipologias:
 
-| Tipo | Modo de Corte | Efeito |
-|------|---------------|--------|
-| **Pre-point** | Corte no segundo exato **antes** do evento principal | Suspense máximo |
-| **Climactic** | Corte no **meio** da ação ou revelação | O "gasp" — impacto emocional |
-| **Post-point** | Corte **após** o evento, na reação inicial não processada | Tensão residual |
+| Tipo           | Modo de Corte                                             | Efeito                       |
+| -------------- | --------------------------------------------------------- | ---------------------------- |
+| **Pre-point**  | Corte no segundo exato **antes** do evento principal      | Suspense máximo              |
+| **Climactic**  | Corte no **meio** da ação ou revelação                    | O "gasp" — impacto emocional |
+| **Post-point** | Corte **após** o evento, na reação inicial não processada | Tensão residual              |
 
 ### Regra de Ouro
 

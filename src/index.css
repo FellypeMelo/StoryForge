@@ -14,8 +14,8 @@
 
 @layer base {
   :root {
-    --sf-bg: #F9F9FB;
-    --sf-text-main: #2A2A2A;
+    --sf-bg: #f9f9fb;
+    --sf-text-main: #2a2a2a;
     --sf-text-muted: rgba(42, 42, 42, 0.4);
     --sf-border: rgba(0, 0, 0, 0.04);
     --sf-hover: rgba(0, 0, 0, 0.03);
@@ -24,7 +24,7 @@
   @media (prefers-color-scheme: dark) {
     :root {
       --sf-bg: #000000;
-      --sf-text-main: #EAEAEA;
+      --sf-text-main: #eaeaea;
       --sf-text-muted: rgba(234, 234, 234, 0.3);
       --sf-border: rgba(255, 255, 255, 0.06);
       --sf-hover: rgba(255, 255, 255, 0.05);
@@ -35,7 +35,9 @@
     background-color: var(--sf-bg);
     color: var(--sf-text-main);
     font-family: var(--font-serif);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   /* Ultra-Minimalist Custom Scrollbars */

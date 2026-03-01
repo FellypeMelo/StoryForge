@@ -16,13 +16,13 @@ A IA gera personagens **psicologicamente rasos**, sem agência, que operam como 
 
 O modelo dos Cinco Grandes Fatores parametriza o comportamento do personagem. A IA **entende profundamente** este modelo e responde com precisão quando os scores são fornecidos.
 
-| Traço | Polo Alto | Polo Baixo |
-|-------|-----------|------------|
-| **Abertura (O)** | Originalidade, curiosidade | Rotina, conservadorismo |
-| **Conscienciosidade (C)** | Disciplina, organização | Caos, impulsividade |
-| **Extroversão (E)** | Busca por estímulo, sociabilidade | Isolamento, introspecção |
-| **Amabilidade (A)** | Confiança, empatia | Ceticismo, hostilidade |
-| **Neuroticismo (N)** | Ansiedade, vulnerabilidade | Estabilidade, resiliência |
+| Traço                     | Polo Alto                         | Polo Baixo                |
+| ------------------------- | --------------------------------- | ------------------------- |
+| **Abertura (O)**          | Originalidade, curiosidade        | Rotina, conservadorismo   |
+| **Conscienciosidade (C)** | Disciplina, organização           | Caos, impulsividade       |
+| **Extroversão (E)**       | Busca por estímulo, sociabilidade | Isolamento, introspecção  |
+| **Amabilidade (A)**       | Confiança, empatia                | Ceticismo, hostilidade    |
+| **Neuroticismo (N)**      | Ansiedade, vulnerabilidade        | Estabilidade, resiliência |
 
 ### Regras de Uso
 
@@ -36,13 +36,13 @@ O modelo dos Cinco Grandes Fatores parametriza o comportamento do personagem. A 
 
 Define a **trajetória da alma** do personagem ao longo da narrativa.
 
-| Componente | Descrição | Exemplo |
-|------------|-----------|---------|
-| **Ferida (Wound)** | Trauma não curado do passado | Abandono parental aos 8 anos |
-| **Crença (Belief)** | A mentira sobre o mundo que a ferida criou | "Ninguém pode ser confiável" |
-| **Medo (Fear)** | O terror emocional de sofrer a ferida novamente | Medo paralisante de intimidade |
-| **Identidade (Identity)** | O "eu falso", a armadura emocional | Persona de autossuficiência agressiva |
-| **Essência (Essence)** | O "eu verdadeiro" a ser aceito no Ato 3 | Capacidade de vulnerabilidade e conexão |
+| Componente                | Descrição                                       | Exemplo                                 |
+| ------------------------- | ----------------------------------------------- | --------------------------------------- |
+| **Ferida (Wound)**        | Trauma não curado do passado                    | Abandono parental aos 8 anos            |
+| **Crença (Belief)**       | A mentira sobre o mundo que a ferida criou      | "Ninguém pode ser confiável"            |
+| **Medo (Fear)**           | O terror emocional de sofrer a ferida novamente | Medo paralisante de intimidade          |
+| **Identidade (Identity)** | O "eu falso", a armadura emocional              | Persona de autossuficiência agressiva   |
+| **Essência (Essence)**    | O "eu verdadeiro" a ser aceito no Ato 3         | Capacidade de vulnerabilidade e conexão |
 
 ### Regra Crítica
 
@@ -69,6 +69,7 @@ A IA **padroniza diálogos**. Para criar voz única, cada personagem precisa de:
 ### Subtexto Comportamental
 
 Definir **3 "tells" físicos involuntários** que o personagem exibe quando sua Identidade é ameaçada. Ex:
+
 1. Coça a cicatriz no pulso
 2. Fala mais rápido e em volume mais baixo
 3. Alinha obsessivamente objetos próximos
@@ -117,12 +118,12 @@ Quero falhas humanas feias e realistas."
 
 ## 7. Anti-Patterns a Bloquear
 
-| Anti-Pattern | Sintoma | Ação |
-|---|---|---|
-| Personagem-terapeuta | Resolve conflitos conversando articuladamente | Exigir evasão, interrupção, jargão regional |
-| Otimismo artificial | Sem preconceitos internos ou defeitos reais | Aplicar regra negativa do prompt |
-| Voz genérica | Todos os personagens falam igual | Verificar regras sintáticas distintas por personagem |
-| Arco interno ausente | Sem Ferida/Crença/Medo definidos | Bloquear progressão até preenchimento do Hauge |
+| Anti-Pattern         | Sintoma                                       | Ação                                                 |
+| -------------------- | --------------------------------------------- | ---------------------------------------------------- |
+| Personagem-terapeuta | Resolve conflitos conversando articuladamente | Exigir evasão, interrupção, jargão regional          |
+| Otimismo artificial  | Sem preconceitos internos ou defeitos reais   | Aplicar regra negativa do prompt                     |
+| Voz genérica         | Todos os personagens falam igual              | Verificar regras sintáticas distintas por personagem |
+| Arco interno ausente | Sem Ferida/Crença/Medo definidos              | Bloquear progressão até preenchimento do Hauge       |
 
 ---
 

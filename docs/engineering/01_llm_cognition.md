@@ -15,6 +15,7 @@ LLMs não "entendem" lógica; operam via inferência estatística de alta dimens
 - O produto escalar (Q · K) pondera qual token passado DEVE influenciar o próximo.
 
 ### Implicação Prática: Diluição de Atenção
+
 Atenção dilui com o aumento de tokens. Injetar um arquivo de 10.000 linhas satura a matriz com "ruído térmico", resultando em **alucinações**.
 
 ---
@@ -22,7 +23,7 @@ Atenção dilui com o aumento de tokens. Injetar um arquivo de 10.000 linhas sat
 ## 2. Alucinação como Compressão com Perdas
 
 Alucinação não é "bug corrigível" — é limite matemático da **Complexidade de Kolmogorov**.
-O LLM é um *lossy compressor* do GitHub. Quando o contexto falta, ele interpola via **proximidade semântica**.
+O LLM é um _lossy compressor_ do GitHub. Quando o contexto falta, ele interpola via **proximidade semântica**.
 
 **Exemplo:**
 Se faltar contexto de tipagem em TypeScript, ele pode inferir padrões do React em código puramente Node, se a densidade vetorial de sua base apontar para essa direção.
@@ -31,7 +32,7 @@ Se faltar contexto de tipagem em TypeScript, ele pode inferir padrões do React 
 
 ## 3. A Síndrome da "Agulha no Palheiro"
 
-Janelas de 2M de tokens (Gemini 1.5 Pro) processam montes de texto, mas o **ruído contextualmente adjacente** dilui o vetor de atenção. 
+Janelas de 2M de tokens (Gemini 1.5 Pro) processam montes de texto, mas o **ruído contextualmente adjacente** dilui o vetor de atenção.
 Enviar contexto desnecessário faz a IA ignorar regras arquiteturais vitais colocadas no meio do prompt.
 
 ---
@@ -40,12 +41,12 @@ Enviar contexto desnecessário faz a IA ignorar regras arquiteturais vitais colo
 
 Confundir os níveis de capacidade de um agente é a maior causa de falha corporativa.
 
-| Paradigma | Características | Caso de Uso |
-|-----------|-----------------|-------------|
-| **LLM Simples (Zero-Shot)** | Stateless. Auto-regressivo simples. | Autocomplete trivial (Copilot clássico). Falha em refatorações massivas. |
-| **Agente com Tools** | Executa funções determinísticas (JSON Schema). | Extrair logs, testes isolados. Exige gramática restrita para JSON. |
-| **Agente ReAct** | Razão → Ação → Observação. Possui loop com stderr/stdout. | Depuração, refatorações curtas em um arquivo via CLI. |
-| **Sistemas Multiagentes** | Coreografia distribuída: Planejador ➔ Trabalhadores ➔ Revisor. | Escala arquitetural complexa. Padrão exigido pelo AI-XP. |
+| Paradigma                   | Características                                                | Caso de Uso                                                              |
+| --------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| **LLM Simples (Zero-Shot)** | Stateless. Auto-regressivo simples.                            | Autocomplete trivial (Copilot clássico). Falha em refatorações massivas. |
+| **Agente com Tools**        | Executa funções determinísticas (JSON Schema).                 | Extrair logs, testes isolados. Exige gramática restrita para JSON.       |
+| **Agente ReAct**            | Razão → Ação → Observação. Possui loop com stderr/stdout.      | Depuração, refatorações curtas em um arquivo via CLI.                    |
+| **Sistemas Multiagentes**   | Coreografia distribuída: Planejador ➔ Trabalhadores ➔ Revisor. | Escala arquitetural complexa. Padrão exigido pelo AI-XP.                 |
 
 ---
 
@@ -63,7 +64,7 @@ Para o desenvolvimento em grande escala, a IA sofre de **Miopia Topológica** (n
 
 ## 6. Casos de Falha Reais (O Perigo do Vibe Coding)
 
-1. **A Armadilha do Código Feliz:** 
+1. **A Armadilha do Código Feliz:**
    O LLM gera componentes complexos, mas não "pensa" na vida útil além de ciclos felizes (esquece Memory Leaks e Eventos Async).
 2. **Quebra Silenciosa de Refatoração:**
    Como no ReAct a atenção satura para iteração de longo prazo, a IA adota atalhos nocivos: `// resto do código permanece o mesmo`, estilhaçando projetos.

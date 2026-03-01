@@ -22,20 +22,20 @@ A IA escreve de forma **episódica** (eventos conectados por "e então"). O auto
 
 ### 2.1 A Jornada do Herói (Campbell / Vogler)
 
-| Estágio | Descrição |
-|---------|-----------|
-| 1. Mundo Comum | Status quo do protagonista |
-| 2. Chamado à Aventura | Evento disruptivo |
-| 3. Recusa do Chamado | Hesitação e medo |
-| 4. Encontro com o Mentor | Guia ou catalisador |
-| 5. Travessia do Limiar | Ponto sem retorno |
-| 6. Testes, Aliados, Inimigos | Mundo especial |
-| 7. Aproximação da Caverna | Preparação para a provação |
-| 8. Provação Suprema | Confronto maior |
-| 9. Recompensa | Conquista temporária |
-| 10. Caminho de Volta | Consequências da recompensa |
-| 11. Ressurreição | Transformação final |
-| 12. Retorno com o Elixir | Novo equilíbrio |
+| Estágio                      | Descrição                   |
+| ---------------------------- | --------------------------- |
+| 1. Mundo Comum               | Status quo do protagonista  |
+| 2. Chamado à Aventura        | Evento disruptivo           |
+| 3. Recusa do Chamado         | Hesitação e medo            |
+| 4. Encontro com o Mentor     | Guia ou catalisador         |
+| 5. Travessia do Limiar       | Ponto sem retorno           |
+| 6. Testes, Aliados, Inimigos | Mundo especial              |
+| 7. Aproximação da Caverna    | Preparação para a provação  |
+| 8. Provação Suprema          | Confronto maior             |
+| 9. Recompensa                | Conquista temporária        |
+| 10. Caminho de Volta         | Consequências da recompensa |
+| 11. Ressurreição             | Transformação final         |
+| 12. Retorno com o Elixir     | Novo equilíbrio             |
 
 **Aplicação ideal:** Fantasia, Épicos, Sci-Fi, Coming-of-Age.
 
@@ -61,12 +61,12 @@ Alternância geométrica: **Gancho** (oposto do fim) → Virada 1 → Ponto de A
 
 Foca em **contraste** em vez de conflito:
 
-| Ato | Função |
-|-----|--------|
-| **Ki** (Introdução) | Apresentação |
-| **Shō** (Desenvolvimento) | Expansão |
-| **Ten** (Reviravolta) | Elemento novo e **não relacionado** |
-| **Ketsu** (Conclusão) | Harmoniza a reviravolta com a premissa |
+| Ato                       | Função                                 |
+| ------------------------- | -------------------------------------- |
+| **Ki** (Introdução)       | Apresentação                           |
+| **Shō** (Desenvolvimento) | Expansão                               |
+| **Ten** (Reviravolta)     | Elemento novo e **não relacionado**    |
+| **Ketsu** (Conclusão)     | Harmoniza a reviravolta com a premissa |
 
 **Aplicação ideal:** Ficção literária, slice-of-life.
 
@@ -99,11 +99,11 @@ Quebra da linearidade temporal para forçar o leitor a montar o quebra-cabeça t
 
 ## 4. Erros Estruturais Comuns com IA
 
-| Erro | Causa | Detecção | Prevenção |
-|------|-------|----------|-----------|
-| **Sagging Middle** | IA perde direção entre evento incitante e clímax | Reflexões internas intermináveis sem progressão de enredo | Exigir Pinch Points obrigatórios no meio |
-| **Resolução Precoce** | RLHF causa aversão a prolongar sofrimento | Mistérios resolvidos rápido, traumas curados facilmente | Instruir: "É proibido resolver o conflito antes do Ato 3" |
-| **Episodicidade** | Eventos conectados por "e então" em vez de "portanto/mas" | Cenas que podem ser reordenadas sem impacto | Exigir relação causal explícita entre cenas |
+| Erro                  | Causa                                                     | Detecção                                                  | Prevenção                                                 |
+| --------------------- | --------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
+| **Sagging Middle**    | IA perde direção entre evento incitante e clímax          | Reflexões internas intermináveis sem progressão de enredo | Exigir Pinch Points obrigatórios no meio                  |
+| **Resolução Precoce** | RLHF causa aversão a prolongar sofrimento                 | Mistérios resolvidos rápido, traumas curados facilmente   | Instruir: "É proibido resolver o conflito antes do Ato 3" |
+| **Episodicidade**     | Eventos conectados por "e então" em vez de "portanto/mas" | Cenas que podem ser reordenadas sem impacto               | Exigir relação causal explícita entre cenas               |
 
 ---
 

@@ -27,6 +27,7 @@ LLMs são treinados para **contar** (resumir informações), não para **mostrar
 A IA **obedece melhor ao que NÃO deve fazer**. Toda requisição de escrita deve conter:
 
 **Proibições obrigatórias:**
+
 - ❌ Nomear emoções diretamente ("sentiu raiva", "estava triste")
 - ❌ Usar palavras da blacklist: "tapeçaria", "mosaico", "silêncio sepulcral", "olhou para o horizonte", "dança mortal"
 - ❌ Reações físicas clichê: "apertou a mandíbula", "liberou uma respiração que não sabia que segurava", "arrepio desceu pela espinha"
@@ -81,13 +82,13 @@ Essa técnica ativa regiões mais densas do espaço latente associadas a escrita
 
 ## 5. Blacklist de AI-ismos (Palavras Proibidas)
 
-| Categoria | Exemplos Proibidos |
-|-----------|-------------------|
-| **Metáforas visuais grandiosas** | "rica tapeçaria", "mosaico de emoções", "dança mortal" |
-| **Frases genéricas** | "um silêncio ensurdecedor", "olhou para o horizonte" |
-| **Reações corporais** | "apertou a mandíbula", "arrepio na espinha", "olhos brilharam" |
-| **Conectores artificiais** | "Não apenas... mas também", perguntas retóricas em série |
-| **Resoluções limpas** | Lições de moral, reflexões reconfortantes, epifanias súbitas |
+| Categoria                        | Exemplos Proibidos                                             |
+| -------------------------------- | -------------------------------------------------------------- |
+| **Metáforas visuais grandiosas** | "rica tapeçaria", "mosaico de emoções", "dança mortal"         |
+| **Frases genéricas**             | "um silêncio ensurdecedor", "olhou para o horizonte"           |
+| **Reações corporais**            | "apertou a mandíbula", "arrepio na espinha", "olhos brilharam" |
+| **Conectores artificiais**       | "Não apenas... mas também", perguntas retóricas em série       |
+| **Resoluções limpas**            | Lições de moral, reflexões reconfortantes, epifanias súbitas   |
 
 ---
 

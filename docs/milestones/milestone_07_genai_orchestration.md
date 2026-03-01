@@ -171,13 +171,13 @@ API keys mascaradas na UI (******).
 
 ## Entregáveis do Milestone 7
 
-| Artefato | Descrição |
-|----------|-----------|
-| OllamaAdapter | Local-first com streaming |
-| OpenAiAdapter | Com retry + rate limit handling |
-| AnthropicAdapter | Messages API com streaming |
-| GeminiAdapter | GenerateContent API |
-| LlmRouter | Fallback + Circuit Breaker |
-| ProviderConfig | Persistência cifrada de API keys |
-| AgentPipeline | Supervisor → Specialists reutilizando use cases |
-| UI Settings | Configuração de provedores com teste de conexão |
+| Artefato         | Descrição                                       |
+| ---------------- | ----------------------------------------------- |
+| OllamaAdapter    | Local-first com streaming                       |
+| OpenAiAdapter    | Com retry + rate limit handling                 |
+| AnthropicAdapter | Messages API com streaming                      |
+| GeminiAdapter    | GenerateContent API                             |
+| LlmRouter        | Fallback + Circuit Breaker                      |
+| ProviderConfig   | Persistência cifrada de API keys                |
+| AgentPipeline    | Supervisor → Specialists reutilizando use cases |
+| UI Settings      | Configuração de provedores com teste de conexão |

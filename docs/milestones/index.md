@@ -8,16 +8,16 @@
 
 ## Visão Geral
 
-| # | Milestone | Fase | Foco Principal |
-|---|-----------|------|----------------|
-| 1 | [Foundation & Scaffold](milestone_01_foundation.md) | 🏗️ Zero | Tauri + React + SQLite + Clean Arch + Pipeline TDD |
-| 2 | [Story Bible & Motor RAG](milestone_02_story_bible_rag.md) | 📚 Dados | Lorebook, FTS5, sqlite-vec, Injeção de Contexto RAG |
-| 3 | [Ideação CHI & Personagens](milestone_03_ideation_characters.md) | 🧠 Criativo | Método CHI (anti-clichê), OCEAN, Hauge, Worldbuilding CAD |
-| 4 | [Estrutura Narrativa & Capítulos](milestone_04_narrative_structure.md) | 🏛️ Estrutura | 6 Frameworks, Story Grid, Cena & Sequela, Beat Sheets |
-| 5 | [Assistente de Escrita E.P.R.L.](milestone_05_writing_assistant.md) | ✍️ Core | CAD + Guardrails + RSIP, MRU, Editor TipTap WYSIWYG |
-| 6 | [Bad Cop Editor & Avançado](milestone_06_badcop_advanced.md) | 🚨 Qualidade | 4 Eixos de Auditoria, Motif Engineering, MPS, Narradores |
-| 7 | [Multi-Provider GenAI](milestone_07_genai_orchestration.md) | 🔌 Infra IA | Ollama, OpenAI, Claude, Gemini, Circuit Breaker, Agentes |
-| 8 | [DevSecOps & Production](milestone_08_devsecops_production.md) | 🛡️ Release | CI/CD, SAST, Self-Healing, Packaging, Performance |
+| #   | Milestone                                                              | Fase         | Foco Principal                                            |
+| --- | ---------------------------------------------------------------------- | ------------ | --------------------------------------------------------- |
+| 1   | [Foundation & Scaffold](milestone_01_foundation.md)                    | 🏗️ Zero      | Tauri + React + SQLite + Clean Arch + Pipeline TDD        |
+| 2   | [Story Bible & Motor RAG](milestone_02_story_bible_rag.md)             | 📚 Dados     | Lorebook, FTS5, sqlite-vec, Injeção de Contexto RAG       |
+| 3   | [Ideação CHI & Personagens](milestone_03_ideation_characters.md)       | 🧠 Criativo  | Método CHI (anti-clichê), OCEAN, Hauge, Worldbuilding CAD |
+| 4   | [Estrutura Narrativa & Capítulos](milestone_04_narrative_structure.md) | 🏛️ Estrutura | 6 Frameworks, Story Grid, Cena & Sequela, Beat Sheets     |
+| 5   | [Assistente de Escrita E.P.R.L.](milestone_05_writing_assistant.md)    | ✍️ Core      | CAD + Guardrails + RSIP, MRU, Editor TipTap WYSIWYG       |
+| 6   | [Bad Cop Editor & Avançado](milestone_06_badcop_advanced.md)           | 🚨 Qualidade | 4 Eixos de Auditoria, Motif Engineering, MPS, Narradores  |
+| 7   | [Multi-Provider GenAI](milestone_07_genai_orchestration.md)            | 🔌 Infra IA  | Ollama, OpenAI, Claude, Gemini, Circuit Breaker, Agentes  |
+| 8   | [DevSecOps & Production](milestone_08_devsecops_production.md)         | 🛡️ Release   | CI/CD, SAST, Self-Healing, Packaging, Performance         |
 
 ---
 

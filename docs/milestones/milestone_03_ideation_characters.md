@@ -154,11 +154,11 @@ Design consistente com AppShell.
 
 ## Entregáveis do Milestone 3
 
-| Artefato | Descrição |
-|----------|-----------|
-| Método CHI | Pipeline de 3 fases (clichês → premissas → validação) |
-| Worldbuilding CAD | Pipeline de 4 passos decompostos |
-| CharacterSheet | Aggregate root com OCEAN + Hauge + Voz + Tells |
-| LlmPort | Interface de domínio para comunicação com LLM |
-| UI Ideação | Wizard de 3 etapas para geração de premissas |
-| UI Personagens | CRUD de fichas com indicador de completude |
+| Artefato          | Descrição                                             |
+| ----------------- | ----------------------------------------------------- |
+| Método CHI        | Pipeline de 3 fases (clichês → premissas → validação) |
+| Worldbuilding CAD | Pipeline de 4 passos decompostos                      |
+| CharacterSheet    | Aggregate root com OCEAN + Hauge + Voz + Tells        |
+| LlmPort           | Interface de domínio para comunicação com LLM         |
+| UI Ideação        | Wizard de 3 etapas para geração de premissas          |
+| UI Personagens    | CRUD de fichas com indicador de completude            |

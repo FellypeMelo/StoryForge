@@ -8,7 +8,7 @@
 
 ## 1. Fundamento: O Efeito da Média
 
-Quando um LLM recebe um prompt simples de ideação, ele gera a premissa **estatisticamente mais comum** do seu banco de treinamento — o chamado *Averaging Effect*. Para combater isso, utilizamos o **Método CHI** aliado a **CAD**.
+Quando um LLM recebe um prompt simples de ideação, ele gera a premissa **estatisticamente mais comum** do seu banco de treinamento — o chamado _Averaging Effect_. Para combater isso, utilizamos o **Método CHI** aliado a **CAD**.
 
 ---
 
@@ -16,11 +16,11 @@ Quando um LLM recebe um prompt simples de ideação, ele gera a premissa **estat
 
 ### Processo em 3 Fases
 
-| Fase | Ação | Regra |
-|------|-------|-------|
-| **Fase 1 — Extração de Clichês** | Forçar a IA a listar TUDO que é comum e previsível no gênero | Os elementos listados ficam **permanentemente proibidos** |
-| **Fase 2 — Polinização Cruzada** | Combinar a premissa de gênero com uma disciplina acadêmica não relacionada | Ex: *Fantasia Épica + Teoria dos Jogos*, *Romance + Termodinâmica* |
-| **Fase 3 — Validação Reversa** | Avaliar o motor de conflito da ideia gerada | Deve responder: O que o protagonista quer? Quem/o que impede? O que acontece se falhar? |
+| Fase                             | Ação                                                                       | Regra                                                                                   |
+| -------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Fase 1 — Extração de Clichês** | Forçar a IA a listar TUDO que é comum e previsível no gênero               | Os elementos listados ficam **permanentemente proibidos**                               |
+| **Fase 2 — Polinização Cruzada** | Combinar a premissa de gênero com uma disciplina acadêmica não relacionada | Ex: _Fantasia Épica + Teoria dos Jogos_, _Romance + Termodinâmica_                      |
+| **Fase 3 — Validação Reversa**   | Avaliar o motor de conflito da ideia gerada                                | Deve responder: O que o protagonista quer? Quem/o que impede? O que acontece se falhar? |
 
 ### Regras de Operação
 
@@ -91,12 +91,12 @@ C) O Risco (O que acontece se ele falhar?)."
 
 ## 6. Anti-Patterns a Bloquear
 
-| Anti-Pattern | Sintoma | Ação |
-|---|---|---|
-| Premissa genérica | "Um jovem descobre que tem poderes" | Rejeitar. Executar Fase 1 do CHI |
-| Conflito vago | "Ele precisa salvar o mundo" | Exigir especificidade: quem, como, por que ele especificamente? |
-| Antagonista ausente | Sem força opositora clara | Bloquear progressão até definição concreta |
-| Worldbuilding de prompt único | "Crie um mundo de fantasia completo" | Forçar decomposição via CAD |
+| Anti-Pattern                  | Sintoma                              | Ação                                                            |
+| ----------------------------- | ------------------------------------ | --------------------------------------------------------------- |
+| Premissa genérica             | "Um jovem descobre que tem poderes"  | Rejeitar. Executar Fase 1 do CHI                                |
+| Conflito vago                 | "Ele precisa salvar o mundo"         | Exigir especificidade: quem, como, por que ele especificamente? |
+| Antagonista ausente           | Sem força opositora clara            | Bloquear progressão até definição concreta                      |
+| Worldbuilding de prompt único | "Crie um mundo de fantasia completo" | Forçar decomposição via CAD                                     |
 
 ---
 

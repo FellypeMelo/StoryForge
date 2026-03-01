@@ -71,12 +71,12 @@ Validação retorna mensagem específica de violação Story Grid.
 
 ### Resultados Permitidos para Disaster
 
-| Tipo | Válido |
-|------|--------|
-| "Não" (fracasso direto) | ✅ |
-| "Não, e pior..." (fracasso + complicação) | ✅ |
-| "Sim, mas..." (sucesso com custo grave) | ✅ |
-| Sucesso limpo | ❌ BLOQUEADO |
+| Tipo                                      | Válido       |
+| ----------------------------------------- | ------------ |
+| "Não" (fracasso direto)                   | ✅           |
+| "Não, e pior..." (fracasso + complicação) | ✅           |
+| "Sim, mas..." (sucesso com custo grave)   | ✅           |
+| Sucesso limpo                             | ❌ BLOQUEADO |
 
 ### Critério de Aceite
 
@@ -162,13 +162,13 @@ Alertas de erros estruturais visíveis inline.
 
 ## Entregáveis do Milestone 4
 
-| Artefato | Descrição |
-|----------|-----------|
-| 6 Frameworks Narrativos | Strategy pattern com beats obrigatórios |
-| Story Grid Validator | Validação de inversão de polaridade por cena |
-| Cena & Sequela | Modelo Dwight Swain com 3 tipos de Disaster |
-| Cliffhanger tipado | Pre-point, Climactic, Post-point |
-| Beat Sheet Generator | Use case com prompt DRTD + validação pós-geração |
-| Detecção de erros | Sagging Middle, Resolução Precoce, Episodicidade |
-| UI Estrutura | Seletor de framework + visualização de beats |
-| UI Capítulos | Beat sheets com indicadores visuais |
+| Artefato                | Descrição                                        |
+| ----------------------- | ------------------------------------------------ |
+| 6 Frameworks Narrativos | Strategy pattern com beats obrigatórios          |
+| Story Grid Validator    | Validação de inversão de polaridade por cena     |
+| Cena & Sequela          | Modelo Dwight Swain com 3 tipos de Disaster      |
+| Cliffhanger tipado      | Pre-point, Climactic, Post-point                 |
+| Beat Sheet Generator    | Use case com prompt DRTD + validação pós-geração |
+| Detecção de erros       | Sagging Middle, Resolução Precoce, Episodicidade |
+| UI Estrutura            | Seletor de framework + visualização de beats     |
+| UI Capítulos            | Beat sheets com indicadores visuais              |

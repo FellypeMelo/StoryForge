@@ -10,7 +10,7 @@
 
 - **O que é:** Agentes criam heranças monstruosas e arquiteturas infladas (ex: `IValidator<T>`, `BaseValidatorAbstract`).
 - **Por que ocorre:** Predomínio estatístico de dados educacionais sobre "Padrões de Projeto Gof/Enterprise" nos treinamentos primários do LLM.
-- **A Solução Governamental:** **Regra das 3 Repetições**. Os meta-prompts suprimem as generalizações: *"Nenhuma interface genérica abstrata deverá ser delineada até que surja evidência incontestável de replicação em 3 módulos na base estática. Redija de forma puramente concreta."*
+- **A Solução Governamental:** **Regra das 3 Repetições**. Os meta-prompts suprimem as generalizações: _"Nenhuma interface genérica abstrata deverá ser delineada até que surja evidência incontestável de replicação em 3 módulos na base estática. Redija de forma puramente concreta."_
 
 ---
 
@@ -19,7 +19,7 @@
 - **O que é:** A IA força um falso reaproveitamento ao mesclar contextos lógicos fundamentalmente separados pelo mero acaso de possuírem os mesmos campos textuais no estado presente.
 - **Exemplo:** Mesclar entidade de Banco de Dados (`UserModel`) com Objeto de Transferência HTTP (`UserDTO`). Alterar o front quebra veladamente a persistence ORM.
 - **Por que ocorre:** Compressão matemática. Para economizar tokens preditivos na janela (DRY), o LLM engaveta abstrações e agrupa códigos distintos.
-- **A Solução Governamental:** Segregação brutal por Bounded Contexts em prompts DRTD rigorosos exigindo duplicação tática protetiva frente ao acoplamento danoso. 
+- **A Solução Governamental:** Segregação brutal por Bounded Contexts em prompts DRTD rigorosos exigindo duplicação tática protetiva frente ao acoplamento danoso.
 
 ---
 

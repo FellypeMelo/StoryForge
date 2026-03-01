@@ -34,11 +34,11 @@ do ambiente, sem explicar o simbolismo."
 
 A tensão é ditada pelo **comprimento das frases** e **seleção vocabular**.
 
-| Tipo de Cena | Instrução para a IA | Efeito |
-|---|---|---|
+| Tipo de Cena      | Instrução para a IA                                                                          | Efeito              |
+| ----------------- | -------------------------------------------------------------------------------------------- | ------------------- |
 | **Ação / Pânico** | Abolir conjunções adversativas complexas. Frases de 5–10 palavras. Verbos de ação agressiva. | Taquicardia textual |
-| **Introspecção** | Maior variação lexical. Orações coordenadas que reflitam deambulação mental. | Cadência reflexiva |
-| **Suspense** | Frases curtas intercaladas com uma longa. Foco em detalhes sensoriais irrelevantes. | Tensão crescente |
+| **Introspecção**  | Maior variação lexical. Orações coordenadas que reflitam deambulação mental.                 | Cadência reflexiva  |
+| **Suspense**      | Frases curtas intercaladas com uma longa. Foco em detalhes sensoriais irrelevantes.          | Tensão crescente    |
 
 ### Técnica Gary Provost
 
@@ -94,13 +94,13 @@ contraste entre suas ações cruéis e seus pensamentos nobres."
 
 ### Regras do Workflow
 
-| Fase | Responsável | Regra |
-|------|-------------|-------|
-| 1–2 | Humano + IA | IA sugere, humano decide e aprova |
-| 3 | IA guiada | Blocos de 500–800 palavras, beat por beat |
-| 4 | IA + Humano | IA gera variações, humano funde (Frankenstein) |
-| 5 | IA | Auditoria técnica implacável |
-| 6 | **100% Humano** | Ajuste fino de cadência, corte de adjetivos, garantia da "Bossa" |
+| Fase | Responsável     | Regra                                                            |
+| ---- | --------------- | ---------------------------------------------------------------- |
+| 1–2  | Humano + IA     | IA sugere, humano decide e aprova                                |
+| 3    | IA guiada       | Blocos de 500–800 palavras, beat por beat                        |
+| 4    | IA + Humano     | IA gera variações, humano funde (Frankenstein)                   |
+| 5    | IA              | Auditoria técnica implacável                                     |
+| 6    | **100% Humano** | Ajuste fino de cadência, corte de adjetivos, garantia da "Bossa" |
 
 ### A Regra 70/30
 
@@ -117,6 +117,7 @@ Quando o autor apenas clica "gerar" e não edita, ocorre o **esvaziamento da voz
 ### Cura
 
 A cura **não reside apenas em engenharia de prompt**, mas na atitude do autor de:
+
 - **Reescrever ativamente** por cima da saída algorítmica.
 - **Injetar sua experiência humana intransferível** — a dor, a sujeira, as idiossincrasias.
 - **Nunca** aceitar a saída completa do modelo como texto final.

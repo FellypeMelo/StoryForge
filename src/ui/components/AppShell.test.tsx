@@ -4,7 +4,7 @@ import { expect, test } from "vitest";
 
 test("sidebar collapses and expands on Ctrl+B / Cmd+B", () => {
   render(<AppShell>Content</AppShell>);
-  
+
   // By default, it's not collapsed, so "Dashboard" text should be in the document
   expect(screen.queryByText(/Dashboard/i)).toBeInTheDocument();
 

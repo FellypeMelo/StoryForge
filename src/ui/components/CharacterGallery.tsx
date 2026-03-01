@@ -1,6 +1,6 @@
-import React from 'react';
-import { Character } from '../../domain/character';
-import { User, ShieldQuestion } from 'lucide-react';
+import React from "react";
+import { Character } from "../../domain/character";
+import { User, ShieldQuestion } from "lucide-react";
 
 interface CharacterGalleryProps {
   characters: Character[];
@@ -8,10 +8,10 @@ interface CharacterGalleryProps {
   onCreateNew?: () => void;
 }
 
-export const CharacterGallery: React.FC<CharacterGalleryProps> = ({ 
-  characters, 
+export const CharacterGallery: React.FC<CharacterGalleryProps> = ({
+  characters,
   onSelect,
-  onCreateNew 
+  onCreateNew,
 }) => {
   if (characters.length === 0) {
     return (
@@ -25,7 +25,7 @@ export const CharacterGallery: React.FC<CharacterGalleryProps> = ({
             Your story is waiting for its cast. Create your first character to begin.
           </p>
         </div>
-        <button 
+        <button
           onClick={onCreateNew}
           className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
@@ -41,7 +41,7 @@ export const CharacterGallery: React.FC<CharacterGalleryProps> = ({
         <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
           Cast of Characters ({characters.length})
         </h2>
-        <button 
+        <button
           onClick={onCreateNew}
           className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"
         >
@@ -51,7 +51,7 @@ export const CharacterGallery: React.FC<CharacterGalleryProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {characters.map((char) => (
-          <div 
+          <div
             key={char.id}
             onClick={() => onSelect?.(char)}
             className="group bg-bg-base border border-border-subtle p-6 rounded-lg space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full"
@@ -70,7 +70,7 @@ export const CharacterGallery: React.FC<CharacterGalleryProps> = ({
                 {char.name}
               </h3>
               <p className="text-xs text-text-muted font-sans line-clamp-1">
-                {char.occupation || 'No occupation'}
+                {char.occupation || "No occupation"}
               </p>
             </div>
 

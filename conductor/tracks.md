@@ -5,4 +5,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 ## [~] Track: Character Management
+
 [Folder](./tracks/characters_20260301/)

@@ -8,7 +8,7 @@
 
 ## 1. Filosofia: A Morte do Prompt Coloquial
 
-Comandos "informais" ou "como se falasse com um júnior" geram *vibe coding*. Prompts devem ser tratados como **linguagens de compilação** direcionadas ao espaço paramétrico da IA.
+Comandos "informais" ou "como se falasse com um júnior" geram _vibe coding_. Prompts devem ser tratados como **linguagens de compilação** direcionadas ao espaço paramétrico da IA.
 
 ---
 
@@ -30,7 +30,7 @@ O arquivo-mestre de configurações (como `.cursorrules` ou `CLAUDE.md`) exige 6
 1. **Perfil Epistemológico:** Valorizar legibilidade e restrição em vez de invenção inútil.
 2. **Contextualização Isolada:** Apresentação purificada de mapas hierárquicos.
 3. **Restrições Negativas (Anti-patterns):** Ordens estritas do que a IA **não tem permissão** de codar.
-4. **Obrigação Reflexiva (Chain-of-Thought):** Tags de `<thinking>` obrigatórias. *A IA não tem estado fora dos tokens gerados; refletir atua como memória rascunho.*
+4. **Obrigação Reflexiva (Chain-of-Thought):** Tags de `<thinking>` obrigatórias. _A IA não tem estado fora dos tokens gerados; refletir atua como memória rascunho._
 5. **Qualidade Verificável:** Critérios matemáticos (ciclomática máxima < 15, Nesting max 2).
 6. **Mecânica de Resposta:** Rigor no `application/json` ou syntax de diffing da ferramenta local.
 
@@ -38,12 +38,12 @@ O arquivo-mestre de configurações (como `.cursorrules` ou `CLAUDE.md`) exige 6
 
 ## 4. Comparativo de Abordagem
 
-| Fator | Vibe Coding (Fraco) | DRTD (Avançado) |
-|---|---|---|
-| **Papel** | "Você é um programador sênior" | "Assuma papel de Arquiteto. Maximize simplicidade, garanta idempotência, não use libs externas" |
-| **Contexto** | "Aqui está o arquivo com 2k linhas" | "Anexo AST topológico do módulo. Isole o estado das requisições I/O sem destruir contratos" |
-| **Execução** | "Conserte este erro de console." | "Planeje na tag `<reflection>`. Liste os side-effects. Emita em `application/json`." |
-| **Alucinação** | Inventa APIs | "Regra Tolerância-Zero: APIs não mapeadas ativam flag `HUMAN_INTERVENTION_REQUIRED`." |
+| Fator          | Vibe Coding (Fraco)                 | DRTD (Avançado)                                                                                 |
+| -------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Papel**      | "Você é um programador sênior"      | "Assuma papel de Arquiteto. Maximize simplicidade, garanta idempotência, não use libs externas" |
+| **Contexto**   | "Aqui está o arquivo com 2k linhas" | "Anexo AST topológico do módulo. Isole o estado das requisições I/O sem destruir contratos"     |
+| **Execução**   | "Conserte este erro de console."    | "Planeje na tag `<reflection>`. Liste os side-effects. Emita em `application/json`."            |
+| **Alucinação** | Inventa APIs                        | "Regra Tolerância-Zero: APIs não mapeadas ativam flag `HUMAN_INTERVENTION_REQUIRED`."           |
 
 ---
 
@@ -55,6 +55,7 @@ Não se submete a tarefa ao codificador; submete-se ao **Planejador Orquestral**
 2. O prompt de Passo A já contém todos os guardrails para a infraestrutura delimitada e é encaminhado para execução pelo Codificador de Menor Parametrização.
 
 ### Categorias de Meta-Prompts
+
 - **de Planejamento:** Pseudo-código antes de escrita da sintaxe.
-- **de Auto-revisão:** Inverte o vetor de atenção. Obriga o LLM a atuar como adversário que procura falhas do arquivo recém gerado (*Reflexion Pattern*).
+- **de Auto-revisão:** Inverte o vetor de atenção. Obriga o LLM a atuar como adversário que procura falhas do arquivo recém gerado (_Reflexion Pattern_).
 - **de Refatoração Arquitetural:** Agrupa AST Nodes pela correlação heurística.

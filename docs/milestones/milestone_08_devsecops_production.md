@@ -202,16 +202,16 @@ Novo autor consegue criar primeiro projeto seguindo o guia.
 
 ## Entregáveis do Milestone 8
 
-| Artefato | Descrição |
-|----------|-----------|
-| CI/CD Pipeline | GitHub Actions com lint, test, build, matrix OS |
-| SAST | SonarQube + boundary validation + secret scanning |
-| Self-Healing | Auto-fix, Dependabot, alertas |
-| Sandboxing | Tauri permissions mínimas, CSP, SQL parameterizado |
-| Fitness Functions | Ciclomática, nesting, tamanho de função/classe |
-| Packaging | Instaladores Windows/macOS/Linux + auto-updater |
-| Performance | Startup <3s, queries <100ms, lazy loading |
-| Documentação | README, Dev Setup, User Guide, CHANGELOG |
+| Artefato          | Descrição                                          |
+| ----------------- | -------------------------------------------------- |
+| CI/CD Pipeline    | GitHub Actions com lint, test, build, matrix OS    |
+| SAST              | SonarQube + boundary validation + secret scanning  |
+| Self-Healing      | Auto-fix, Dependabot, alertas                      |
+| Sandboxing        | Tauri permissions mínimas, CSP, SQL parameterizado |
+| Fitness Functions | Ciclomática, nesting, tamanho de função/classe     |
+| Packaging         | Instaladores Windows/macOS/Linux + auto-updater    |
+| Performance       | Startup <3s, queries <100ms, lazy loading          |
+| Documentação      | README, Dev Setup, User Guide, CHANGELOG           |
 
 ---
 

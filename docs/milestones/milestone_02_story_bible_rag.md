@@ -186,15 +186,15 @@ Design limpo, consistente com AppShell do Milestone 1.
 
 ## Entregáveis do Milestone 2
 
-| Artefato | Descrição |
-|----------|-----------|
-| Modelo de domínio | 7 entidades com Value Objects para IDs |
-| Ports (interfaces) | 7 interfaces de repositório no domínio |
-| Implementação SQLite | CRUD completo com migrations versionadas |
-| FTS5 | Busca full-text para personagens, locais, timeline |
-| sqlite-vec | Busca semântica vetorial com embeddings |
-| Pipeline RAG | `ContextInjector` com token budget |
-| UI Bíblia | Painel completo com CRUD e busca |
+| Artefato             | Descrição                                          |
+| -------------------- | -------------------------------------------------- |
+| Modelo de domínio    | 7 entidades com Value Objects para IDs             |
+| Ports (interfaces)   | 7 interfaces de repositório no domínio             |
+| Implementação SQLite | CRUD completo com migrations versionadas           |
+| FTS5                 | Busca full-text para personagens, locais, timeline |
+| sqlite-vec           | Busca semântica vetorial com embeddings            |
+| Pipeline RAG         | `ContextInjector` com token budget                 |
+| UI Bíblia            | Painel completo com CRUD e busca                   |
 
 ---
 

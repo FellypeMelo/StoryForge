@@ -8,7 +8,7 @@
 
 ## 1. Filosofia
 
-O trabalho deste agente **não é elogiar ou massagear o ego do autor**. É realizar uma **dissecação estrutural clínica, rigorosa e brutal**. Foco em *developmental editing* (fundação da história), não em *copyediting* (gramática).
+O trabalho deste agente **não é elogiar ou massagear o ego do autor**. É realizar uma **dissecação estrutural clínica, rigorosa e brutal**. Foco em _developmental editing_ (fundação da história), não em _copyediting_ (gramática).
 
 ---
 
@@ -17,19 +17,22 @@ O trabalho deste agente **não é elogiar ou massagear o ego do autor**. É real
 ### 2.1 Mecânica de Causação
 
 Apontar especificamente onde os eventos **carecem de lógica de causa e efeito**:
+
 - Coisas acontecem "por coincidência" em vez de serem consequências das escolhas do personagem.
 - Deus ex machina ou soluções convenientes.
 
 ### 2.2 Profundidade Psicológica e Agência
 
 Avaliar as reações do protagonista:
+
 - As ações parecem lógicas perante sua **Ferida** e **Medo** (ficha Hauge)?
 - Ou parecem controladas artificialmente pela conveniência da trama?
 - O protagonista **toma decisões difíceis** (Sequela) ou apenas reage passivamente?
 
-### 2.3 Auditoria "Show, Don't Tell" 
+### 2.3 Auditoria "Show, Don't Tell"
 
 Isolar parágrafos exatos onde houve:
+
 - **Info-dumping** (exposição de informação fora de contexto)
 - Emoções **rotuladas** em vez de **encenadas** ("ela ficou apavorada" → deveria ser tátil e visceral)
 
@@ -37,13 +40,13 @@ Isolar parágrafos exatos onde houve:
 
 Identificar impressões digitais de escrita por IA:
 
-| Anti-Pattern | Causa Algorítmica | Sintoma Textual |
-|---|---|---|
-| **Escrita Genérica / Purple Prose** | Modelo prediz palavra mais provável, recaindo em clichês | "Rica tapeçaria", "mosaico de emoções", "dança mortal" |
-| **Diálogo de RH** | RLHF treina IA para ser "útil e inofensiva" | Personagens resolvem disputas como terapeutas, sem interrupções |
-| **Reações Físicas Clichê** | IA usa marcadores físicos limitados | "Apertou a mandíbula", "respiração que não sabia que segurava" |
-| **Estrutura Repetitiva** | IA encontra estrutura sintática e aplica uniformemente | Parágrafos começando igual, uso excessivo de "Não apenas... mas também" |
-| **Resolução Precoce** | IA treinada para "resolver" problemas rapidamente | Mistérios resolvidos cedo, traumas curados instantaneamente |
+| Anti-Pattern                        | Causa Algorítmica                                        | Sintoma Textual                                                         |
+| ----------------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Escrita Genérica / Purple Prose** | Modelo prediz palavra mais provável, recaindo em clichês | "Rica tapeçaria", "mosaico de emoções", "dança mortal"                  |
+| **Diálogo de RH**                   | RLHF treina IA para ser "útil e inofensiva"              | Personagens resolvem disputas como terapeutas, sem interrupções         |
+| **Reações Físicas Clichê**          | IA usa marcadores físicos limitados                      | "Apertou a mandíbula", "respiração que não sabia que segurava"          |
+| **Estrutura Repetitiva**            | IA encontra estrutura sintática e aplica uniformemente   | Parágrafos começando igual, uso excessivo de "Não apenas... mas também" |
+| **Resolução Precoce**               | IA treinada para "resolver" problemas rapidamente        | Mistérios resolvidos cedo, traumas curados instantaneamente             |
 
 ---
 
@@ -89,20 +92,24 @@ Texto para análise:
 Antes da aprovação final, o autor deve auditar:
 
 ### Plot & Ritmo
+
 - [ ] O arco do protagonista flui através do conflito externo?
-- [ ] O *sagging middle* foi evitado com Pinch Points?
+- [ ] O _sagging middle_ foi evitado com Pinch Points?
 
 ### Agência
+
 - [ ] O protagonista toma decisões difíceis (Sequela)?
 - [ ] Ou apenas reage ao que lhe acontece?
 
 ### Erradicação de IA-ismos
+
 - [ ] O texto foi limpo com "Pente Fino" contra:
   - Advérbios em "-mente"
   - Clichês descritivos ("tapeçaria", "mosaico")
   - Diálogos perfeitos (tipo terapeuta)
 
 ### Show, Don't Tell
+
 - [ ] Os momentos críticos foram dramatizados em tempo real?
 - [ ] Através da visão, cheiro e tato?
 - [ ] Em vez de resumidos narrativamente?
@@ -113,12 +120,12 @@ Antes da aprovação final, o autor deve auditar:
 
 O módulo implementa detectores automatizados:
 
-| Detector | Método | Ação |
-|----------|--------|------|
-| **Blacklist de palavras** | Busca por termos da lista de AI-ismos | Alerta amarelo |
-| **Classificador de IA** | Modelo auxiliar pequeno audita trechos em background | Alerta laranja |
-| **Repetição sintática** | Análise de padrões de início de parágrafos | Alerta amarelo |
-| **Densidade de advérbios** | Contagem de "-mente" por parágrafo | Alerta se > threshold |
+| Detector                   | Método                                               | Ação                  |
+| -------------------------- | ---------------------------------------------------- | --------------------- |
+| **Blacklist de palavras**  | Busca por termos da lista de AI-ismos                | Alerta amarelo        |
+| **Classificador de IA**    | Modelo auxiliar pequeno audita trechos em background | Alerta laranja        |
+| **Repetição sintática**    | Análise de padrões de início de parágrafos           | Alerta amarelo        |
+| **Densidade de advérbios** | Contagem de "-mente" por parágrafo                   | Alerta se > threshold |
 
 Todos os alertas são **não intrusivos**, com sugestões de melhoria.
 

@@ -31,13 +31,13 @@
 
 ### Anti-Patterns Detectados
 
-| Anti-Pattern | Causa Algorítmica | Sintoma |
-|---|---|---|
-| Escrita Genérica / Purple Prose | Modelo prediz palavra mais provável | Clichês descritivos |
-| Diálogo de RH | RLHF treina IA para ser "útil e inofensiva" | Personagens como terapeutas |
-| Reações Físicas Clichê | Marcadores físicos limitados | "Apertou a mandíbula" |
-| Estrutura Repetitiva | Padrão sintático uniforme | Parágrafos iniciam igual |
-| Resolução Precoce | IA treinada para "resolver" | Traumas curados instantaneamente |
+| Anti-Pattern                    | Causa Algorítmica                           | Sintoma                          |
+| ------------------------------- | ------------------------------------------- | -------------------------------- |
+| Escrita Genérica / Purple Prose | Modelo prediz palavra mais provável         | Clichês descritivos              |
+| Diálogo de RH                   | RLHF treina IA para ser "útil e inofensiva" | Personagens como terapeutas      |
+| Reações Físicas Clichê          | Marcadores físicos limitados                | "Apertou a mandíbula"            |
+| Estrutura Repetitiva            | Padrão sintático uniforme                   | Parágrafos iniciam igual         |
+| Resolução Precoce               | IA treinada para "resolver"                 | Traumas curados instantaneamente |
 
 ### Critério de Aceite
 
@@ -161,11 +161,11 @@ Comparação MPS funcional com fusão manual.
 
 ## Entregáveis do Milestone 6
 
-| Artefato | Descrição |
-|----------|-----------|
-| Bad Cop Pipeline | 4 eixos de auditoria + Plano de Ação |
-| Detectores Heurísticos | Blacklist, Repetição, Advérbios (background) |
-| Motif Engineering | Simbolismo vinculado a Ferida + frequência escalante |
-| Narrador Não-Confiável | Prompt enhancement para dissonância ação/narração |
-| MPS (Multi-Perspectiva) | 3 variações estilísticas + fusão Frankenstein |
-| UI Auditoria | Relatório + indicadores inline + comparação MPS |
+| Artefato                | Descrição                                            |
+| ----------------------- | ---------------------------------------------------- |
+| Bad Cop Pipeline        | 4 eixos de auditoria + Plano de Ação                 |
+| Detectores Heurísticos  | Blacklist, Repetição, Advérbios (background)         |
+| Motif Engineering       | Simbolismo vinculado a Ferida + frequência escalante |
+| Narrador Não-Confiável  | Prompt enhancement para dissonância ação/narração    |
+| MPS (Multi-Perspectiva) | 3 variações estilísticas + fusão Frankenstein        |
+| UI Auditoria            | Relatório + indicadores inline + comparação MPS      |

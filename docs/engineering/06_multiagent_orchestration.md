@@ -8,19 +8,19 @@
 
 ## 1. O Problema Epistêmico de um "Mega-Agente"
 
-Delegar a um único LLM toda a cadeia de execução arruína a integridade sistêmica por *saturação e poluição de tokens*. A solução é um paralelismo estruturado por "Expertise Roles".
+Delegar a um único LLM toda a cadeia de execução arruína a integridade sistêmica por _saturação e poluição de tokens_. A solução é um paralelismo estruturado por "Expertise Roles".
 
 ---
 
 ## 2. Comparativo de Frameworks Corporativos
 
-| Framework | Padrão | Vantagem Ponto Forte | Desvantagem de Retenção |
-|-----------|--------|----------------------|-----------------------|
-| **LangGraph (LangChain)** | Topologia de Grafos de Estado. Cycles & Branching. Machine-state. | Controle Cíclico Inigualável, alta robustez, Time Travel e "Memory-Checkpoints". | Mais complexo de debugar código boilerplate. |
-| **CrewAI** | Hierarquia Organizacional de Squads (Papéis, Metas, Tarefas). | Facilidade brutal de criar Agentes Cooperativos modulares (Delegation). | Abstrai os limites, podendo vazar *token memory* se mal tunado. |
-| **AutoGen (Microsoft)** | Foco de Diálogos Peer-to-Peer. Arbitragem. | Dinâmicas Socráticas onde codificadores refutam as próprias teses. | Falta previsibilidade da rede de chamadas (Redes caóticas). |
+| Framework                 | Padrão                                                            | Vantagem Ponto Forte                                                             | Desvantagem de Retenção                                         |
+| ------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **LangGraph (LangChain)** | Topologia de Grafos de Estado. Cycles & Branching. Machine-state. | Controle Cíclico Inigualável, alta robustez, Time Travel e "Memory-Checkpoints". | Mais complexo de debugar código boilerplate.                    |
+| **CrewAI**                | Hierarquia Organizacional de Squads (Papéis, Metas, Tarefas).     | Facilidade brutal de criar Agentes Cooperativos modulares (Delegation).          | Abstrai os limites, podendo vazar _token memory_ se mal tunado. |
+| **AutoGen (Microsoft)**   | Foco de Diálogos Peer-to-Peer. Arbitragem.                        | Dinâmicas Socráticas onde codificadores refutam as próprias teses.               | Falta previsibilidade da rede de chamadas (Redes caóticas).     |
 
-**Adoção StoryForge:** *CrewAI* como orquestração de Agentes para funções locais (geração) em virtude de abstração de equipe; mas *LangGraph* como matriz diretiva de infraestrutura e pipelines analíticos de CI/CD em processos ciclomáticos.
+**Adoção StoryForge:** _CrewAI_ como orquestração de Agentes para funções locais (geração) em virtude de abstração de equipe; mas _LangGraph_ como matriz diretiva de infraestrutura e pipelines analíticos de CI/CD em processos ciclomáticos.
 
 ---
 

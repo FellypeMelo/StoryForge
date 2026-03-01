@@ -49,13 +49,13 @@ ProseOutput agrega 3 versões (rascunho, crítica, final).
 
 ### Categorias de Blacklist
 
-| Categoria | Exemplos |
-|-----------|----------|
-| Metáforas visuais grandiosas | "rica tapeçaria", "mosaico de emoções" |
-| Frases genéricas | "silêncio ensurdecedor", "olhou para o horizonte" |
-| Reações corporais | "apertou a mandíbula", "olhos brilharam" |
-| Conectores artificiais | "Não apenas... mas também" |
-| Resoluções limpas | Lições de moral, epifanias súbitas |
+| Categoria                    | Exemplos                                          |
+| ---------------------------- | ------------------------------------------------- |
+| Metáforas visuais grandiosas | "rica tapeçaria", "mosaico de emoções"            |
+| Frases genéricas             | "silêncio ensurdecedor", "olhou para o horizonte" |
+| Reações corporais            | "apertou a mandíbula", "olhos brilharam"          |
+| Conectores artificiais       | "Não apenas... mas também"                        |
+| Resoluções limpas            | Lições de moral, epifanias súbitas                |
 
 ### Critério de Aceite
 
@@ -163,11 +163,11 @@ Auto-save funcional com debounce.
 
 ## Entregáveis do Milestone 5
 
-| Artefato | Descrição |
-|----------|-----------|
-| Pipeline EPRL | 3 pilares: CAD + Guardrails + RSIP |
-| AiismDetector | Detecção por categoria com blacklist extensível |
-| MruValidator | Enforcement Show/Don't Tell via MRU |
-| EmotionPrompting | Injeção de urgência emocional por beat |
-| Editor TipTap | WYSIWYG com ações contextuais de IA |
-| Alertas inline | AI-ismos (amarelo) + MRU (laranja) |
+| Artefato         | Descrição                                       |
+| ---------------- | ----------------------------------------------- |
+| Pipeline EPRL    | 3 pilares: CAD + Guardrails + RSIP              |
+| AiismDetector    | Detecção por categoria com blacklist extensível |
+| MruValidator     | Enforcement Show/Don't Tell via MRU             |
+| EmotionPrompting | Injeção de urgência emocional por beat          |
+| Editor TipTap    | WYSIWYG com ações contextuais de IA             |
+| Alertas inline   | AI-ismos (amarelo) + MRU (laranja)              |

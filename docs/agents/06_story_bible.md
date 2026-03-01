@@ -16,15 +16,15 @@ A **degradação de contexto** é a falha letal da IA em textos longos. O LLM "e
 
 O documento central (Lorebook) organiza o conhecimento narrativo em seções:
 
-| Seção | Conteúdo | Formato |
-|-------|----------|---------|
-| **Personagens** | Fichas OCEAN + Hauge + Voz + Tells | Ficha estruturada |
-| **Locais** | Descrição física, atmosfera, significado simbólico | Texto + metadados |
-| **Regras do Mundo** | Física/magia, economia, sociologia, religião | Hierarquia CAD |
-| **Cronologia** | Timeline de eventos com datas e dependências causais | Lista ordenada |
-| **Relacionamentos** | Grafos de relação entre personagens | Pares + tipo de relação |
-| **Blacklists** | Clichês proibidos, palavras banidas, AI-ismos | Listas negras |
-| **Estado Atual** | Status de cada personagem no ponto atual da narrativa | Snapshot |
+| Seção               | Conteúdo                                              | Formato                 |
+| ------------------- | ----------------------------------------------------- | ----------------------- |
+| **Personagens**     | Fichas OCEAN + Hauge + Voz + Tells                    | Ficha estruturada       |
+| **Locais**          | Descrição física, atmosfera, significado simbólico    | Texto + metadados       |
+| **Regras do Mundo** | Física/magia, economia, sociologia, religião          | Hierarquia CAD          |
+| **Cronologia**      | Timeline de eventos com datas e dependências causais  | Lista ordenada          |
+| **Relacionamentos** | Grafos de relação entre personagens                   | Pares + tipo de relação |
+| **Blacklists**      | Clichês proibidos, palavras banidas, AI-ismos         | Listas negras           |
+| **Estado Atual**    | Status de cada personagem no ponto atual da narrativa | Snapshot                |
 
 ---
 
@@ -87,6 +87,7 @@ O autor adiciona/edita diretamente fichas, locais, cronologia.
 ### 5.2 Extração Automática
 
 A IA analisa capítulos escritos e sugere atualizações:
+
 - Novos personagens mencionados
 - Mudanças de estado (ferimentos, localizações, relações)
 - Novos locais ou regras do mundo
@@ -99,12 +100,12 @@ A IA analisa capítulos escritos e sugere atualizações:
 
 O agente monitora contradições entre o texto gerado e a Bíblia:
 
-| Tipo de Inconsistência | Exemplo | Ação |
-|------------------------|---------|------|
-| **Factual** | Personagem usa braço fraturado normalmente | Alerta imediato |
-| **Temporal** | Evento referenciado antes de acontecer | Alerta + sugestão de correção |
-| **Caracterização** | Personagem introvertido (E: Baixo) lidera discurso público | Alerta com referência à ficha OCEAN |
-| **Regra do mundo** | Magia usada onde foi estabelecida como impossível | Alerta com referência ao worldbuilding |
+| Tipo de Inconsistência | Exemplo                                                    | Ação                                   |
+| ---------------------- | ---------------------------------------------------------- | -------------------------------------- |
+| **Factual**            | Personagem usa braço fraturado normalmente                 | Alerta imediato                        |
+| **Temporal**           | Evento referenciado antes de acontecer                     | Alerta + sugestão de correção          |
+| **Caracterização**     | Personagem introvertido (E: Baixo) lidera discurso público | Alerta com referência à ficha OCEAN    |
+| **Regra do mundo**     | Magia usada onde foi estabelecida como impossível          | Alerta com referência ao worldbuilding |
 
 ---
 
