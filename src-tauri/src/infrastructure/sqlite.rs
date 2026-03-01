@@ -556,6 +556,246 @@ impl WorldRuleRepository for SqliteDatabase {
     }
 }
 
+impl TimelineRepository for SqliteDatabase {
+    fn create(&self, event: &TimelineEvent) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let deps_json = serde_json::to_string(&event.causal_dependencies).unwrap_or_else(|_| "[]".to_string());
+        conn.execute(
+            "INSERT INTO timeline_events (id, project_id, date, description, causal_dependencies) VALUES (?, ?, ?, ?, ?)",
+            params![event.id.0, event.project_id.0, event.date, event.description, deps_json],
+        ).map_err(AppError::from)?;
+        Ok(())
+    }
+
+    fn get_by_id(&self, id: &TimelineEventId) -> AppResult<TimelineEvent> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let event = conn.query_row(
+            "SELECT id, project_id, date, description, causal_dependencies FROM timeline_events WHERE id = ?",
+            [id.0.clone()],
+            |row| {
+                let deps_json: String = row.get(4)?;
+                let causal_dependencies: Vec<TimelineEventId> = serde_json::from_str(&deps_json).unwrap_or_default();
+                Ok(TimelineEvent {
+                    id: TimelineEventId(row.get(0)?),
+                    project_id: ProjectId(row.get(1)?),
+                    date: row.get(2)?,
+                    description: row.get(3)?,
+                    causal_dependencies,
+                })
+            },
+        ).map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("TimelineEvent with id {} not found", id.0)),
+            _ => AppError::from(e),
+        })?;
+        Ok(event)
+    }
+
+    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<TimelineEvent>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let mut stmt = conn.prepare("SELECT id, project_id, date, description, causal_dependencies FROM timeline_events WHERE project_id = ?")
+            .map_err(AppError::from)?;
+
+        let event_iter = stmt.query_map([project_id.0.clone()], |row| {
+            let deps_json: String = row.get(4)?;
+            let causal_dependencies: Vec<TimelineEventId> = serde_json::from_str(&deps_json).unwrap_or_default();
+            Ok(TimelineEvent {
+                id: TimelineEventId(row.get(0)?),
+                project_id: ProjectId(row.get(1)?),
+                date: row.get(2)?,
+                description: row.get(3)?,
+                causal_dependencies,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut events = Vec::new();
+        for event in event_iter {
+            events.push(event?);
+        }
+        Ok(events)
+    }
+
+    fn update(&self, event: &TimelineEvent) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let deps_json = serde_json::to_string(&event.causal_dependencies).unwrap_or_else(|_| "[]".to_string());
+        let rows_affected = conn.execute(
+            "UPDATE timeline_events SET date = ?, description = ?, causal_dependencies = ? WHERE id = ?",
+            params![event.date, event.description, deps_json, event.id.0],
+        ).map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("TimelineEvent with id {} not found", event.id.0)));
+        }
+        Ok(())
+    }
+
+    fn delete(&self, id: &TimelineEventId) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute("DELETE FROM timeline_events WHERE id = ?", [id.0.clone()])
+            .map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("TimelineEvent with id {} not found", id.0)));
+        }
+        Ok(())
+    }
+}
+
+impl RelationshipRepository for SqliteDatabase {
+    fn create(&self, relationship: &Relationship) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        conn.execute(
+            "INSERT INTO relationships (id, project_id, character_a, character_b, type) VALUES (?, ?, ?, ?, ?)",
+            params![relationship.id.0, relationship.project_id.0, relationship.character_a.0, relationship.character_b.0, relationship.r#type],
+        ).map_err(AppError::from)?;
+        Ok(())
+    }
+
+    fn get_by_id(&self, id: &RelationshipId) -> AppResult<Relationship> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let relationship = conn.query_row(
+            "SELECT id, project_id, character_a, character_b, type FROM relationships WHERE id = ?",
+            [id.0.clone()],
+            |row| {
+                Ok(Relationship {
+                    id: RelationshipId(row.get(0)?),
+                    project_id: ProjectId(row.get(1)?),
+                    character_a: CharacterId(row.get(2)?),
+                    character_b: CharacterId(row.get(3)?),
+                    r#type: row.get(4)?,
+                })
+            },
+        ).map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("Relationship with id {} not found", id.0)),
+            _ => AppError::from(e),
+        })?;
+        Ok(relationship)
+    }
+
+    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Relationship>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let mut stmt = conn.prepare("SELECT id, project_id, character_a, character_b, type FROM relationships WHERE project_id = ?")
+            .map_err(AppError::from)?;
+
+        let relationship_iter = stmt.query_map([project_id.0.clone()], |row| {
+            Ok(Relationship {
+                id: RelationshipId(row.get(0)?),
+                project_id: ProjectId(row.get(1)?),
+                character_a: CharacterId(row.get(2)?),
+                character_b: CharacterId(row.get(3)?),
+                r#type: row.get(4)?,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut relationships = Vec::new();
+        for rel in relationship_iter {
+            relationships.push(rel?);
+        }
+        Ok(relationships)
+    }
+
+    fn update(&self, relationship: &Relationship) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute(
+            "UPDATE relationships SET character_a = ?, character_b = ?, type = ? WHERE id = ?",
+            params![relationship.character_a.0, relationship.character_b.0, relationship.r#type, relationship.id.0],
+        ).map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("Relationship with id {} not found", relationship.id.0)));
+        }
+        Ok(())
+    }
+
+    fn delete(&self, id: &RelationshipId) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute("DELETE FROM relationships WHERE id = ?", [id.0.clone()])
+            .map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("Relationship with id {} not found", id.0)));
+        }
+        Ok(())
+    }
+}
+
+impl BlacklistRepository for SqliteDatabase {
+    fn create(&self, entry: &BlacklistEntry) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        conn.execute(
+            "INSERT INTO blacklist_entries (id, project_id, term, category, reason) VALUES (?, ?, ?, ?, ?)",
+            params![entry.id.0, entry.project_id.0, entry.term, entry.category, entry.reason],
+        ).map_err(AppError::from)?;
+        Ok(())
+    }
+
+    fn get_by_id(&self, id: &BlacklistEntryId) -> AppResult<BlacklistEntry> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let entry = conn.query_row(
+            "SELECT id, project_id, term, category, reason FROM blacklist_entries WHERE id = ?",
+            [id.0.clone()],
+            |row| {
+                Ok(BlacklistEntry {
+                    id: BlacklistEntryId(row.get(0)?),
+                    project_id: ProjectId(row.get(1)?),
+                    term: row.get(2)?,
+                    category: row.get(3)?,
+                    reason: row.get(4)?,
+                })
+            },
+        ).map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("BlacklistEntry with id {} not found", id.0)),
+            _ => AppError::from(e),
+        })?;
+        Ok(entry)
+    }
+
+    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<BlacklistEntry>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let mut stmt = conn.prepare("SELECT id, project_id, term, category, reason FROM blacklist_entries WHERE project_id = ?")
+            .map_err(AppError::from)?;
+
+        let entry_iter = stmt.query_map([project_id.0.clone()], |row| {
+            Ok(BlacklistEntry {
+                id: BlacklistEntryId(row.get(0)?),
+                project_id: ProjectId(row.get(1)?),
+                term: row.get(2)?,
+                category: row.get(3)?,
+                reason: row.get(4)?,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut entries = Vec::new();
+        for entry in entry_iter {
+            entries.push(entry?);
+        }
+        Ok(entries)
+    }
+
+    fn update(&self, entry: &BlacklistEntry) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute(
+            "UPDATE blacklist_entries SET term = ?, category = ?, reason = ? WHERE id = ?",
+            params![entry.term, entry.category, entry.reason, entry.id.0],
+        ).map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("BlacklistEntry with id {} not found", entry.id.0)));
+        }
+        Ok(())
+    }
+
+    fn delete(&self, id: &BlacklistEntryId) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute("DELETE FROM blacklist_entries WHERE id = ?", [id.0.clone()])
+            .map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("BlacklistEntry with id {} not found", id.0)));
+        }
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -791,6 +1031,113 @@ mod tests {
         // Delete
         repo.delete(&rule.id).expect("Failed to delete rule");
         let result = repo.get_by_id(&rule.id);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_timeline_repository_crud() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_timeline_crud.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project_id = ProjectId("proj-1".to_string());
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+        }
+
+        let event = TimelineEvent::new(project_id.clone(), "The War Started".to_string()).unwrap();
+        let repo: &dyn crate::domain::ports::TimelineRepository = &db;
+        
+        // Create
+        repo.create(&event).expect("Failed to create event");
+        
+        // Get
+        let fetched = repo.get_by_id(&event.id).expect("Failed to fetch event");
+        assert_eq!(fetched.description, "The War Started");
+        
+        // List
+        let list = repo.list_by_project(&project_id).expect("Failed to list events");
+        assert_eq!(list.len(), 1);
+        
+        // Delete
+        repo.delete(&event.id).expect("Failed to delete event");
+        let result = repo.get_by_id(&event.id);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_relationship_repository_crud() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_relationship_crud.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project_id = ProjectId("proj-1".to_string());
+        let char_a = CharacterId("char-a".to_string());
+        let char_b = CharacterId("char-b".to_string());
+        
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+            conn.execute("INSERT INTO characters (id, project_id, name) VALUES (?, ?, ?)", [&char_a.0, &project_id.0, "Alice"]).unwrap();
+            conn.execute("INSERT INTO characters (id, project_id, name) VALUES (?, ?, ?)", [&char_b.0, &project_id.0, "Bob"]).unwrap();
+        }
+
+        let rel = Relationship::new(project_id.clone(), char_a.clone(), char_b.clone(), "Siblings".to_string()).unwrap();
+        let repo: &dyn crate::domain::ports::RelationshipRepository = &db;
+        
+        // Create
+        repo.create(&rel).expect("Failed to create relationship");
+        
+        // Get
+        let fetched = repo.get_by_id(&rel.id).expect("Failed to fetch relationship");
+        assert_eq!(fetched.r#type, "Siblings");
+        
+        // List
+        let list = repo.list_by_project(&project_id).expect("Failed to list relationships");
+        assert_eq!(list.len(), 1);
+        
+        // Delete
+        repo.delete(&rel.id).expect("Failed to delete relationship");
+        let result = repo.get_by_id(&rel.id);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_blacklist_repository_crud() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_blacklist_crud.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project_id = ProjectId("proj-1".to_string());
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+        }
+
+        let entry = BlacklistEntry::new(project_id.clone(), "cliché".to_string()).unwrap();
+        let repo: &dyn crate::domain::ports::BlacklistRepository = &db;
+        
+        // Create
+        repo.create(&entry).expect("Failed to create entry");
+        
+        // Get
+        let fetched = repo.get_by_id(&entry.id).expect("Failed to fetch entry");
+        assert_eq!(fetched.term, "cliché");
+        
+        // List
+        let list = repo.list_by_project(&project_id).expect("Failed to list entries");
+        assert_eq!(list.len(), 1);
+        
+        // Delete
+        repo.delete(&entry.id).expect("Failed to delete entry");
+        let result = repo.get_by_id(&entry.id);
         assert!(result.is_err());
     }
 }
