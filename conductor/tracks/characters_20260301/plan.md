@@ -28,10 +28,10 @@
 - [x] Task: Sidebar & Navigation Update (4fcaf28)
     - [x] 🔴 RED: Test navigation to Character view
     - [x] 🟢 GREEN: Update AppShell sidebar and routing
-- [~] Task: Character Gallery View
-    - [ ] 🔴 RED: Test rendering of character list
-    - [ ] 🟢 GREEN: Implement responsive grid with character cards
-- [ ] Task: Conductor - User Manual Verification 'UI Shell Integration & Gallery' (Protocol in workflow.md)
+- [x] Task: Character Gallery View (e9dda81)
+    - [x] 🔴 RED: Test rendering of character list
+    - [x] 🟢 GREEN: Implement responsive grid with character cards
+- [~] Task: Conductor - User Manual Verification 'UI Shell Integration & Gallery' (Protocol in workflow.md)
 
 ## Phase 5: Profile Editor & Finalization
 - [ ] Task: Character Profile Editor Form
