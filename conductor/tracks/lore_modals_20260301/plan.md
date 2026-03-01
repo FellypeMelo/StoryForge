@@ -8,16 +8,16 @@
     - [x] 🔵 REFACTOR: Apply "Scale & Fade" animations using CSS transitions or Framer Motion if already in project.
 - [ ] Task: Conductor - User Manual Verification 'Foundation' (Protocol in workflow.md)
 
-## Phase 2: Category Implementations
+## Phase 2: Category Implementations [checkpoint: 19cdd9d]
 - [x] Task: Integrate `LocationForm` into Modal [bfb63d6]
     - [x] 🔴 RED: Test that clicking "Adicionar Local" in `BibleDashboard` opens the `SlideOver` with `LocationForm`.
     - [x] 🟢 GREEN: Update `handleCreateLocation` to manage modal visibility state instead of using `prompt`.
 - [x] Task: Integrate `WorldRuleForm` into Modal [6df5125]
     - [x] 🔴 RED: Test that clicking "Adicionar Regra" in `BibleDashboard` opens the `SlideOver` with `WorldRuleForm`.
     - [x] 🟢 GREEN: Update `handleCreateRule` to manage modal visibility state.
-- [ ] Task: Integrate `CharacterWizard` into Modal
-    - [ ] 🔴 RED: Test that clicking "Novo Personagem" opens the `SlideOver` containing the existing `CharacterWizard`.
-    - [ ] 🟢 GREEN: Refactor `BibleDashboard` to show `CharacterWizard` inside the modal system.
+- [x] Task: Integrate `CharacterWizard` into Modal [19cdd9d]
+    - [x] 🔴 RED: Test that clicking "Novo Personagem" opens the `SlideOver` containing the existing `CharacterWizard`.
+    - [x] 🟢 GREEN: Refactor `BibleDashboard` to show `CharacterWizard` inside the modal system.
 - [ ] Task: Conductor - User Manual Verification 'Category Implementations' (Protocol in workflow.md)
 
 ## Phase 3: Polish & Refinement

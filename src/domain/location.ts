@@ -43,6 +43,16 @@ export class Location {
     });
   }
 
+  public static generate(projectId: ProjectId, name: string): Location {
+    return new Location({
+      id: LocationId.generate(),
+      projectId,
+      name,
+      description: "",
+      symbolicMeaning: "",
+    });
+  }
+
   public get id(): LocationId {
     return this.props.id;
   }

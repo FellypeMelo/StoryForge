@@ -1,4 +1,3 @@
-import React from "react";
 import { OceanScores } from "../../../domain/character";
 
 interface OceanRadarChartProps {

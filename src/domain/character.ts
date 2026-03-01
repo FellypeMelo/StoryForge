@@ -15,7 +15,7 @@ export type OceanScores = z.infer<typeof OceanScoresSchema>;
 export const CharacterSchema = z.object({
   id: CharacterIdSchema,
   projectId: ProjectIdSchema,
-  name: z.string().min(1, "Name cannot be empty"),
+  name: z.string().default(""),
   age: z.number().int().min(0).default(0),
   occupation: z.string().default(""),
   physical_description: z.string().default(""),
@@ -50,6 +50,14 @@ export interface CharacterProps {
 
 export class Character {
   private constructor(private readonly props: CharacterProps) {}
+
+  public static generate(projectId: ProjectId, name: string): Character {
+    return Character.create({
+      id: CharacterId.generate(),
+      projectId,
+      name,
+    });
+  }
 
   public static create(props: {
     id: CharacterId;

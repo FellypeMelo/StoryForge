@@ -3,9 +3,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { CharacterList } from "../character/CharacterList";
 import { CharacterWizard } from "../character/CharacterWizard";
 import { LocationList } from "../location/LocationList";
+import { LocationForm } from "../location/LocationForm";
 import { WorldRuleList } from "../world-rule/WorldRuleList";
+import { WorldRuleForm } from "../world-rule/WorldRuleForm";
 import { TimelineList, RelationshipList, BlacklistList } from "./LoreLists";
 import { SearchBar } from "../shared/SearchBar";
+import { SlideOver } from "../shared/SlideOver";
 import { Character } from "../../../domain/character";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 import { Location } from "../../../domain/location";
@@ -29,6 +32,12 @@ export function BibleDashboard() {
 
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
+
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+
+  const [isRuleModalOpen, setIsRuleModalOpen] = useState(false);
+  const [editingRule, setEditingRule] = useState<WorldRule | null>(null);
   
   // Mock project ID for now (until Milestone 1 full project management is active)
   const currentProjectId = "550e8400-e29b-41d4-a716-446655440000";
@@ -98,7 +107,7 @@ export function BibleDashboard() {
   };
 
   const handleCreateCharacter = () => {
-    const newChar = Character.new(ProjectId.create(currentProjectId), "");
+    const newChar = Character.generate(ProjectId.create(currentProjectId), "");
     setEditingCharacter(newChar);
     setIsWizardOpen(true);
   };
@@ -135,20 +144,62 @@ export function BibleDashboard() {
     }
   };
 
-  const handleCreateLocation = async () => {
-    const name = prompt("Nome do Local:");
-    if (name) {
-      await invoke("create_location", { projectId: currentProjectId, name });
+  const handleCreateLocation = () => {
+    const newLoc = Location.generate(ProjectId.create(currentProjectId), "");
+    setEditingLocation(newLoc);
+    setIsLocationModalOpen(true);
+  };
+
+  const handleSaveLocation = async (loc: Location) => {
+    try {
+      const locData = loc.toProps();
+      await invoke("create_location", { 
+        projectId: currentProjectId, 
+        name: locData.name 
+      });
+      // Simplified update for now
+      await invoke("update_location", {
+        location: {
+          ...locData,
+          id: locData.id.value,
+          project_id: locData.projectId.value,
+        }
+      });
+      setIsLocationModalOpen(false);
+      setEditingLocation(null);
       loadData();
+    } catch (error) {
+      console.error("Failed to save location:", error);
     }
   };
 
-  const handleCreateRule = async () => {
-    const category = prompt("Categoria (ex. Magia):");
-    const content = prompt("Conteúdo da Regra:");
-    if (category && content) {
-      await invoke("create_world_rule", { projectId: currentProjectId, category, content });
+  const handleCreateRule = () => {
+    const newRule = WorldRule.generate(ProjectId.create(currentProjectId));
+    setEditingRule(newRule);
+    setIsRuleModalOpen(true);
+  };
+
+  const handleSaveRule = async (rule: WorldRule) => {
+    try {
+      const ruleData = rule.toProps();
+      await invoke("create_world_rule", { 
+        projectId: currentProjectId, 
+        category: ruleData.category,
+        content: ruleData.content
+      });
+      // Simplified update for now
+      await invoke("update_world_rule", {
+        rule: {
+          ...ruleData,
+          id: ruleData.id.value,
+          project_id: ruleData.projectId.value,
+        }
+      });
+      setIsRuleModalOpen(false);
+      setEditingRule(null);
       loadData();
+    } catch (error) {
+      console.error("Failed to save world rule:", error);
     }
   };
 
@@ -160,18 +211,6 @@ export function BibleDashboard() {
     { id: "relationships", label: "Relacionamentos", icon: GitBranch },
     { id: "blacklist", label: "Lista Negra", icon: Ban },
   ];
-
-  if (isWizardOpen && editingCharacter) {
-    return (
-      <div className="py-8">
-        <CharacterWizard 
-          character={editingCharacter}
-          onSave={handleSaveCharacter}
-          onCancel={() => setIsWizardOpen(false)}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
@@ -250,6 +289,63 @@ export function BibleDashboard() {
           </>
         )}
       </main>
+
+      <SlideOver 
+        isOpen={isWizardOpen} 
+        onClose={() => {
+          setIsWizardOpen(false);
+          setEditingCharacter(null);
+        }}
+      >
+        {editingCharacter && (
+          <CharacterWizard 
+            character={editingCharacter}
+            onSave={handleSaveCharacter}
+            onCancel={() => {
+              setIsWizardOpen(false);
+              setEditingCharacter(null);
+            }}
+          />
+        )}
+      </SlideOver>
+
+      <SlideOver 
+        isOpen={isLocationModalOpen} 
+        onClose={() => {
+          setIsLocationModalOpen(false);
+          setEditingLocation(null);
+        }}
+      >
+        {editingLocation && (
+          <LocationForm 
+            location={editingLocation}
+            onSave={handleSaveLocation}
+            onCancel={() => {
+              setIsLocationModalOpen(false);
+              setEditingLocation(null);
+            }}
+          />
+        )}
+      </SlideOver>
+
+      <SlideOver 
+        isOpen={isRuleModalOpen} 
+        onClose={() => {
+          setIsRuleModalOpen(false);
+          setEditingRule(null);
+        }}
+      >
+        {editingRule && (
+          <WorldRuleForm 
+            rule={editingRule}
+            onSave={handleSaveRule}
+            onCancel={() => {
+              setIsRuleModalOpen(false);
+              setEditingRule(null);
+            }}
+          />
+        )}
+      </SlideOver>
     </div>
   );
 }

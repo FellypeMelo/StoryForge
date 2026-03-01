@@ -43,6 +43,16 @@ export class WorldRule {
     });
   }
 
+  public static generate(projectId: ProjectId, category: string = "Geral"): WorldRule {
+    return new WorldRule({
+      id: WorldRuleId.generate(),
+      projectId,
+      category,
+      content: "",
+      hierarchy: 0,
+    });
+  }
+
   public get id(): WorldRuleId {
     return this.props.id;
   }
