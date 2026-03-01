@@ -41,18 +41,23 @@ impl SqliteDatabase {
 
 impl DatabasePort for SqliteDatabase {
     fn is_healthy(&self) -> bool {
-        let conn_result = self.connection.lock();
-        if let Ok(conn) = conn_result {
-            conn.query_row("SELECT 1", [], |_| Ok(())).is_ok()
-        } else {
-            false
+        match self.connection.lock() {
+            Ok(conn) => conn.query_row("SELECT 1", [], |_| Ok(())).is_ok(),
+            Err(e) => {
+                eprintln!("Critical: Database mutex poisoned: {}", e);
+                false
+            }
         }
     }
 
     fn get_version(&self) -> i32 {
         let conn_result = self.connection.lock();
         if let Ok(conn) = conn_result {
-            conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0)).unwrap_or(0)
+            conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))
+                .unwrap_or_else(|e| {
+                    eprintln!("Warning: Failed to fetch database version: {}", e);
+                    0
+                })
         } else {
             0
         }

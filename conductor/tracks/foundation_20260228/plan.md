@@ -42,3 +42,6 @@
     - [x] Create responsive `<AppShell>` with Dark Theme
     - [x] Implement layout with sidebar and main content area
 - [x] Task: Conductor - User Manual Verification 'UI Shell & Finalization' [49c8f3b]
+
+## Phase: Review Fixes
+- [~] Task: Apply review suggestions

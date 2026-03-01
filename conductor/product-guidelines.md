@@ -7,12 +7,15 @@
 
 ## User Experience (UX) Principles
 - **Distraction-Free Writing:** The interface should vanish when the author is in the flow state.
-- **Power with Simplicity:** Complex engineering tools (RAG, structural auditing) must be intuitive and accessible.
-- **Instant Reactive Feedback:** Provide real-time signals on narrative health without interrupting the creative process.
+- **Minimalist Black and White:** Maximum and soft minimalist interface to eliminate cognitive load.
+- **Power with Simplicity:** Complex engineering tools (RAG, structural auditing) must be intuitive and seamlessly integrated into the minimalist aesthetic.
+- **Instant Reactive Feedback:** Provide real-time signals on narrative health through subtle typography or soft grayscale indicators without interrupting the creative process.
 
 ## Visual Identity & Branding
-- **Dark & Typographic Aesthetic:** Deep tones and high contrast to reduce eye strain, with a primary focus on elegant, readable typography.
-- **Minimalist Layout:** Eliminate unnecessary UI elements; prioritize the manuscript and active agent feedback.
+- **Light Mode (Paper Aesthetic):** Soft minimalist, pure paper-like appearance emphasizing whitespace and highly readable, elegant typography.
+- **Dark Mode (Complete Black Canvas):** A complete pitch-black background with contrasting text to minimize eye strain and maximize focus.
+- **Strictly Black and White:** Eliminate unnecessary color options, using a strictly monochromatic palette accented only by necessary structural elements.
+- **Minimalist Layout:** Eliminate all unnecessary UI elements; prioritize the manuscript and active agent feedback above all else.
 
 ## Narrative Engineering Process
 - **Psychology-First:** Characters must be built from the "Wound" outward to ensure authentic agency and growth.
