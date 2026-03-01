@@ -1,9 +1,9 @@
 # Plan: Story Bible Persistence, Search & RAG Pipeline
 
 ## Phase 1: SQLite Persistence & CRUD Repositories
-- [ ] Task: Implement SQL Migrations
-    - [ ] Create migration for `projects`, `characters`, and `locations` tables.
-    - [ ] Create migration for `world_rules`, `timeline_events`, `relationships`, and `blacklist_entries`.
+- [x] Task: Implement SQL Migrations [55c6243]
+    - [x] Create migration for `projects`, `characters`, and `locations` tables.
+    - [x] Create migration for `world_rules`, `timeline_events`, `relationships`, and `blacklist_entries`.
 - [ ] Task: Implement `SqliteProjectRepository`
     - [ ] 🔴 RED: Test for project creation and retrieval.
     - [ ] 🟢 GREEN: Implement basic CRUD in `infrastructure/sqlite/project-repository.rs`.
