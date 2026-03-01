@@ -1,10 +1,20 @@
 use rusqlite::{params, Connection, Result, Row};
 use std::path::Path;
 use std::sync::Mutex;
-use crate::domain::ports::{DatabasePort, CharacterRepository, ProjectRepository};
+use crate::domain::ports::{
+    DatabasePort, CharacterRepository, ProjectRepository, LocationRepository, WorldRuleRepository,
+    TimelineRepository, RelationshipRepository, BlacklistRepository
+};
 use crate::domain::character::{Character, OceanScores};
-pub use crate::domain::value_objects::{CharacterId, ProjectId};
+pub use crate::domain::value_objects::{
+    CharacterId, ProjectId, LocationId, WorldRuleId, TimelineEventId, RelationshipId, BlacklistEntryId
+};
 use crate::domain::project::Project;
+use crate::domain::location::Location;
+use crate::domain::world_rule::WorldRule;
+use crate::domain::timeline_event::TimelineEvent;
+use crate::domain::relationship::Relationship;
+use crate::domain::blacklist_entry::BlacklistEntry;
 use crate::domain::error::{AppError, AppResult};
 
 pub struct SqliteDatabase {
@@ -390,6 +400,162 @@ impl CharacterRepository for SqliteDatabase {
     }
 }
 
+impl LocationRepository for SqliteDatabase {
+    fn create(&self, location: &Location) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        conn.execute(
+            "INSERT INTO locations (id, project_id, name, description, symbolic_meaning) VALUES (?, ?, ?, ?, ?)",
+            params![location.id.0, location.project_id.0, location.name, location.description, location.symbolic_meaning],
+        ).map_err(AppError::from)?;
+        Ok(())
+    }
+
+    fn get_by_id(&self, id: &LocationId) -> AppResult<Location> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let location = conn.query_row(
+            "SELECT id, project_id, name, description, symbolic_meaning FROM locations WHERE id = ?",
+            [id.0.clone()],
+            |row| {
+                Ok(Location {
+                    id: LocationId(row.get(0)?),
+                    project_id: ProjectId(row.get(1)?),
+                    name: row.get(2)?,
+                    description: row.get(3)?,
+                    symbolic_meaning: row.get(4)?,
+                })
+            },
+        ).map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("Location with id {} not found", id.0)),
+            _ => AppError::from(e),
+        })?;
+        Ok(location)
+    }
+
+    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Location>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let mut stmt = conn.prepare("SELECT id, project_id, name, description, symbolic_meaning FROM locations WHERE project_id = ?")
+            .map_err(AppError::from)?;
+
+        let location_iter = stmt.query_map([project_id.0.clone()], |row| {
+            Ok(Location {
+                id: LocationId(row.get(0)?),
+                project_id: ProjectId(row.get(1)?),
+                name: row.get(2)?,
+                description: row.get(3)?,
+                symbolic_meaning: row.get(4)?,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut locations = Vec::new();
+        for loc in location_iter {
+            locations.push(loc?);
+        }
+        Ok(locations)
+    }
+
+    fn update(&self, location: &Location) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute(
+            "UPDATE locations SET name = ?, description = ?, symbolic_meaning = ? WHERE id = ?",
+            params![location.name, location.description, location.symbolic_meaning, location.id.0],
+        ).map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("Location with id {} not found", location.id.0)));
+        }
+        Ok(())
+    }
+
+    fn delete(&self, id: &LocationId) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute("DELETE FROM locations WHERE id = ?", [id.0.clone()])
+            .map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("Location with id {} not found", id.0)));
+        }
+        Ok(())
+    }
+}
+
+impl WorldRuleRepository for SqliteDatabase {
+    fn create(&self, rule: &WorldRule) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        conn.execute(
+            "INSERT INTO world_rules (id, project_id, category, content, hierarchy) VALUES (?, ?, ?, ?, ?)",
+            params![rule.id.0, rule.project_id.0, rule.category, rule.content, rule.hierarchy],
+        ).map_err(AppError::from)?;
+        Ok(())
+    }
+
+    fn get_by_id(&self, id: &WorldRuleId) -> AppResult<WorldRule> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rule = conn.query_row(
+            "SELECT id, project_id, category, content, hierarchy FROM world_rules WHERE id = ?",
+            [id.0.clone()],
+            |row| {
+                Ok(WorldRule {
+                    id: WorldRuleId(row.get(0)?),
+                    project_id: ProjectId(row.get(1)?),
+                    category: row.get(2)?,
+                    content: row.get(3)?,
+                    hierarchy: row.get(4)?,
+                })
+            },
+        ).map_err(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => AppError::NotFound(format!("WorldRule with id {} not found", id.0)),
+            _ => AppError::from(e),
+        })?;
+        Ok(rule)
+    }
+
+    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<WorldRule>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let mut stmt = conn.prepare("SELECT id, project_id, category, content, hierarchy FROM world_rules WHERE project_id = ? ORDER BY hierarchy ASC")
+            .map_err(AppError::from)?;
+
+        let rule_iter = stmt.query_map([project_id.0.clone()], |row| {
+            Ok(WorldRule {
+                id: WorldRuleId(row.get(0)?),
+                project_id: ProjectId(row.get(1)?),
+                category: row.get(2)?,
+                content: row.get(3)?,
+                hierarchy: row.get(4)?,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut rules = Vec::new();
+        for rule in rule_iter {
+            rules.push(rule?);
+        }
+        Ok(rules)
+    }
+
+    fn update(&self, rule: &WorldRule) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute(
+            "UPDATE world_rules SET category = ?, content = ?, hierarchy = ? WHERE id = ?",
+            params![rule.category, rule.content, rule.hierarchy, rule.id.0],
+        ).map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("WorldRule with id {} not found", rule.id.0)));
+        }
+        Ok(())
+    }
+
+    fn delete(&self, id: &WorldRuleId) -> AppResult<()> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        let rows_affected = conn.execute("DELETE FROM world_rules WHERE id = ?", [id.0.clone()])
+            .map_err(AppError::from)?;
+
+        if rows_affected == 0 {
+            return Err(AppError::NotFound(format!("WorldRule with id {} not found", id.0)));
+        }
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -416,7 +582,7 @@ mod tests {
         db.run_migrations().expect("Failed to run migrations");
         
         let db_port: &dyn DatabasePort = &db;
-        assert!(db_port.get_version() >= 2);
+        assert!(db_port.get_version() >= 3);
     }
 
     #[test]
@@ -558,5 +724,73 @@ mod tests {
         repo.delete(&project.id).expect("Failed to delete project");
         let result = repo.get_by_id(&project.id);
         assert!(result.is_err(), "Project should be deleted");
+    }
+
+    #[test]
+    fn test_location_repository_crud() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_location_crud.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project_id = ProjectId("proj-1".to_string());
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+        }
+
+        let location = Location::new(project_id.clone(), "The Dark Forest".to_string()).unwrap();
+        let repo: &dyn crate::domain::ports::LocationRepository = &db;
+        
+        // Create
+        repo.create(&location).expect("Failed to create location");
+        
+        // Get
+        let fetched = repo.get_by_id(&location.id).expect("Failed to fetch location");
+        assert_eq!(fetched.name, "The Dark Forest");
+        
+        // List
+        let list = repo.list_by_project(&project_id).expect("Failed to list locations");
+        assert_eq!(list.len(), 1);
+        
+        // Delete
+        repo.delete(&location.id).expect("Failed to delete location");
+        let result = repo.get_by_id(&location.id);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_world_rule_repository_crud() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_rule_crud.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let project_id = ProjectId("proj-1".to_string());
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+        }
+
+        let rule = WorldRule::new(project_id.clone(), "Magic".to_string(), "Costs life energy".to_string()).unwrap();
+        let repo: &dyn crate::domain::ports::WorldRuleRepository = &db;
+        
+        // Create
+        repo.create(&rule).expect("Failed to create rule");
+        
+        // Get
+        let fetched = repo.get_by_id(&rule.id).expect("Failed to fetch rule");
+        assert_eq!(fetched.category, "Magic");
+        
+        // List
+        let list = repo.list_by_project(&project_id).expect("Failed to list rules");
+        assert_eq!(list.len(), 1);
+        
+        // Delete
+        repo.delete(&rule.id).expect("Failed to delete rule");
+        let result = repo.get_by_id(&rule.id);
+        assert!(result.is_err());
     }
 }
