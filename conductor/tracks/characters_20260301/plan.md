@@ -13,10 +13,10 @@
 - [x] Task: Character Database Schema & Migration (b81851c)
     - [x] 🔴 RED: Test migration creates characters table
     - [x] 🟢 GREEN: Implement SQLite migration for characters
-- [~] Task: CharacterRepository Implementation
-    - [ ] 🔴 RED: Test CRUD operations via Repository
-    - [ ] 🟢 GREEN: Implement SqliteCharacterRepository
-- [ ] Task: Conductor - User Manual Verification 'Persistence & Infrastructure' (Protocol in workflow.md)
+- [x] Task: CharacterRepository Implementation (5046fad)
+    - [x] 🔴 RED: Test CRUD operations via Repository
+    - [x] 🟢 GREEN: Implement SqliteCharacterRepository
+- [~] Task: Conductor - User Manual Verification 'Persistence & Infrastructure' (Protocol in workflow.md)
 
 ## Phase 3: IPC Bridge & Backend Application
 - [ ] Task: Character Use Cases & Commands
