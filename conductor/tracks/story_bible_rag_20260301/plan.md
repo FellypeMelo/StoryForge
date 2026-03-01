@@ -53,3 +53,7 @@
     - [x] 🔴 RED: Test UI state for "Active" lore entries.
     - [x] 🟢 GREEN: Add visual cues for items prioritized by the RAG pipeline.
 - [x] Task: Conductor - User Manual Verification 'Story Bible UI Dashboard' (Protocol in workflow.md) [604dff6]
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions [78d6518]
+
