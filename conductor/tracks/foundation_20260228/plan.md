@@ -23,7 +23,7 @@
     - [x] Configure WAL mode and `app_data_dir` persistence
 - [x] Task: Conductor - User Manual Verification 'Persistence Engine (TDD)' [2bafec7]
 
-## Phase 3: IPC & Infrastructure Integration
+## Phase 3: IPC & Infrastructure Integration [checkpoint: 188d25e]
 - [x] Task: Implement IPC Bridge Commands [5611c8a]
     - [x] 🔴 RED: Test for `get_app_info` command
     - [x] 🟢 GREEN: Implement `get_app_info` returning version
@@ -34,7 +34,7 @@
     - [x] Set up Vitest (frontend) and Cargo Test (backend)
     - [x] Configure ESLint/Prettier and Clippy (deny warnings)
     - [x] Create `pnpm test:all` root script
-- [~] Task: Conductor - User Manual Verification 'IPC & Infrastructure Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'IPC & Infrastructure Integration' [188d25e]
 
 ## Phase 4: UI Shell & Finalization
 - [ ] Task: Initialize UI Foundation
