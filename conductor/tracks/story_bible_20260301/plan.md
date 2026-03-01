@@ -24,19 +24,19 @@
     - [x] 🟢 GREEN: Implement `BlacklistEntry`.
 - [x] Task: Conductor - User Manual Verification 'Domain Entities & Value Objects' (Protocol in workflow.md) [b32102f]
 
-## Phase 2: Repository Ports (Interfaces)
-- [ ] Task: Define Repository Interfaces
-    - [ ] Define `ProjectRepository` in `src/domain/ports/`.
-    - [ ] Define `CharacterRepository` with CRUD signatures.
-    - [ ] Define `LocationRepository`.
-    - [ ] Define `WorldRuleRepository`.
-    - [ ] Define `TimelineRepository` with causal ordering.
-    - [ ] Define `RelationshipRepository` with graph search.
-    - [ ] Define `BlacklistRepository`.
-- [ ] Task: Define Search Ports
-    - [ ] Define `SearchPort` for FTS.
-    - [ ] Define `VectorSearchPort` signature.
-- [ ] Task: Conductor - User Manual Verification 'Repository Ports' (Protocol in workflow.md)
+## Phase 2: Repository Ports (Interfaces) [checkpoint: a272179]
+- [x] Task: Define Repository Interfaces [a272179]
+    - [x] Define `ProjectRepository` in `src/domain/ports/`.
+    - [x] Define `CharacterRepository` with CRUD signatures.
+    - [x] Define `LocationRepository`.
+    - [x] Define `WorldRuleRepository`.
+    - [x] Define `TimelineRepository` with causal ordering.
+    - [x] Define `RelationshipRepository` with graph search.
+    - [x] Define `BlacklistRepository`.
+- [x] Task: Define Search Ports [a272179]
+    - [x] Define `SearchPort` for FTS.
+    - [x] Define `VectorSearchPort` signature.
+- [x] Task: Conductor - User Manual Verification 'Repository Ports' (Protocol in workflow.md) [a272179]
 
 ## Phase 3: UI Dashboard & Components (Mocks)
 - [ ] Task: Create Bible Dashboard Layout
