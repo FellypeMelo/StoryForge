@@ -1,6 +1,6 @@
 # Implementation Plan: Modal System for Lore Creation
 
-## Phase 1: Foundation & Shared Component
+## Phase 1: Foundation & Shared Component [checkpoint: 71715f8]
 - [x] Task: Create Generic `SlideOver` Component [8330ace]
     - [x] 🔴 RED: Test that `SlideOver` renders its children and triggers `onClose` when the backdrop is clicked.
     - [x] 🔴 RED: Test accessibility (ESC key triggers `onClose`, focus is trapped within the component).
