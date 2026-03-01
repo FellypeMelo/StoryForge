@@ -1,3 +1,10 @@
 pub mod ports;
 pub mod error;
+pub mod value_objects;
 pub mod character;
+pub mod project;
+pub mod location;
+pub mod world_rule;
+pub mod timeline_event;
+pub mod relationship;
+pub mod blacklist_entry;

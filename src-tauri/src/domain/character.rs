@@ -1,18 +1,6 @@
 use serde::{Serialize, Deserialize};
-use uuid::Uuid;
 use crate::domain::error::{AppError, AppResult};
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct CharacterId(pub String);
-
-impl CharacterId {
-    pub fn new() -> Self {
-        Self(Uuid::new_v4().to_string())
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct ProjectId(pub String);
+pub use crate::domain::value_objects::{CharacterId, ProjectId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OceanScores {

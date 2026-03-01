@@ -70,6 +70,62 @@ impl SqliteDatabase {
                  COMMIT;"
             )?;
         }
+
+        let current_version: i32 = conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;
+        if current_version < 3 {
+            conn.execute_batch(
+                "BEGIN;
+                 CREATE TABLE IF NOT EXISTS locations (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    description TEXT DEFAULT '',
+                    symbolic_meaning TEXT DEFAULT '',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
+                 );
+                 CREATE TABLE IF NOT EXISTS world_rules (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    category TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    hierarchy INTEGER DEFAULT 0,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
+                 );
+                 CREATE TABLE IF NOT EXISTS timeline_events (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    date TEXT DEFAULT '',
+                    description TEXT NOT NULL,
+                    causal_dependencies TEXT DEFAULT '[]',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
+                 );
+                 CREATE TABLE IF NOT EXISTS relationships (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    character_a TEXT NOT NULL,
+                    character_b TEXT NOT NULL,
+                    type TEXT NOT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,
+                    FOREIGN KEY(character_a) REFERENCES characters(id) ON DELETE CASCADE,
+                    FOREIGN KEY(character_b) REFERENCES characters(id) ON DELETE CASCADE
+                 );
+                 CREATE TABLE IF NOT EXISTS blacklist_entries (
+                    id TEXT PRIMARY KEY,
+                    project_id TEXT NOT NULL,
+                    term TEXT NOT NULL,
+                    category TEXT DEFAULT '',
+                    reason TEXT DEFAULT '',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
+                 );
+                 PRAGMA user_version = 3;
+                 COMMIT;"
+            )?;
+        }
         
         Ok(())
     }
@@ -303,6 +359,36 @@ mod tests {
         ).map(|count: i32| count > 0).expect("Failed to query sqlite_master");
         
         assert!(table_exists, "Characters table should exist after migration");
+    }
+
+    #[test]
+    fn test_all_bible_tables_exist() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_all_tables.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+        
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        let tables = vec![
+            "projects",
+            "characters",
+            "locations",
+            "world_rules",
+            "timeline_events",
+            "relationships",
+            "blacklist_entries"
+        ];
+
+        for table in tables {
+            let table_exists: bool = conn.query_row(
+                &format!("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{}'", table),
+                [],
+                |row| row.get(0),
+            ).map(|count: i32| count > 0).expect(&format!("Failed to query sqlite_master for table {}", table));
+            
+            assert!(table_exists, "Table {} should exist after migration", table);
+        }
     }
 
     #[test]
