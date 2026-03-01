@@ -25,9 +25,9 @@
 - [x] Task: Conductor - User Manual Verification 'Full-Text Search (FTS5)' (Protocol in workflow.md) [7d7aba5]
 
 ## Phase 3: Vector Search (sqlite-vec)
-- [ ] Task: Integrate `sqlite-vec` extension
-    - [ ] 🔴 RED: Test vector table creation without extension.
-    - [ ] 🟢 GREEN: Configure `libsqlite3-sys` and load `sqlite-vec` in Rust.
+- [x] Task: Integrate `sqlite-vec` extension [3a3b6b2]
+    - [x] 🔴 RED: Test vector table creation without extension.
+    - [x] 🟢 GREEN: Configure `libsqlite3-sys` and load `sqlite-vec` in Rust.
 - [ ] Task: Implement `SqliteVectorSearchPort`
     - [ ] 🔴 RED: Test cosine similarity retrieval.
     - [ ] 🟢 GREEN: Create embedding mapping table and implement search logic.
