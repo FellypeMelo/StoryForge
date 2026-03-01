@@ -37,4 +37,27 @@
     font-family: var(--font-serif);
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+
+  /* Ultra-Minimalist Custom Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--sf-border);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--sf-text-muted);
+  }
+
+  /* Monochromatic Accessibility Focus Rings */
+  *:focus-visible {
+    outline: 2px solid var(--sf-text-muted) !important;
+    outline-offset: 4px !important;
+  }
 }

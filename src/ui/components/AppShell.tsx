@@ -31,11 +31,30 @@ export const AppShell: React.FC<AppShellProps> = ({ children, appVersion, dbHeal
   const [collapsed, setCollapsed] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
+  // Sidebar toggle shortcut logic (Ctrl+B / Cmd+B)
+  useEffect(() => {
+    const handleToggle = (e: KeyboardEvent) => {
+      // Check for Ctrl+B or Cmd+B
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        setCollapsed((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleToggle);
+    return () => {
+      window.removeEventListener("keydown", handleToggle);
+    };
+  }, []);
+
   // Auto-dimming logic for flow state
   // We simulate it by intercepting global keyboard events
   useEffect(() => {
     let timeoutId: number;
-    const handleKeyDown = () => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger auto-dimming when pressing shortcuts
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+      
       setIsTyping(true);
       window.clearTimeout(timeoutId);
       timeoutId = window.setTimeout(() => setIsTyping(false), 2000);
