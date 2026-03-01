@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { AppShell } from "./ui/components/AppShell";
+import { CharacterGallery } from "./ui/components/CharacterGallery";
+import { Character } from "./domain/character";
 
 interface AppInfo {
   name: string;
@@ -16,6 +18,24 @@ function App() {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState<string>('dashboard');
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Initializing with a default project for now
+  const activeProjectId = 'project-1';
+
+  const fetchCharacters = async () => {
+    setIsLoading(true);
+    try {
+      const list = await invoke<Character[]>("list_characters", { projectId: activeProjectId });
+      setCharacters(list);
+    } catch (err) {
+      console.error("Failed to fetch characters:", err);
+      // We don't set global error here to not block the whole app if one view fails
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +53,25 @@ function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (currentPath === 'personas') {
+      fetchCharacters();
+    }
+  }, [currentPath]);
+
+  const handleCreateCharacter = async () => {
+    try {
+      const name = prompt("Enter character name:");
+      if (!name) return;
+
+      await invoke("create_character", { projectId: activeProjectId, name });
+      await fetchCharacters();
+    } catch (err) {
+      console.error("Failed to create character:", err);
+      alert("Failed to create character: " + err);
+    }
+  };
+
   const renderContent = () => {
     switch (currentPath) {
       case 'personas':
@@ -46,9 +85,18 @@ function App() {
                 Manage your characters and their psychological depth.
               </p>
             </header>
-            <div className="py-20 border border-dashed border-border-subtle rounded-lg flex items-center justify-center text-text-muted font-sans italic">
-              Character Gallery coming soon...
-            </div>
+            
+            {isLoading ? (
+              <div className="py-20 flex justify-center">
+                <span className="text-text-muted font-mono animate-pulse">Consulting the archives...</span>
+              </div>
+            ) : (
+              <CharacterGallery 
+                characters={characters} 
+                onCreateNew={handleCreateCharacter}
+                onSelect={(char) => console.log('Selected:', char)}
+              />
+            )}
           </div>
         );
       case 'dashboard':
