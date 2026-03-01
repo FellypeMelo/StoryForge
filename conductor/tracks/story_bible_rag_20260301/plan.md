@@ -49,7 +49,7 @@
 - [x] Task: Integrate Live Search & Results Panel [fd33b01]
     - [x] 🔴 RED: Test search results UI responsiveness.
     - [x] 🟢 GREEN: Connect SearchBar to SearchPort and display results in real-time.
-- [ ] Task: Implement Injection Indicators
-    - [ ] 🔴 RED: Test UI state for "Active" lore entries.
-    - [ ] 🟢 GREEN: Add visual cues for items prioritized by the RAG pipeline.
-- [ ] Task: Conductor - User Manual Verification 'Story Bible UI Dashboard' (Protocol in workflow.md)
+- [x] Task: Implement Injection Indicators [604dff6]
+    - [x] 🔴 RED: Test UI state for "Active" lore entries.
+    - [x] 🟢 GREEN: Add visual cues for items prioritized by the RAG pipeline.
+- [x] Task: Conductor - User Manual Verification 'Story Bible UI Dashboard' (Protocol in workflow.md) [604dff6]
