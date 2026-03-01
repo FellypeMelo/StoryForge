@@ -43,9 +43,9 @@
 - [x] Task: Conductor - User Manual Verification 'RAG Pipeline & Context Management' (Protocol in workflow.md) [e9bf81c]
 
 ## Phase 5: Story Bible UI Dashboard
-- [ ] Task: Implement Bible Tabbed Interface
-    - [ ] 🔴 RED: Test navigation between Lore categories.
-    - [ ] 🟢 GREEN: Expand `/bible` with specialized views for each entity type.
+- [x] Task: Implement Bible Tabbed Interface [579abf2]
+    - [x] 🔴 RED: Test navigation between Lore categories.
+    - [x] 🟢 GREEN: Expand `/bible` with specialized views for each entity type.
 - [ ] Task: Integrate Live Search & Results Panel
     - [ ] 🔴 RED: Test search results UI responsiveness.
     - [ ] 🟢 GREEN: Connect SearchBar to SearchPort and display results in real-time.
