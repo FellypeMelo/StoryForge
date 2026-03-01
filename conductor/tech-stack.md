@@ -6,6 +6,7 @@
   - **ID Generation:** `uuid` crate for Value Objects.
 - **Frontend:** React + Tailwind CSS - Modular, distraction-free UI.
   - **Validation:** `Zod` for schema-driven domain integrity.
+  - **Value Objects:** `uuid` based identification for all domain entities.
 
 ## Persistence & Search
 

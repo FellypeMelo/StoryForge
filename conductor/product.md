@@ -28,6 +28,7 @@ StoryForge is a world-class literary development platform that combats AI writin
 
 - **CHI Ideation:** Anti-cliché worldbuilding and premise generation.
 - **Psychological Profiles:** Functional OCEAN-based character construction with persistence.
+- **Story Bible Foundation:** Comprehensive lore management including Locations, World Rules, Timeline Events, and Relationships.
 - **Narrative Architect:** Multi-framework support (Save the Cat, Hero's Journey, etc.).
 
 ### Phase 3: Guided Writing (E.P.R.L.)
