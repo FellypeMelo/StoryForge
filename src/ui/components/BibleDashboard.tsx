@@ -22,9 +22,17 @@ export function BibleDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+
+  const [injectedIds, setInjectedIds] = useState<string[]>([]);
   
   // Mock project ID for now (until Milestone 1 full project management is active)
   const currentProjectId = "default-project";
+
+  useEffect(() => {
+    // Simulando IDs injetados pelo RAG para demonstração visual
+    // Em produção isso viria de um ContextProvider ou Store (Zustand)
+    setInjectedIds(characters.slice(0, 1).map(c => c.id.value));
+  }, [characters]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -171,9 +179,9 @@ export function BibleDashboard() {
           </div>
         ) : (
           <>
-            {activeTab === "characters" && <CharacterList characters={characters} onCreateNew={() => {}} />}
-            {activeTab === "locations" && <LocationList locations={locations} onCreateNew={handleCreateLocation} />}
-            {activeTab === "rules" && <WorldRuleList rules={rules} onCreateNew={handleCreateRule} />}
+            {activeTab === "characters" && <CharacterList characters={characters} onCreateNew={() => {}} injectedIds={injectedIds} />}
+            {activeTab === "locations" && <LocationList locations={locations} onCreateNew={handleCreateLocation} injectedIds={injectedIds} />}
+            {activeTab === "rules" && <WorldRuleList rules={rules} onCreateNew={handleCreateRule} injectedIds={injectedIds} />}
             {activeTab === "timeline" && <TimelineList events={[]} onCreateNew={() => {}} />}
             {activeTab === "relationships" && <RelationshipList relationships={[]} onCreateNew={() => {}} />}
             {activeTab === "blacklist" && <BlacklistList entries={[]} onCreateNew={() => {}} />}
