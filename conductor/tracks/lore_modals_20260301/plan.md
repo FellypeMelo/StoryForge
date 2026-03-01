@@ -9,9 +9,9 @@
 - [ ] Task: Conductor - User Manual Verification 'Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Category Implementations
-- [ ] Task: Integrate `LocationForm` into Modal
-    - [ ] 🔴 RED: Test that clicking "Adicionar Local" in `BibleDashboard` opens the `SlideOver` with `LocationForm`.
-    - [ ] 🟢 GREEN: Update `handleCreateLocation` to manage modal visibility state instead of using `prompt`.
+- [x] Task: Integrate `LocationForm` into Modal [bfb63d6]
+    - [x] 🔴 RED: Test that clicking "Adicionar Local" in `BibleDashboard` opens the `SlideOver` with `LocationForm`.
+    - [x] 🟢 GREEN: Update `handleCreateLocation` to manage modal visibility state instead of using `prompt`.
 - [ ] Task: Integrate `WorldRuleForm` into Modal
     - [ ] 🔴 RED: Test that clicking "Adicionar Regra" in `BibleDashboard` opens the `SlideOver` with `WorldRuleForm`.
     - [ ] 🟢 GREEN: Update `handleCreateRule` to manage modal visibility state.
