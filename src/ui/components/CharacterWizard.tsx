@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Character, CharacterProps, OceanScores } from "../../domain/character";
-import { ChevronLeft, ChevronRight, Save, X, User, Brain, ScrollText } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, X, User, Brain, ScrollText, Info } from "lucide-react";
+import { OceanRadarChart } from "./OceanRadarChart";
 
 interface CharacterWizardProps {
   character: Character;
@@ -13,9 +14,30 @@ export function CharacterWizard({
   onSave,
   onCancel
 }: CharacterWizardProps) {
+  const DRAFT_KEY = `character_draft_${character.id.value}`;
+  
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<CharacterProps>(character.toProps());
   const [errors, setErrors] = useState<{ name?: string }>({});
+  const [hoveredTrait, setHoveredTrait] = useState<string | null>(null);
+
+  // Load draft on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        setFormData(draft);
+      } catch (e) {
+        console.error("Failed to parse draft", e);
+      }
+    }
+  }, []);
+
+  // Auto-save on data change
+  useEffect(() => {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(formData));
+  }, [formData]);
 
   const nextStep = () => setStep((s) => Math.min(s + 1, 3));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
@@ -50,13 +72,35 @@ export function CharacterWizard({
     }));
   };
 
-  const oceanTraits: { key: keyof OceanScores; label: string }[] = [
-    { key: "openness", label: "Abertura" },
-    { key: "conscientiousness", label: "Consciência" },
-    { key: "extraversion", label: "Extroversão" },
-    { key: "agreeableness", label: "Amabilidade" },
-    { key: "neuroticism", label: "Neuroticismo" },
+  const getSemanticLabel = (value: number) => {
+    if (value <= 30) return "Baixo";
+    if (value <= 70) return "Moderado";
+    return "Alto";
+  };
+
+  const oceanTraits: { key: keyof OceanScores; label: string; description: string }[] = [
+    { key: "openness", label: "Abertura", description: "Curiosidade intelectual, criatividade e preferência por novidade." },
+    { key: "conscientiousness", label: "Consciência", description: "Organização, persistência e motivação em comportamentos dirigidos a objetivos." },
+    { key: "extraversion", label: "Extroversão", description: "Sociabilidade, assertividade e busca por estimulação externa." },
+    { key: "agreeableness", label: "Amabilidade", description: "Qualidade das orientações interpessoais, empatia e cooperação." },
+    { key: "neuroticism", label: "Neuroticismo", description: "Tendência a experienciar emoções negativas como ansiedade ou raiva." },
   ];
+
+  const CharacterCounter = ({ current, limit }: { current: number; limit: number }) => (
+    <div className={`text-[10px] font-mono mt-1 text-right ${current > limit ? "text-red-500 font-bold" : "text-text-muted"}`}>
+      {current} / {limit}
+    </div>
+  );
+
+  const handleFinalSave = () => {
+    if (!formData.name.trim()) {
+      setErrors({ name: "Nome é obrigatório" });
+      setStep(1);
+      return;
+    }
+    localStorage.removeItem(DRAFT_KEY);
+    onSave(Character.create(formData));
+  };
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto p-6 bg-bg-base border border-border-subtle rounded-xl shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-y-auto max-h-[90vh]">
@@ -79,14 +123,7 @@ export function CharacterWizard({
         
         {step === 3 && (
           <button
-            onClick={() => {
-              if (!formData.name.trim()) {
-                setErrors({ name: "Nome é obrigatório" });
-                setStep(1);
-                return;
-              }
-              onSave(Character.create(formData));
-            }}
+            onClick={handleFinalSave}
             className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-md shadow-text-main/10"
           >
             <Save size={16} />
@@ -153,6 +190,7 @@ export function CharacterWizard({
                   className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                   placeholder="Traços visuais, estilo, presença..."
                 />
+                <CharacterCounter current={formData.physical_description.trim().length} limit={500} />
               </div>
             </div>
           </div>
@@ -165,25 +203,54 @@ export function CharacterWizard({
               <h3 className="text-xs font-bold tracking-widest uppercase">Perfil Psicológico (OCEAN)</h3>
             </div>
 
-            <div className="space-y-8 bg-bg-hover/30 p-8 rounded-lg border border-border-subtle">
-              {oceanTraits.map((trait) => (
-                <div key={trait.key} className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <label className="text-sm font-serif text-text-main">{trait.label}</label>
-                    <span className="text-xs font-mono text-text-muted">
-                      {formData.ocean_scores[trait.key]}%
-                    </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div className="relative">
+                <OceanRadarChart scores={formData.ocean_scores} size={280} />
+                {hoveredTrait && (
+                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                    <div className="bg-text-main text-bg-base text-[10px] p-3 rounded shadow-xl max-w-[150px] animate-in zoom-in-95 duration-200 text-center font-sans leading-relaxed">
+                      {oceanTraits.find(t => t.key === hoveredTrait)?.description}
+                    </div>
                   </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={formData.ocean_scores[trait.key]}
-                    onChange={(e) => handleOceanChange(trait.key, parseInt(e.target.value))}
-                    className="w-full accent-text-main cursor-pointer"
-                  />
-                </div>
-              ))}
+                )}
+              </div>
+              
+              <div className="space-y-6 bg-bg-hover/30 p-6 rounded-lg border border-border-subtle">
+                {oceanTraits.map((trait) => (
+                  <div key={trait.key} className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <label className="text-sm font-serif text-text-main">{trait.label}</label>
+                        <button
+                          type="button"
+                          data-testid={`help-${trait.key}`}
+                          onMouseEnter={() => setHoveredTrait(trait.key)}
+                          onMouseLeave={() => setHoveredTrait(null)}
+                          className="text-text-muted hover:text-text-main transition-colors cursor-help"
+                        >
+                          <Info size={12} />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-tighter text-text-muted px-1.5 py-0.5 bg-bg-base rounded border border-border-subtle">
+                          {getSemanticLabel(formData.ocean_scores[trait.key])}
+                        </span>
+                        <span className="text-xs font-mono text-text-muted">
+                          {formData.ocean_scores[trait.key]}%
+                        </span>
+                      </div>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={formData.ocean_scores[trait.key]}
+                      onChange={(e) => handleOceanChange(trait.key, parseInt(e.target.value))}
+                      className="w-full accent-text-main cursor-pointer"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -207,6 +274,7 @@ export function CharacterWizard({
                   className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
                   placeholder="O que eles querem agora?"
                 />
+                <CharacterCounter current={formData.goal.length} limit={200} />
               </div>
               <div className="space-y-2">
                 <label htmlFor="motivation" className="text-xs font-medium text-text-muted">Motivação</label>
@@ -219,6 +287,7 @@ export function CharacterWizard({
                   className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
                   placeholder="Por que eles querem isso?"
                 />
+                <CharacterCounter current={formData.motivation.length} limit={300} />
               </div>
               <div className="space-y-2">
                 <label htmlFor="internal_conflict" className="text-xs font-medium text-text-muted">Conflito Interno</label>
@@ -231,6 +300,7 @@ export function CharacterWizard({
                   className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                   placeholder="A força interna que os impede de avançar..."
                 />
+                <CharacterCounter current={formData.internal_conflict.length} limit={500} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
