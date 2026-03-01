@@ -1,49 +1,50 @@
 use crate::domain::character::{Character, CharacterId, ProjectId};
 use crate::domain::error::{AppError, AppResult};
 use crate::domain::ports::CharacterRepository;
-use std::sync::Arc;
+use crate::infrastructure::sqlite::SqliteDatabase;
+use tauri::State;
 
 #[tauri::command]
-pub fn create_character(
-    repo: tauri::State<'_, Arc<dyn CharacterRepository + Send + Sync>>,
+pub async fn create_character(
+    state: State<'_, SqliteDatabase>,
     project_id: String,
     name: String,
 ) -> AppResult<Character> {
     let character = Character::new(ProjectId(project_id), name)?;
-    repo.create(&character)?;
+    state.create(&character)?;
     Ok(character)
 }
 
 #[tauri::command]
-pub fn get_character(
-    repo: tauri::State<'_, Arc<dyn CharacterRepository + Send + Sync>>,
+pub async fn get_character(
+    state: State<'_, SqliteDatabase>,
     id: String,
 ) -> AppResult<Character> {
-    repo.get_by_id(&CharacterId(id))
+    state.get_by_id(&CharacterId(id))
 }
 
 #[tauri::command]
-pub fn list_characters(
-    repo: tauri::State<'_, Arc<dyn CharacterRepository + Send + Sync>>,
+pub async fn list_characters(
+    state: State<'_, SqliteDatabase>,
     project_id: String,
 ) -> AppResult<Vec<Character>> {
-    repo.list_by_project(&ProjectId(project_id))
+    state.list_by_project(&ProjectId(project_id))
 }
 
 #[tauri::command]
-pub fn update_character(
-    repo: tauri::State<'_, Arc<dyn CharacterRepository + Send + Sync>>,
+pub async fn update_character(
+    state: State<'_, SqliteDatabase>,
     character: Character,
 ) -> AppResult<()> {
-    repo.update(&character)
+    state.update(&character)
 }
 
 #[tauri::command]
-pub fn delete_character(
-    repo: tauri::State<'_, Arc<dyn CharacterRepository + Send + Sync>>,
+pub async fn delete_character(
+    state: State<'_, SqliteDatabase>,
     id: String,
 ) -> AppResult<()> {
-    repo.delete(&CharacterId(id))
+    state.delete(&CharacterId(id))
 }
 
 #[cfg(test)]

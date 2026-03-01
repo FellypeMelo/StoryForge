@@ -18,11 +18,10 @@ pub fn run() {
                 std::fs::create_dir_all(&app_data_dir).expect("Failed to create app data dir");
             }
             let db_path = app_data_dir.join("storyforge.db");
-            let db = Arc::new(SqliteDatabase::new(&db_path).expect("Failed to initialize database"));
+            let db = SqliteDatabase::new(&db_path).expect("Failed to initialize database");
             db.run_migrations().expect("Failed to run database migrations");
             
-            app.manage(db.clone() as Arc<dyn DatabasePort + Send + Sync>);
-            app.manage(db.clone() as Arc<dyn CharacterRepository + Send + Sync>);
+            app.manage(db);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -32,7 +31,14 @@ pub fn run() {
             commands::character::get_character,
             commands::character::list_characters,
             commands::character::update_character,
-            commands::character::delete_character
+            commands::character::delete_character,
+            commands::lore::create_project,
+            commands::lore::list_projects,
+            commands::lore::create_location,
+            commands::lore::list_locations,
+            commands::lore::create_world_rule,
+            commands::lore::list_world_rules,
+            commands::lore::search_lore
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

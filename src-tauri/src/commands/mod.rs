@@ -1,4 +1,5 @@
 pub mod character;
+pub mod lore;
 
 use serde::{Serialize, Deserialize};
 use crate::domain::ports::DatabasePort;
