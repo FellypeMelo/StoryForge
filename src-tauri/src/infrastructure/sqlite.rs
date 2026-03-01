@@ -1,14 +1,17 @@
 use rusqlite::{params, Connection, Result, Row};
 use std::path::Path;
-use std::sync::Mutex;
+use std::sync::{Mutex, Once};
 use crate::domain::ports::{
     DatabasePort, CharacterRepository, ProjectRepository, LocationRepository, WorldRuleRepository,
     TimelineRepository, RelationshipRepository, BlacklistRepository, SearchPort, SearchResult, EntityType
 };
-use crate::domain::character::{Character, OceanScores};
+
+static SQLITE_VEC_INIT: Once = Once::new();
+
 pub use crate::domain::value_objects::{
     CharacterId, ProjectId, LocationId, WorldRuleId, TimelineEventId, RelationshipId, BlacklistEntryId
 };
+use crate::domain::character::{Character, OceanScores};
 use crate::domain::project::Project;
 use crate::domain::location::Location;
 use crate::domain::world_rule::WorldRule;
@@ -23,6 +26,15 @@ pub struct SqliteDatabase {
 
 impl SqliteDatabase {
     pub fn new(path: &Path) -> Result<Self> {
+        // Register sqlite-vec auto-extension once
+        SQLITE_VEC_INIT.call_once(|| {
+            unsafe {
+                rusqlite::ffi::sqlite3_auto_extension(Some(std::mem::transmute(
+                    sqlite_vec::sqlite3_vec_init as *const (),
+                )));
+            }
+        });
+
         let connection = Connection::open(path)?;
         
         // Enable WAL mode for better concurrency
@@ -1276,5 +1288,32 @@ mod tests {
         let results = repo.search(&project_id, "Magic", Some(vec![EntityType::WorldRule])).expect("Search failed");
         assert!(!results.is_empty());
         assert_eq!(results[0].entity_id, "rule-1");
+    }
+
+    #[test]
+    fn test_sqlite_vec_loaded() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_vec_load.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        
+        let version: String = conn.query_row("SELECT vec_version()", [], |row| row.get(0)).expect("sqlite-vec not loaded");
+        assert!(!version.is_empty());
+    }
+
+    #[test]
+    fn test_vector_table_creation_succeeds() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_vec_success.db");
+        
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        
+        let result = conn.execute(
+            "CREATE VIRTUAL TABLE test_vec USING vec0(embedding float[3])",
+            [],
+        );
+        assert!(result.is_ok(), "Vector table creation failed: {:?}", result.err());
     }
 }
