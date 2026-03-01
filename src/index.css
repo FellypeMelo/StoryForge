@@ -63,3 +63,20 @@
     outline-offset: 4px !important;
   }
 }
+
+@layer utilities {
+  @keyframes scale-fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-scale-fade {
+    animation: scale-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}

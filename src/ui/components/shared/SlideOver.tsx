@@ -53,10 +53,11 @@ export const SlideOver: React.FC<SlideOverProps> = ({ isOpen, onClose, title, ch
         onClick={onClose}
       />
 
-      {/* Slide-over panel with Slide & Fade */}
+      {/* Slide-over panel with Scale & Fade */}
       <div
         ref={panelRef}
-        className="relative flex h-full w-full flex-col bg-bg-base shadow-2xl border-l border-border-subtle transition-all duration-500 ease-in-out sm:w-[500px] animate-in slide-in-from-right"
+        data-testid="slideover-panel"
+        className="relative flex h-full w-full flex-col bg-bg-base shadow-2xl border-l border-border-subtle transition-all sm:max-w-xl animate-scale-fade"
       >
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Header */}

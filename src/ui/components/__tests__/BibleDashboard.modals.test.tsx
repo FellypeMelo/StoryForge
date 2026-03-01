@@ -70,4 +70,35 @@ describe("BibleDashboard Modal Integration", () => {
     // Header from Dashboard should still be there (unlike before where it replaced the view)
     expect(screen.getByText(/Bíblia da História/i)).toBeInTheDocument();
   });
+
+  it("should reset form state when modal is closed and reopened", async () => {
+    render(<BibleDashboard />);
+
+    // Open Location modal
+    const locationsTab = screen.getByRole("button", { name: /Locais/i });
+    fireEvent.click(locationsTab);
+    await waitFor(() => expect(screen.getByRole("button", { name: /Criar Local/i })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: /Criar Local/i }));
+
+    // Type something
+    const nameInput = screen.getByLabelText(/Nome/i) as HTMLInputElement;
+    fireEvent.change(nameInput, { target: { value: "Lugar Temporário" } });
+    expect(nameInput.value).toBe("Lugar Temporário");
+
+    // Close modal via backdrop
+    const backdrop = screen.getByTestId("slideover-backdrop");
+    fireEvent.click(backdrop);
+
+    // Wait for modal to be removed from DOM
+    await waitFor(() => {
+      expect(screen.queryByText(/Detalhes do Local/i)).not.toBeInTheDocument();
+    });
+
+    // Reopen
+    fireEvent.click(screen.getByRole("button", { name: /Criar Local/i }));
+
+    // Check if input is empty
+    const newNameInput = screen.getByLabelText(/Nome/i) as HTMLInputElement;
+    expect(newNameInput.value).toBe("");
+  });
 });

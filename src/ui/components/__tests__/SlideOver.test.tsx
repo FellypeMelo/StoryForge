@@ -49,3 +49,19 @@ test("SlideOver calls onClose when Escape key is pressed", () => {
 
   expect(onClose).toHaveBeenCalledTimes(1);
 });
+
+test("SlideOver renders full width on mobile screens", () => {
+  // Mock window width
+  vi.stubGlobal("innerWidth", 500);
+  window.dispatchEvent(new Event("resize"));
+
+  render(
+    <SlideOver isOpen={true} onClose={() => {}}>
+      <div data-testid="content">Content</div>
+    </SlideOver>
+  );
+  
+  // Panel should have w-full class
+  const panel = screen.getByTestId("slideover-panel");
+  expect(panel).toHaveClass("w-full");
+});
