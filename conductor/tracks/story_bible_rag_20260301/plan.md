@@ -46,9 +46,9 @@
 - [x] Task: Implement Bible Tabbed Interface [579abf2]
     - [x] 🔴 RED: Test navigation between Lore categories.
     - [x] 🟢 GREEN: Expand `/bible` with specialized views for each entity type.
-- [ ] Task: Integrate Live Search & Results Panel
-    - [ ] 🔴 RED: Test search results UI responsiveness.
-    - [ ] 🟢 GREEN: Connect SearchBar to SearchPort and display results in real-time.
+- [x] Task: Integrate Live Search & Results Panel [fd33b01]
+    - [x] 🔴 RED: Test search results UI responsiveness.
+    - [x] 🟢 GREEN: Connect SearchBar to SearchPort and display results in real-time.
 - [ ] Task: Implement Injection Indicators
     - [ ] 🔴 RED: Test UI state for "Active" lore entries.
     - [ ] 🟢 GREEN: Add visual cues for items prioritized by the RAG pipeline.
