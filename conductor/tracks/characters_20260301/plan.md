@@ -1,13 +1,13 @@
 # Implementation Plan: Milestone 2 — Character Management (Core & UI)
 
-## Phase 1: Domain Entities & Validation
+## Phase 1: Domain Entities & Validation [checkpoint: 5d56556]
 - [x] Task: Define Character Value Objects & Entity (Backend) (2b429ea)
     - [x] 🔴 RED: Test CharacterId and Character validation
     - [x] 🟢 GREEN: Implement Character entity with strict validation
 - [x] Task: Define Character Value Objects & Entity (Frontend) (1982026)
     - [x] 🔴 RED: Test Character schema validation (Zod/etc)
     - [x] 🟢 GREEN: Implement TypeScript entities and types
-- [~] Task: Conductor - User Manual Verification 'Domain Entities & Validation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Domain Entities & Validation' (Protocol in workflow.md)
 
 ## Phase 2: Persistence & Infrastructure
 - [ ] Task: Character Database Schema & Migration
