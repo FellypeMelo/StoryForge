@@ -3,7 +3,7 @@ use uuid::Uuid;
 use crate::domain::error::{AppError, AppResult};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct CharacterId(String);
+pub struct CharacterId(pub String);
 
 impl CharacterId {
     pub fn new() -> Self {
