@@ -1,3 +1,5 @@
+pub mod character;
+
 use serde::{Serialize, Deserialize};
 use crate::domain::ports::DatabasePort;
 use crate::domain::error::AppResult;
