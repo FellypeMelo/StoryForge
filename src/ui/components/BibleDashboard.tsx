@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { CharacterList } from "./CharacterList";
+import { CharacterWizard } from "./CharacterWizard";
 import { LocationList } from "./LocationList";
 import { WorldRuleList } from "./WorldRuleList";
 import { TimelineList, RelationshipList, BlacklistList } from "./LoreLists";
 import { SearchBar } from "./SearchBar";
 import { Character } from "../../domain/character";
+import { ProjectId } from "../../domain/value-objects/project-id";
 import { Location } from "../../domain/location";
 import { WorldRule } from "../../domain/world-rule";
 import { Users, MapPin, Scroll, Clock, GitBranch, Ban } from "lucide-react";
@@ -24,9 +26,12 @@ export function BibleDashboard() {
   const [isSearching, setIsSearching] = useState(false);
 
   const [injectedIds, setInjectedIds] = useState<string[]>([]);
+
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
   
   // Mock project ID for now (until Milestone 1 full project management is active)
-  const currentProjectId = "default-project";
+  const currentProjectId = "550e8400-e29b-41d4-a716-446655440000";
 
   useEffect(() => {
     // Simulando IDs injetados pelo RAG para demonstração visual
@@ -48,7 +53,7 @@ export function BibleDashboard() {
     // Only load if not searching
     if (searchQuery.trim() !== "") return;
     
-    setLoading(true);
+    setLoading(false); // Immediate feedback for smoother UX
     try {
       if (activeTab === "characters") {
         const data = await invoke<any[]>("list_characters", { projectId: currentProjectId });
@@ -56,7 +61,7 @@ export function BibleDashboard() {
           ...d,
           id: { value: d.id },
           projectId: { value: d.project_id },
-          name: d.name || "Unnamed",
+          name: d.name || "Sem nome",
         } as any)));
       } else if (activeTab === "locations") {
         const data = await invoke<any[]>("list_locations", { projectId: currentProjectId });
@@ -64,7 +69,7 @@ export function BibleDashboard() {
           ...d,
           id: { value: d.id },
           projectId: { value: d.project_id },
-          name: d.name || "Unnamed",
+          name: d.name || "Sem nome",
         } as any)));
       } else if (activeTab === "rules") {
         const data = await invoke<any[]>("list_world_rules", { projectId: currentProjectId });
@@ -72,7 +77,7 @@ export function BibleDashboard() {
           ...d,
           id: { value: d.id },
           projectId: { value: d.project_id },
-          category: d.category || "General",
+          category: d.category || "Geral",
           content: d.content || "",
         } as any)));
       }
@@ -92,8 +97,46 @@ export function BibleDashboard() {
     }
   };
 
+  const handleCreateCharacter = () => {
+    const newChar = Character.new(ProjectId.create(currentProjectId), "");
+    setEditingCharacter(newChar);
+    setIsWizardOpen(true);
+  };
+
+  const handleEditCharacter = (char: Character) => {
+    setEditingCharacter(char);
+    setIsWizardOpen(true);
+  };
+
+  const handleSaveCharacter = async (char: Character) => {
+    try {
+      // In a real app, you'd check if it's new or existing. 
+      // For this UI demo, we'll just try to create/update.
+      const charData = char.toProps();
+      await invoke("create_character", { 
+        projectId: currentProjectId, 
+        name: charData.name 
+      });
+      // After creation, update the other fields (simplified for now)
+      await invoke("update_character", { 
+        character: {
+          ...charData,
+          id: charData.id.value,
+          project_id: charData.projectId.value,
+          // Map snake_case for Rust if needed, but our toProps should be consistent
+        } 
+      });
+      
+      setIsWizardOpen(false);
+      setEditingCharacter(null);
+      loadData();
+    } catch (error) {
+      console.error("Failed to save character:", error);
+    }
+  };
+
   const handleCreateLocation = async () => {
-    const name = prompt("Location Name:");
+    const name = prompt("Nome do Local:");
     if (name) {
       await invoke("create_location", { projectId: currentProjectId, name });
       loadData();
@@ -101,8 +144,8 @@ export function BibleDashboard() {
   };
 
   const handleCreateRule = async () => {
-    const category = prompt("Category (e.g. Magic):");
-    const content = prompt("Rule Content:");
+    const category = prompt("Categoria (ex. Magia):");
+    const content = prompt("Conteúdo da Regra:");
     if (category && content) {
       await invoke("create_world_rule", { projectId: currentProjectId, category, content });
       loadData();
@@ -110,20 +153,32 @@ export function BibleDashboard() {
   };
 
   const tabs: { id: Tab; label: string; icon: any }[] = [
-    { id: "characters", label: "Characters", icon: Users },
-    { id: "locations", label: "Locations", icon: MapPin },
-    { id: "rules", label: "World Rules", icon: Scroll },
-    { id: "timeline", label: "Timeline", icon: Clock },
-    { id: "relationships", label: "Relationships", icon: GitBranch },
-    { id: "blacklist", label: "Blacklist", icon: Ban },
+    { id: "characters", label: "Personagens", icon: Users },
+    { id: "locations", label: "Locais", icon: MapPin },
+    { id: "rules", label: "Regras do Mundo", icon: Scroll },
+    { id: "timeline", label: "Linha do Tempo", icon: Clock },
+    { id: "relationships", label: "Relacionamentos", icon: GitBranch },
+    { id: "blacklist", label: "Lista Negra", icon: Ban },
   ];
+
+  if (isWizardOpen && editingCharacter) {
+    return (
+      <div className="py-8">
+        <CharacterWizard 
+          character={editingCharacter}
+          onSave={handleSaveCharacter}
+          onCancel={() => setIsWizardOpen(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-subtle pb-6">
         <div>
-          <h1 className="text-3xl font-serif text-text-main">Story Bible</h1>
-          <p className="text-text-muted text-sm font-sans">The definitive guide to your story's lore and logic.</p>
+          <h1 className="text-3xl font-serif text-text-main">Bíblia da História</h1>
+          <p className="text-text-muted text-sm font-sans">O guia definitivo para a sabedoria e lógica da sua história.</p>
         </div>
         <SearchBar onSearch={setSearchQuery} />
       </header>
@@ -152,7 +207,7 @@ export function BibleDashboard() {
         {isSearching ? (
           <div className="space-y-6">
             <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
-              Search Results ({searchResults.length})
+              Resultados da Busca ({searchResults.length})
             </h2>
             {searchResults.length > 0 ? (
               <div className="grid grid-cols-1 gap-4">
@@ -169,17 +224,24 @@ export function BibleDashboard() {
               </div>
             ) : (
               <div className="py-20 text-center text-text-muted font-sans">
-                No matching lore entries found.
+                Nenhuma entrada correspondente encontrada.
               </div>
             )}
           </div>
         ) : loading ? (
           <div className="py-20 text-center font-mono text-text-muted animate-pulse">
-            Consulting the archives...
+            Consultando os arquivos...
           </div>
         ) : (
           <>
-            {activeTab === "characters" && <CharacterList characters={characters} onCreateNew={() => {}} injectedIds={injectedIds} />}
+            {activeTab === "characters" && (
+              <CharacterList 
+                characters={characters} 
+                onCreateNew={handleCreateCharacter} 
+                onSelect={handleEditCharacter}
+                injectedIds={injectedIds} 
+              />
+            )}
             {activeTab === "locations" && <LocationList locations={locations} onCreateNew={handleCreateLocation} injectedIds={injectedIds} />}
             {activeTab === "rules" && <WorldRuleList rules={rules} onCreateNew={handleCreateRule} injectedIds={injectedIds} />}
             {activeTab === "timeline" && <TimelineList events={[]} onCreateNew={() => {}} />}
@@ -191,5 +253,6 @@ export function BibleDashboard() {
     </div>
   );
 }
+
 
 
