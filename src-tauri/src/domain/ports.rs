@@ -8,9 +8,30 @@ use crate::domain::blacklist_entry::BlacklistEntry;
 use crate::domain::value_objects::{ProjectId, CharacterId, LocationId, WorldRuleId, TimelineEventId, RelationshipId, BlacklistEntryId};
 use crate::domain::error::AppResult;
 
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EntityType {
+    Character,
+    Location,
+    WorldRule,
+    TimelineEvent,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct SearchResult {
+    pub entity_id: String,
+    pub entity_type: EntityType,
+    pub snippet: String,
+    pub score: f64,
+}
+
 pub trait DatabasePort {
     fn is_healthy(&self) -> bool;
     fn get_version(&self) -> i32;
+}
+
+pub trait SearchPort {
+    fn search(&self, project_id: &ProjectId, query: &str, types: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>>;
 }
 
 pub trait ProjectRepository {

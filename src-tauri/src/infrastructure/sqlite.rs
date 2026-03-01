@@ -3,7 +3,7 @@ use std::path::Path;
 use std::sync::Mutex;
 use crate::domain::ports::{
     DatabasePort, CharacterRepository, ProjectRepository, LocationRepository, WorldRuleRepository,
-    TimelineRepository, RelationshipRepository, BlacklistRepository
+    TimelineRepository, RelationshipRepository, BlacklistRepository, SearchPort, SearchResult, EntityType
 };
 use crate::domain::character::{Character, OceanScores};
 pub use crate::domain::value_objects::{
@@ -18,7 +18,7 @@ use crate::domain::blacklist_entry::BlacklistEntry;
 use crate::domain::error::{AppError, AppResult};
 
 pub struct SqliteDatabase {
-    connection: Mutex<Connection>,
+    pub connection: Mutex<Connection>,
 }
 
 impl SqliteDatabase {
@@ -222,7 +222,7 @@ impl ProjectRepository for SqliteDatabase {
         let project = conn.query_row(
             "SELECT id, name, created_at FROM projects WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 Ok(Project {
                     id: ProjectId(row.get(0)?),
                     name: row.get(1)?,
@@ -241,7 +241,7 @@ impl ProjectRepository for SqliteDatabase {
         let mut stmt = conn.prepare("SELECT id, name, created_at FROM projects")
             .map_err(AppError::from)?;
 
-        let project_iter = stmt.query_map([], |row| {
+        let project_iter = stmt.query_map([], |row: &Row| {
             Ok(Project {
                 id: ProjectId(row.get(0)?),
                 name: row.get(1)?,
@@ -323,7 +323,7 @@ impl CharacterRepository for SqliteDatabase {
                 ocean_agreeableness, ocean_neuroticism
             FROM characters WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 Ok(Character {
                     id: CharacterId(row.get(0)?),
                     project_id: ProjectId(row.get(1)?),
@@ -363,7 +363,7 @@ impl CharacterRepository for SqliteDatabase {
             FROM characters WHERE project_id = ?",
         ).map_err(AppError::from)?;
 
-        let character_iter = stmt.query_map([project_id.0.clone()], |row| {
+        let character_iter = stmt.query_map([project_id.0.clone()], |row: &Row| {
             Ok(Character {
                 id: CharacterId(row.get(0)?),
                 project_id: ProjectId(row.get(1)?),
@@ -454,7 +454,7 @@ impl LocationRepository for SqliteDatabase {
         let location = conn.query_row(
             "SELECT id, project_id, name, description, symbolic_meaning FROM locations WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 Ok(Location {
                     id: LocationId(row.get(0)?),
                     project_id: ProjectId(row.get(1)?),
@@ -475,7 +475,7 @@ impl LocationRepository for SqliteDatabase {
         let mut stmt = conn.prepare("SELECT id, project_id, name, description, symbolic_meaning FROM locations WHERE project_id = ?")
             .map_err(AppError::from)?;
 
-        let location_iter = stmt.query_map([project_id.0.clone()], |row| {
+        let location_iter = stmt.query_map([project_id.0.clone()], |row: &Row| {
             Ok(Location {
                 id: LocationId(row.get(0)?),
                 project_id: ProjectId(row.get(1)?),
@@ -532,7 +532,7 @@ impl WorldRuleRepository for SqliteDatabase {
         let rule = conn.query_row(
             "SELECT id, project_id, category, content, hierarchy FROM world_rules WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 Ok(WorldRule {
                     id: WorldRuleId(row.get(0)?),
                     project_id: ProjectId(row.get(1)?),
@@ -553,7 +553,7 @@ impl WorldRuleRepository for SqliteDatabase {
         let mut stmt = conn.prepare("SELECT id, project_id, category, content, hierarchy FROM world_rules WHERE project_id = ? ORDER BY hierarchy ASC")
             .map_err(AppError::from)?;
 
-        let rule_iter = stmt.query_map([project_id.0.clone()], |row| {
+        let rule_iter = stmt.query_map([project_id.0.clone()], |row: &Row| {
             Ok(WorldRule {
                 id: WorldRuleId(row.get(0)?),
                 project_id: ProjectId(row.get(1)?),
@@ -611,7 +611,7 @@ impl TimelineRepository for SqliteDatabase {
         let event = conn.query_row(
             "SELECT id, project_id, date, description, causal_dependencies FROM timeline_events WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 let deps_json: String = row.get(4)?;
                 let causal_dependencies: Vec<TimelineEventId> = serde_json::from_str(&deps_json).unwrap_or_default();
                 Ok(TimelineEvent {
@@ -634,7 +634,7 @@ impl TimelineRepository for SqliteDatabase {
         let mut stmt = conn.prepare("SELECT id, project_id, date, description, causal_dependencies FROM timeline_events WHERE project_id = ?")
             .map_err(AppError::from)?;
 
-        let event_iter = stmt.query_map([project_id.0.clone()], |row| {
+        let event_iter = stmt.query_map([project_id.0.clone()], |row: &Row| {
             let deps_json: String = row.get(4)?;
             let causal_dependencies: Vec<TimelineEventId> = serde_json::from_str(&deps_json).unwrap_or_default();
             Ok(TimelineEvent {
@@ -694,7 +694,7 @@ impl RelationshipRepository for SqliteDatabase {
         let relationship = conn.query_row(
             "SELECT id, project_id, character_a, character_b, type FROM relationships WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 Ok(Relationship {
                     id: RelationshipId(row.get(0)?),
                     project_id: ProjectId(row.get(1)?),
@@ -715,7 +715,7 @@ impl RelationshipRepository for SqliteDatabase {
         let mut stmt = conn.prepare("SELECT id, project_id, character_a, character_b, type FROM relationships WHERE project_id = ?")
             .map_err(AppError::from)?;
 
-        let relationship_iter = stmt.query_map([project_id.0.clone()], |row| {
+        let relationship_iter = stmt.query_map([project_id.0.clone()], |row: &Row| {
             Ok(Relationship {
                 id: RelationshipId(row.get(0)?),
                 project_id: ProjectId(row.get(1)?),
@@ -772,7 +772,7 @@ impl BlacklistRepository for SqliteDatabase {
         let entry = conn.query_row(
             "SELECT id, project_id, term, category, reason FROM blacklist_entries WHERE id = ?",
             [id.0.clone()],
-            |row| {
+            |row: &Row| {
                 Ok(BlacklistEntry {
                     id: BlacklistEntryId(row.get(0)?),
                     project_id: ProjectId(row.get(1)?),
@@ -793,7 +793,7 @@ impl BlacklistRepository for SqliteDatabase {
         let mut stmt = conn.prepare("SELECT id, project_id, term, category, reason FROM blacklist_entries WHERE project_id = ?")
             .map_err(AppError::from)?;
 
-        let entry_iter = stmt.query_map([project_id.0.clone()], |row| {
+        let entry_iter = stmt.query_map([project_id.0.clone()], |row: &Row| {
             Ok(BlacklistEntry {
                 id: BlacklistEntryId(row.get(0)?),
                 project_id: ProjectId(row.get(1)?),
@@ -835,6 +835,71 @@ impl BlacklistRepository for SqliteDatabase {
     }
 }
 
+impl SearchPort for SqliteDatabase {
+    fn search(&self, project_id: &ProjectId, query: &str, types: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>> {
+        let conn = self.connection.lock().map_err(|e| AppError::Internal(e.to_string()))?;
+        
+        let mut sql = "SELECT entity_id, type, title || ': ' || content, bm25(lore_search) as score 
+                       FROM lore_search 
+                       WHERE project_id = ? AND lore_search MATCH ?".to_string();
+        
+        if let Some(ref t) = types {
+            if !t.is_empty() {
+                let type_placeholders: Vec<String> = t.iter().map(|_| "?".to_string()).collect();
+                sql.push_str(&format!(" AND type IN ({})", type_placeholders.join(",")));
+            }
+        }
+        
+        sql.push_str(" ORDER BY score DESC");
+        
+        let mut stmt = conn.prepare(&sql).map_err(AppError::from)?;
+        
+        let mut params: Vec<Box<dyn rusqlite::ToSql>> = vec![
+            Box::new(project_id.0.clone()),
+            Box::new(query.to_string()),
+        ];
+        
+        if let Some(t) = types {
+            for entity_type in t {
+                let type_str = match entity_type {
+                    EntityType::Character => "character",
+                    EntityType::Location => "location",
+                    EntityType::WorldRule => "world_rule",
+                    EntityType::TimelineEvent => "timeline_event",
+                };
+                params.push(Box::new(type_str.to_string()));
+            }
+        }
+
+        // Convert Vec<Box<dyn ToSql>> to slice of &dyn ToSql
+        let params_refs: Vec<&dyn rusqlite::ToSql> = params.iter().map(|b| b.as_ref()).collect();
+
+        let results_iter = stmt.query_map(rusqlite::params_from_iter(params_refs), |row: &Row| {
+            let type_str: String = row.get(1)?;
+            let entity_type = match type_str.as_str() {
+                "character" => EntityType::Character,
+                "location" => EntityType::Location,
+                "world_rule" => EntityType::WorldRule,
+                "timeline_event" => EntityType::TimelineEvent,
+                _ => EntityType::WorldRule, // Fallback
+            };
+            
+            Ok(SearchResult {
+                entity_id: row.get(0)?,
+                entity_type,
+                snippet: row.get(2)?,
+                score: row.get(3)?,
+            })
+        }).map_err(AppError::from)?;
+
+        let mut results = Vec::new();
+        for res in results_iter {
+            results.push(res?);
+        }
+        Ok(results)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -861,7 +926,7 @@ mod tests {
         db.run_migrations().expect("Failed to run migrations");
         
         let db_port: &dyn DatabasePort = &db;
-        assert!(db_port.get_version() >= 3);
+        assert!(db_port.get_version() >= 4);
     }
 
     #[test]
@@ -876,7 +941,7 @@ mod tests {
         let table_exists: bool = conn.query_row(
             "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='characters'",
             [],
-            |row| row.get(0),
+            |row: &Row| row.get(0),
         ).map(|count: i32| count > 0).expect("Failed to query sqlite_master");
         
         assert!(table_exists, "Characters table should exist after migration");
@@ -898,14 +963,15 @@ mod tests {
             "world_rules",
             "timeline_events",
             "relationships",
-            "blacklist_entries"
+            "blacklist_entries",
+            "lore_search"
         ];
 
         for table in tables {
             let table_exists: bool = conn.query_row(
-                &format!("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='{}'", table),
+                &format!("SELECT count(*) FROM sqlite_master WHERE name='{}'", table),
                 [],
-                |row| row.get(0),
+                |row: &Row| row.get(0),
             ).map(|count: i32| count > 0).expect(&format!("Failed to query sqlite_master for table {}", table));
             
             assert!(table_exists, "Table {} should exist after migration", table);
@@ -1181,20 +1247,34 @@ mod tests {
     }
 
     #[test]
-    fn test_fts5_tables_exist() {
+    fn test_search_port_ranked() {
         let dir = tempdir().expect("Failed to create temp dir");
-        let db_path = dir.path().join("test_fts5.db");
+        let db_path = dir.path().join("test_search.db");
         
         let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
         db.run_migrations().expect("Failed to run migrations");
         
-        let conn = db.connection.lock().expect("Failed to lock connection");
-        let table_exists: bool = conn.query_row(
-            "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='lore_search'",
-            [],
-            |row| row.get(0),
-        ).map(|count: i32| count > 0).expect("Failed to query sqlite_master");
+        let project_id = ProjectId("proj-1".to_string());
+        {
+            let conn = db.connection.lock().unwrap();
+            conn.execute("INSERT INTO projects (id, name) VALUES (?, ?)", [&project_id.0, "Project 1"]).unwrap();
+            conn.execute("INSERT INTO characters (id, project_id, name, occupation) VALUES (?, ?, ?, ?)", 
+                ["char-1", &project_id.0, "Conan the Barbarian", "Warrior from Cimmeria"]).unwrap();
+            conn.execute("INSERT INTO world_rules (id, project_id, category, content) VALUES (?, ?, ?, ?)", 
+                ["rule-1", &project_id.0, "Magic", "Magic is dangerous and rare"]).unwrap();
+        }
+
+        let repo: &dyn crate::domain::ports::SearchPort = &db;
         
-        assert!(table_exists, "FTS5 virtual table lore_search should exist after migration");
+        // Search for \"Barbarian\" - should find Conan
+        let results = repo.search(&project_id, "Barbarian", None).expect("Search failed");
+        assert!(!results.is_empty(), "Should find at least one result");
+        assert_eq!(results[0].entity_id, "char-1");
+        assert!(results[0].snippet.contains("Conan"));
+        
+        // Search for \"Magic\" - should find the rule
+        let results = repo.search(&project_id, "Magic", Some(vec![EntityType::WorldRule])).expect("Search failed");
+        assert!(!results.is_empty());
+        assert_eq!(results[0].entity_id, "rule-1");
     }
 }
