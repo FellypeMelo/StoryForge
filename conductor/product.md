@@ -27,7 +27,7 @@ StoryForge is a world-class literary development platform that combats AI writin
 ### Phase 1 & 2: Structural Planning
 
 - **CHI Ideation:** Anti-cliché worldbuilding and premise generation.
-- **Psychological Profiles:** OCEAN/Hauge-based character construction.
+- **Psychological Profiles:** Functional OCEAN-based character construction with persistence.
 - **Narrative Architect:** Multi-framework support (Save the Cat, Hero's Journey, etc.).
 
 ### Phase 3: Guided Writing (E.P.R.L.)

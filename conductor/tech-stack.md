@@ -3,7 +3,9 @@
 ## Core & Runtime
 
 - **Backend:** Rust (Tauri) - High-performance system backend with native IPC and cross-platform portability.
+  - **ID Generation:** `uuid` crate for Value Objects.
 - **Frontend:** React + Tailwind CSS - Modular, distraction-free UI.
+  - **Validation:** `Zod` for schema-driven domain integrity.
 
 ## Persistence & Search
 
