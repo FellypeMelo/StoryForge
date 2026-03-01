@@ -1,6 +1,6 @@
 # Plan: Story Bible Persistence, Search & RAG Pipeline
 
-## Phase 1: SQLite Persistence & CRUD Repositories
+## Phase 1: SQLite Persistence & CRUD Repositories [checkpoint: 48abb36]
 - [x] Task: Implement SQL Migrations [55c6243]
     - [x] Create migration for `projects`, `characters`, and `locations` tables.
     - [x] Create migration for `world_rules`, `timeline_events`, `relationships`, and `blacklist_entries`.
@@ -13,7 +13,7 @@
 - [x] Task: Implement Secondary repositories (Timeline, Relationship, Blacklist) [f3cb1cf]
     - [x] 🔴 RED: Tests for timeline ordering and relationship graph queries.
     - [x] 🟢 GREEN: Implement remaining repositories.
-- [ ] Task: Conductor - User Manual Verification 'SQLite Persistence & CRUD Repositories' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'SQLite Persistence & CRUD Repositories' (Protocol in workflow.md) [48abb36]
 
 ## Phase 2: Full-Text Search (FTS5)
 - [ ] Task: Setup FTS5 Virtual Tables
