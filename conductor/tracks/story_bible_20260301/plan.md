@@ -38,21 +38,21 @@
     - [x] Define `VectorSearchPort` signature.
 - [x] Task: Conductor - User Manual Verification 'Repository Ports' (Protocol in workflow.md) [a272179]
 
-## Phase 3: UI Dashboard & Components (Mocks)
-- [ ] Task: Create Bible Dashboard Layout
-    - [ ] 🔴 RED: Test `BibleDashboard` layout and tabs existence.
-    - [ ] 🟢 GREEN: Implement `BibleDashboard` with tabs using Tailwind.
-- [ ] Task: Implement Entity List Views (Mocks)
-    - [ ] 🔴 RED: Test `CharacterList` with mocked data.
-    - [ ] 🟢 GREEN: Implement `CharacterList`.
-    - [ ] 🔴 RED: Test `LocationList` and `WorldRuleList`.
-    - [ ] 🟢 GREEN: Implement remaining lists.
-- [ ] Task: Implement CRUD Forms (Mocks)
-    - [ ] 🔴 RED: Test `CharacterForm` validation and submission.
-    - [ ] 🟢 GREEN: Implement `CharacterForm`.
-    - [ ] 🔴 RED: Test `LocationForm` and `WorldRuleForm`.
-    - [ ] 🟢 GREEN: Implement remaining forms.
-- [ ] Task: Integrate Search Bar UI
-    - [ ] 🔴 RED: Test `SearchBar` rendering.
-    - [ ] 🟢 GREEN: Implement `SearchBar` component.
-- [ ] Task: Conductor - User Manual Verification 'UI Dashboard & Components' (Protocol in workflow.md)
+## Phase 3: UI Dashboard & Components (Mocks) [checkpoint: c1645b7]
+- [x] Task: Create Bible Dashboard Layout [c1645b7]
+    - [x] 🔴 RED: Test `BibleDashboard` layout and tabs existence.
+    - [x] 🟢 GREEN: Implement `BibleDashboard` with tabs using Tailwind.
+- [x] Task: Implement Entity List Views (Mocks) [c1645b7]
+    - [x] 🔴 RED: Test `CharacterList` with mocked data.
+    - [x] 🟢 GREEN: Implement `CharacterList`.
+    - [x] 🔴 RED: Test `LocationList` and `WorldRuleList`.
+    - [x] 🟢 GREEN: Implement remaining lists.
+- [x] Task: Implement CRUD Forms (Mocks) [c1645b7]
+    - [x] 🔴 RED: Test `CharacterForm` validation and submission.
+    - [x] 🟢 GREEN: Implement `CharacterForm`.
+    - [x] 🔴 RED: Test `LocationForm` and `WorldRuleForm`.
+    - [x] 🟢 GREEN: Implement remaining forms.
+- [x] Task: Integrate Search Bar UI [c1645b7]
+    - [x] 🔴 RED: Test `SearchBar` rendering.
+    - [x] 🟢 GREEN: Implement `SearchBar` component.
+- [x] Task: Conductor - User Manual Verification 'UI Dashboard & Components' (Protocol in workflow.md) [c1645b7]
