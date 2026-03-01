@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { CharacterId, CharacterIdSchema } from "./value-objects/character-id";
+import { ProjectId, ProjectIdSchema } from "./value-objects/project-id";
 
 export const OceanScoresSchema = z.object({
   openness: z.number().min(0).max(100).default(50),
@@ -11,8 +13,8 @@ export const OceanScoresSchema = z.object({
 export type OceanScores = z.infer<typeof OceanScoresSchema>;
 
 export const CharacterSchema = z.object({
-  id: z.string().uuid().or(z.string().min(1)), // UUID preferred but flexible for initial mocks
-  project_id: z.string().min(1),
+  id: CharacterIdSchema,
+  projectId: ProjectIdSchema,
   name: z.string().min(1, "Name cannot be empty"),
   age: z.number().int().min(0).default(0),
   occupation: z.string().default(""),
@@ -31,4 +33,64 @@ export const CharacterSchema = z.object({
   mannerisms: z.string().default(""),
 });
 
-export type Character = z.infer<typeof CharacterSchema>;
+export type CharacterProps = z.infer<typeof CharacterSchema>;
+
+export class Character {
+  private constructor(private readonly props: CharacterProps) {}
+
+  public static create(props: {
+    id: CharacterId;
+    projectId: ProjectId;
+    name: string;
+    age?: number;
+    occupation?: string;
+    physical_description?: string;
+    goal?: string;
+    motivation?: string;
+    internal_conflict?: string;
+    ocean_scores?: OceanScores;
+    voice?: string;
+    mannerisms?: string;
+  }): Character {
+    const validated = CharacterSchema.parse({
+      id: props.id.value,
+      projectId: props.projectId.value,
+      name: props.name,
+      age: props.age,
+      occupation: props.occupation,
+      physical_description: props.physical_description,
+      goal: props.goal,
+      motivation: props.motivation,
+      internal_conflict: props.internal_conflict,
+      ocean_scores: props.ocean_scores,
+      voice: props.voice,
+      mannerisms: props.mannerisms,
+    });
+
+    return new Character({
+      ...validated,
+      id: CharacterId.create(validated.id),
+      projectId: ProjectId.create(validated.projectId),
+    });
+  }
+
+  public get id(): CharacterId {
+    return this.props.id as CharacterId;
+  }
+
+  public get projectId(): ProjectId {
+    return this.props.projectId as ProjectId;
+  }
+
+  public get name(): string {
+    return this.props.name;
+  }
+
+  public get age(): number {
+    return this.props.age;
+  }
+
+  public get ocean_scores(): OceanScores {
+    return this.props.ocean_scores;
+  }
+}

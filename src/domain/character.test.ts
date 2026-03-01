@@ -1,49 +1,39 @@
 import { describe, it, expect } from "vitest";
-import { CharacterSchema } from "./character";
+import { Character, CharacterSchema } from "./character";
+import { CharacterId } from "./value-objects/character-id";
+import { ProjectId } from "./value-objects/project-id";
 
-describe("CharacterSchema", () => {
-  it("should fail validation for empty name", () => {
-    const result = CharacterSchema.safeParse({
-      name: "",
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it("should fail if required fields are missing (age, ocean_scores, etc)", () => {
-    // Current minimal schema only has name, so this will pass safely but fail
-    // when we add required fields.
-    const result = CharacterSchema.safeParse({
-      name: "Protagonist",
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it("should pass for valid data with all fields", () => {
-    const validData = {
-      id: "char-123",
-      project_id: "proj-123",
+describe("Character Entity", () => {
+  it("should create a valid Character", () => {
+    const id = CharacterId.generate();
+    const projectId = ProjectId.generate();
+    const character = Character.create({
+      id,
+      projectId,
       name: "Protagonist",
       age: 25,
-      occupation: "Hero",
-      physical_description: "Tall",
-      goal: "Win",
-      motivation: "Justice",
-      internal_conflict: "Fear",
       ocean_scores: {
         openness: 80,
         conscientiousness: 70,
         extraversion: 60,
         agreeableness: 90,
         neuroticism: 20,
-      },
-      voice: "Confident",
-      mannerisms: "Fast talker",
+      }
+    });
+
+    expect(character.id.equals(id)).toBe(true);
+    expect(character.projectId.equals(projectId)).toBe(true);
+    expect(character.name).toBe("Protagonist");
+    expect(character.ocean_scores.openness).toBe(80);
+  });
+
+  it("should fail validation for empty name", () => {
+    const data = {
+      id: CharacterId.generate().value,
+      projectId: ProjectId.generate().value,
+      name: "",
     };
-    const result = CharacterSchema.safeParse(validData);
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data.age).toBe(25);
-      expect(result.data.ocean_scores.openness).toBe(80);
-    }
+    const result = CharacterSchema.safeParse(data);
+    expect(result.success).toBe(false);
   });
 });
