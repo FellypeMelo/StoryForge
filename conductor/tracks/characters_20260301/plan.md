@@ -24,14 +24,14 @@
     - [x] 🟢 GREEN: Implement Tauri commands and application logic
 - [x] Task: Conductor - User Manual Verification 'IPC Bridge & Backend Application' (Protocol in workflow.md)
 
-## Phase 4: UI Shell Integration & Gallery
+## Phase 4: UI Shell Integration & Gallery [checkpoint: 8751537]
 - [x] Task: Sidebar & Navigation Update (4fcaf28)
     - [x] 🔴 RED: Test navigation to Character view
     - [x] 🟢 GREEN: Update AppShell sidebar and routing
 - [x] Task: Character Gallery View (e9dda81)
     - [x] 🔴 RED: Test rendering of character list
     - [x] 🟢 GREEN: Implement responsive grid with character cards
-- [~] Task: Conductor - User Manual Verification 'UI Shell Integration & Gallery' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'UI Shell Integration & Gallery' (Protocol in workflow.md)
 
 ## Phase 5: Profile Editor & Finalization
 - [ ] Task: Character Profile Editor Form
