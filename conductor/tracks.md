@@ -11,4 +11,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-
+- [ ] **Track: Backend Modularity Refactor (Vertical Slicing)**
+*Link: [./tracks/backend_modularity_20260301/](./tracks/backend_modularity_20260301/)*
