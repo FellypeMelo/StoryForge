@@ -48,3 +48,41 @@ impl<'a> CharacterService<'a> {
         self.repository.delete_character(&id)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct MockRepo;
+    impl CharacterRepository for MockRepo {
+        fn create_character(&self, _c: &Character) -> AppResult<()> { Ok(()) }
+        fn get_character_by_id(&self, _id: &CharacterId) -> AppResult<Character> {
+            Ok(Character::new(ProjectId("p".to_string()), None, "N".to_string()).unwrap())
+        }
+        fn list_characters_by_project(&self, _p: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
+        fn list_characters_by_book(&self, _b: &BookId) -> AppResult<Vec<Character>> { Ok(vec![]) }
+        fn list_global_characters(&self, _p: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
+        fn move_character_to_book(&self, _id: &CharacterId, _b: &BookId) -> AppResult<()> { Ok(()) }
+        fn move_character_to_project(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+        fn update_character(&self, _c: &Character) -> AppResult<()> { Ok(()) }
+        fn delete_character(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+    }
+
+    #[test]
+    fn test_character_service_ops() {
+        let mock = MockRepo;
+        let service = CharacterService::new(&mock);
+        let pid = ProjectId("p".to_string());
+        let bid = BookId::new();
+        let cid = CharacterId::new();
+
+        assert!(service.create_character(pid.clone(), None, "N".to_string()).is_ok());
+        assert!(service.get_character(cid.clone()).is_ok());
+        assert!(service.list_characters_by_project(pid.clone()).is_ok());
+        assert!(service.list_characters_by_book(bid.clone()).is_ok());
+        assert!(service.list_global_characters(pid).is_ok());
+        assert!(service.move_character_to_book(cid.clone(), bid).is_ok());
+        assert!(service.move_character_to_project(cid.clone()).is_ok());
+        assert!(service.delete_character(cid).is_ok());
+    }
+}
