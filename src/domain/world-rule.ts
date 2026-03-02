@@ -64,6 +64,10 @@ export class WorldRule {
     return this.props.id;
   }
 
+  public get projectId(): ProjectId {
+    return this.props.projectId;
+  }
+
   public get bookId(): BookId | undefined {
     return this.props.bookId;
   }

@@ -5,19 +5,21 @@ import { ProjectId } from "./value-objects/project-id";
 describe("Project Entity", () => {
   it("should create a valid Project", () => {
     const id = ProjectId.generate();
+    const now = new Date();
     const project = Project.create({
       id,
       name: "My Epic Universe",
       description: "A sprawling fantasy world",
-      createdAt: new Date(),
+      createdAt: now,
     });
 
     expect(project.id.equals(id)).toBe(true);
     expect(project.name).toBe("My Epic Universe");
     expect(project.description).toBe("A sprawling fantasy world");
+    expect(project.createdAt).toEqual(now);
   });
 
-  it("should create a Project with default description", () => {
+  it("should create a Project with default description and date", () => {
     const id = ProjectId.generate();
     const project = Project.create({
       id,
@@ -26,6 +28,16 @@ describe("Project Entity", () => {
 
     expect(project.name).toBe("Minimal Project");
     expect(project.description).toBe("");
+    expect(project.createdAt).toBeInstanceOf(Date);
+  });
+
+  it("should export props", () => {
+    const project = Project.create({
+      id: ProjectId.generate(),
+      name: "Test"
+    });
+    const props = project.toProps();
+    expect(props.name).toBe("Test");
   });
 
   it("should fail validation for empty name", () => {
