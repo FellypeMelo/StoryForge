@@ -1,10 +1,9 @@
+import { Genre } from '../value-objects/genre';
+import { AcademicDiscipline } from '../value-objects/academic-discipline';
+
 export class CrossPollinationSeed {
   constructor(
-    public readonly genre: string,
-    public readonly academicDiscipline: string
-  ) {
-    if (!academicDiscipline || academicDiscipline.trim().length === 0) {
-      throw new Error('Academic discipline cannot be empty');
-    }
-  }
+    public readonly genre: Genre,
+    public readonly academicDiscipline: AcademicDiscipline
+  ) {}
 }
