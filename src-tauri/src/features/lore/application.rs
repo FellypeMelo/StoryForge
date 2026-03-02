@@ -237,3 +237,151 @@ impl<'a> LoreService<'a> {
         self.search_port.search(&project_id, query, book_id, None)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::value_objects::{LocationId, WorldRuleId, TimelineEventId, RelationshipId, BlacklistEntryId, CharacterId};
+
+    struct MockRepo;
+
+    impl LocationRepository for MockRepo {
+        fn create_location(&self, _location: &Location) -> AppResult<()> { Ok(()) }
+        fn get_location_by_id(&self, _id: &LocationId) -> AppResult<Location> { 
+            Ok(Location::new(ProjectId("p".to_string()), None, "L".to_string()).unwrap())
+        }
+        fn list_locations_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<Location>> { Ok(vec![]) }
+        fn list_locations_by_book(&self, _book_id: &BookId) -> AppResult<Vec<Location>> { Ok(vec![]) }
+        fn list_global_locations(&self, _project_id: &ProjectId) -> AppResult<Vec<Location>> { Ok(vec![]) }
+        fn move_location_to_book(&self, _id: &LocationId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
+        fn move_location_to_project(&self, _id: &LocationId) -> AppResult<()> { Ok(()) }
+        fn update_location(&self, _location: &Location) -> AppResult<()> { Ok(()) }
+        fn delete_location(&self, _id: &LocationId) -> AppResult<()> { Ok(()) }
+    }
+
+    impl WorldRuleRepository for MockRepo {
+        fn create_world_rule(&self, _rule: &WorldRule) -> AppResult<()> { Ok(()) }
+        fn get_world_rule_by_id(&self, _id: &WorldRuleId) -> AppResult<WorldRule> {
+            Ok(WorldRule::new(ProjectId("p".to_string()), None, "C".to_string(), "Co".to_string()).unwrap())
+        }
+        fn list_world_rules_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<WorldRule>> { Ok(vec![]) }
+        fn list_world_rules_by_book(&self, _book_id: &BookId) -> AppResult<Vec<WorldRule>> { Ok(vec![]) }
+        fn list_global_world_rules(&self, _project_id: &ProjectId) -> AppResult<Vec<WorldRule>> { Ok(vec![]) }
+        fn move_world_rule_to_book(&self, _id: &WorldRuleId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
+        fn move_world_rule_to_project(&self, _id: &WorldRuleId) -> AppResult<()> { Ok(()) }
+        fn update_world_rule(&self, _rule: &WorldRule) -> AppResult<()> { Ok(()) }
+        fn delete_world_rule(&self, _id: &WorldRuleId) -> AppResult<()> { Ok(()) }
+    }
+
+    impl TimelineRepository for MockRepo {
+        fn create_timeline_event(&self, _event: &TimelineEvent) -> AppResult<()> { Ok(()) }
+        fn get_timeline_event_by_id(&self, _id: &TimelineEventId) -> AppResult<TimelineEvent> {
+            Ok(TimelineEvent::new(ProjectId("p".to_string()), None, "D".to_string()).unwrap())
+        }
+        fn list_timeline_events_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<TimelineEvent>> { Ok(vec![]) }
+        fn list_timeline_events_by_book(&self, _book_id: &BookId) -> AppResult<Vec<TimelineEvent>> { Ok(vec![]) }
+        fn list_global_timeline_events(&self, _project_id: &ProjectId) -> AppResult<Vec<TimelineEvent>> { Ok(vec![]) }
+        fn move_timeline_event_to_book(&self, _id: &TimelineEventId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
+        fn move_timeline_event_to_project(&self, _id: &TimelineEventId) -> AppResult<()> { Ok(()) }
+        fn update_timeline_event(&self, _event: &TimelineEvent) -> AppResult<()> { Ok(()) }
+        fn delete_timeline_event(&self, _id: &TimelineEventId) -> AppResult<()> { Ok(()) }
+    }
+
+    impl RelationshipRepository for MockRepo {
+        fn create_relationship(&self, _rel: &Relationship) -> AppResult<()> { Ok(()) }
+        fn get_relationship_by_id(&self, _id: &RelationshipId) -> AppResult<Relationship> {
+            Ok(Relationship::new(ProjectId("p".to_string()), None, CharacterId::new(), CharacterId::new(), "T".to_string()).unwrap())
+        }
+        fn list_relationships_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<Relationship>> { Ok(vec![]) }
+        fn list_relationships_by_book(&self, _book_id: &BookId) -> AppResult<Vec<Relationship>> { Ok(vec![]) }
+        fn list_global_relationships(&self, _project_id: &ProjectId) -> AppResult<Vec<Relationship>> { Ok(vec![]) }
+        fn move_relationship_to_book(&self, _id: &RelationshipId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
+        fn move_relationship_to_project(&self, _id: &RelationshipId) -> AppResult<()> { Ok(()) }
+        fn update_relationship(&self, _relationship: &Relationship) -> AppResult<()> { Ok(()) }
+        fn delete_relationship(&self, _id: &RelationshipId) -> AppResult<()> { Ok(()) }
+    }
+
+    impl BlacklistRepository for MockRepo {
+        fn create_blacklist_entry(&self, _entry: &BlacklistEntry) -> AppResult<()> { Ok(()) }
+        fn get_blacklist_entry_by_id(&self, _id: &BlacklistEntryId) -> AppResult<BlacklistEntry> {
+            Ok(BlacklistEntry::new(ProjectId("p".to_string()), None, "T".to_string()).unwrap())
+        }
+        fn list_blacklist_entries_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<BlacklistEntry>> { Ok(vec![]) }
+        fn list_blacklist_entries_by_book(&self, _book_id: &BookId) -> AppResult<Vec<BlacklistEntry>> { Ok(vec![]) }
+        fn list_global_blacklist_entries(&self, _project_id: &ProjectId) -> AppResult<Vec<BlacklistEntry>> { Ok(vec![]) }
+        fn move_blacklist_entry_to_book(&self, _id: &BlacklistEntryId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
+        fn move_blacklist_entry_to_project(&self, _id: &BlacklistEntryId) -> AppResult<()> { Ok(()) }
+        fn update_blacklist_entry(&self, _entry: &BlacklistEntry) -> AppResult<()> { Ok(()) }
+        fn delete_blacklist_entry(&self, _id: &BlacklistEntryId) -> AppResult<()> { Ok(()) }
+    }
+
+    impl SearchPort for MockRepo {
+        fn search(&self, _p: &ProjectId, _q: &str, _b: Option<BookId>, _t: Option<Vec<EntityType>>) -> AppResult<Vec<SearchResult>> {
+            Ok(vec![])
+        }
+    }
+
+    #[test]
+    fn test_lore_service_location_ops() {
+        let mock = MockRepo;
+        let service = LoreService::new(&mock, &mock, &mock, &mock, &mock, &mock);
+        let pid = ProjectId("p".to_string());
+
+        assert!(service.create_location(pid.clone(), None, "L".to_string()).is_ok());
+        assert!(service.list_locations_by_project(pid.clone()).is_ok());
+        assert!(service.list_locations_by_book(BookId::new()).is_ok());
+        assert!(service.list_global_locations(pid).is_ok());
+        assert!(service.move_location_to_book(LocationId::new(), BookId::new()).is_ok());
+        assert!(service.move_location_to_project(LocationId::new()).is_ok());
+    }
+
+    #[test]
+    fn test_lore_service_world_rule_ops() {
+        let mock = MockRepo;
+        let service = LoreService::new(&mock, &mock, &mock, &mock, &mock, &mock);
+        let pid = ProjectId("p".to_string());
+
+        assert!(service.create_world_rule(pid.clone(), None, "C".to_string(), "Co".to_string()).is_ok());
+        assert!(service.list_world_rules_by_project(pid.clone()).is_ok());
+        assert!(service.list_world_rules_by_book(BookId::new()).is_ok());
+        assert!(service.list_global_world_rules(pid).is_ok());
+        assert!(service.move_world_rule_to_book(WorldRuleId::new(), BookId::new()).is_ok());
+        assert!(service.move_world_rule_to_project(WorldRuleId::new()).is_ok());
+    }
+
+    #[test]
+    fn test_lore_service_timeline_ops() {
+        let mock = MockRepo;
+        let service = LoreService::new(&mock, &mock, &mock, &mock, &mock, &mock);
+        let pid = ProjectId("p".to_string());
+
+        assert!(service.create_timeline_event(pid.clone(), None, "D".to_string()).is_ok());
+        assert!(service.list_timeline_events_by_book(BookId::new()).is_ok());
+        assert!(service.list_global_timeline_events(pid).is_ok());
+        assert!(service.delete_timeline_event(TimelineEventId::new()).is_ok());
+    }
+
+    #[test]
+    fn test_lore_service_relationship_ops() {
+        let mock = MockRepo;
+        let service = LoreService::new(&mock, &mock, &mock, &mock, &mock, &mock);
+        let pid = ProjectId("p".to_string());
+
+        assert!(service.create_relationship(pid.clone(), None, CharacterId::new(), CharacterId::new(), "T".to_string()).is_ok());
+        assert!(service.list_relationships_by_book(BookId::new()).is_ok());
+        assert!(service.list_global_relationships(pid).is_ok());
+        assert!(service.delete_relationship(RelationshipId::new()).is_ok());
+    }
+
+    #[test]
+    fn test_lore_service_blacklist_ops() {
+        let mock = MockRepo;
+        let service = LoreService::new(&mock, &mock, &mock, &mock, &mock, &mock);
+        let pid = ProjectId("p".to_string());
+
+        assert!(service.create_blacklist_entry(pid.clone(), None, "T".to_string()).is_ok());
+        assert!(service.list_blacklist_entries_by_book(BookId::new()).is_ok());
+        assert!(service.list_global_blacklist_entries(pid).is_ok());
+        assert!(service.delete_blacklist_entry(BlacklistEntryId::new()).is_ok());
+    }
+}

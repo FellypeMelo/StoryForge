@@ -1113,3 +1113,6 @@ impl SearchPort for SqliteDatabase {
         Ok(results)
     }
 }
+
+#[cfg(test)]
+mod tests;
