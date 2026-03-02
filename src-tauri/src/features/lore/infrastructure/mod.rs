@@ -1047,7 +1047,7 @@ impl SearchPort for SqliteDatabase {
                        WHERE project_id = ? AND lore_search MATCH ?"
                 .to_string();
 
-        if let Some(ref bid) = book_id {
+        if let Some(ref _bid) = book_id {
             sql.push_str(" AND book_id = ?");
         } else {
             sql.push_str(" AND book_id IS NULL");
@@ -1067,8 +1067,8 @@ impl SearchPort for SqliteDatabase {
         let mut params: Vec<Box<dyn rusqlite::ToSql>> =
             vec![Box::new(project_id.0.clone()), Box::new(query.to_string())];
 
-        if let Some(ref bid) = book_id {
-            params.push(Box::new(bid.0.clone()));
+        if let Some(ref _bid) = book_id {
+            params.push(Box::new(_bid.0.clone()));
         }
 
         if let Some(t) = types {

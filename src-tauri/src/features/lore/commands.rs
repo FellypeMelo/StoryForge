@@ -169,6 +169,25 @@ pub async fn search_lore(
     service.search_lore(ProjectId(project_id), &query, book_id.map(BookId))
 }
 
+#[tauri::command]
+pub async fn get_lore_context(
+    state: State<'_, SqliteDatabase>,
+    project_id: String,
+    book_id: Option<String>,
+    text: String,
+    max_tokens: usize,
+) -> AppResult<String> {
+    let service = LoreService::new(
+        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+    );
+    service.inject_context(
+        &ProjectId(project_id),
+        book_id.map(BookId),
+        &text,
+        max_tokens,
+    )
+}
+
 // Timeline Commands
 #[tauri::command]
 pub async fn create_timeline_event(

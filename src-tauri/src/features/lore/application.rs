@@ -1,6 +1,7 @@
 use crate::domain::result::AppResult;
 use crate::domain::value_objects::{BookId, ProjectId};
-use crate::domain::ports::{SearchPort, SearchResult};
+use crate::domain::ports::{SearchPort, SearchResult, EntityType};
+use crate::domain::token_budget::TokenBudgetCalculator;
 use super::domain::*;
 
 pub struct LoreService<'a> {
@@ -29,6 +30,59 @@ impl<'a> LoreService<'a> {
             blacklist_repo,
             search_port,
         }
+    }
+
+    /// Detecta entidades no texto e constrói o bloco de contexto.
+    pub fn inject_context(
+        &self,
+        project_id: &ProjectId,
+        book_id: Option<BookId>,
+        text: &str,
+        max_tokens: usize,
+    ) -> AppResult<String> {
+        let budget_calculator = TokenBudgetCalculator::new(max_tokens);
+        let words: Vec<&str> = text.split_whitespace().collect();
+        let mut seen_entities = std::collections::HashSet::new();
+        let mut context_block = String::from("--- LORE CONTEXT ---\n");
+
+        for word in words {
+            if word.len() < 4 {
+                continue;
+            }
+
+            let results = self
+                .search_port
+                .search(project_id, word, book_id.clone(), None)?;
+            for res in results {
+                if seen_entities.contains(&res.entity_id) {
+                    continue;
+                }
+
+                let type_str = match res.entity_type {
+                    EntityType::Character => "Character",
+                    EntityType::Location => "Location",
+                    EntityType::WorldRule => "World Rule",
+                    EntityType::TimelineEvent => "Event",
+                };
+
+                let snippet = format!("[{}]: {}\n", type_str, res.snippet);
+
+                if budget_calculator
+                    .validate_budget(&context_block, &snippet)
+                    .is_ok()
+                {
+                    context_block.push_str(&snippet);
+                    seen_entities.insert(res.entity_id);
+                }
+            }
+        }
+
+        if seen_entities.is_empty() {
+            return Ok(String::new());
+        }
+
+        context_block.push_str("--------------------\n");
+        Ok(context_block)
     }
 
     // Location methods

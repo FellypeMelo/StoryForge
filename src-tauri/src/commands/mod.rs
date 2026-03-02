@@ -1,5 +1,3 @@
-pub mod book;
-
 use crate::domain::result::AppResult;
 use crate::domain::ports::DatabasePort;
 use crate::infrastructure::sqlite::SqliteDatabase;

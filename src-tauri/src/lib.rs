@@ -1,4 +1,3 @@
-pub mod application;
 pub mod commands;
 pub mod domain;
 pub mod features;
@@ -55,6 +54,7 @@ pub fn run() {
             features::lore::commands::move_world_rule_to_book,
             features::lore::commands::move_world_rule_to_project,
             features::lore::commands::search_lore,
+            features::lore::commands::get_lore_context,
             features::lore::commands::create_timeline_event,
             features::lore::commands::list_timeline_events_by_book,
             features::lore::commands::list_global_timeline_events,
@@ -76,11 +76,11 @@ pub fn run() {
             features::lore::commands::move_blacklist_entry_to_book,
             features::lore::commands::move_blacklist_entry_to_project,
             features::lore::commands::delete_blacklist_entry,
-            commands::book::create_book,
-            commands::book::get_book,
-            commands::book::list_books,
-            commands::book::update_book,
-            commands::book::delete_book
+            features::books::commands::create_book,
+            features::books::commands::get_book,
+            features::books::commands::list_books,
+            features::books::commands::update_book,
+            features::books::commands::delete_book
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

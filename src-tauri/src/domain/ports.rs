@@ -49,14 +49,6 @@ pub trait ScopedRepository<T, ID>: Repository<T, ID> {
     fn move_to_project(&self, id: &ID) -> AppResult<()>;
 }
 
-pub trait BookRepository {
-    fn create_book(&self, book: &crate::domain::book::Book) -> AppResult<()>;
-    fn get_book_by_id(&self, id: &BookId) -> AppResult<crate::domain::book::Book>;
-    fn list_books_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<crate::domain::book::Book>>;
-    fn update_book(&self, book: &crate::domain::book::Book) -> AppResult<()>;
-    fn delete_book(&self, id: &BookId) -> AppResult<()>;
-}
-
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum EntityType {

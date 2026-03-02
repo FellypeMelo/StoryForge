@@ -1,4 +1,4 @@
-use crate::features::projects::domain::{Project, ProjectRepository};
+use crate::features::projects::domain::Project;
 use crate::features::projects::application::ProjectService;
 use crate::domain::value_objects::ProjectId;
 use crate::domain::result::AppResult;

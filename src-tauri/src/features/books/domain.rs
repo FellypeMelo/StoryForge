@@ -38,6 +38,14 @@ impl Book {
     }
 }
 
+pub trait BookRepository {
+    fn create_book(&self, book: &Book) -> AppResult<()>;
+    fn get_book_by_id(&self, id: &BookId) -> AppResult<Book>;
+    fn list_books_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Book>>;
+    fn update_book(&self, book: &Book) -> AppResult<()>;
+    fn delete_book(&self, id: &BookId) -> AppResult<()>;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
