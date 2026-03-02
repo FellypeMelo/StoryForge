@@ -11,7 +11,7 @@
 ## Persistence & Search
 
 - **Database:** SQLite - Reliable, local relational storage.
-- **Vector Search:** `sqlite-vec` + FTS5 - Local semantic search and full-text indexing for RAG (Story Bible).
+- **Vector Search:** `sqlite-vec` + FTS5 - Local semantic search and full-text indexing for RAG (Story Codex).
 
 ## GenAI & Orchestration
 
@@ -27,3 +27,5 @@
 - **Architecture:** Clean Architecture with Vertical Slicing.
 - **Methodology:** AI-XP (AI eXtreme Programming).
 - **Quality Control:** LangGraph + SonarQube (SAST) for self-healing CI/CD.
+
+

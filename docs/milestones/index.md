@@ -11,7 +11,7 @@
 | #   | Milestone                                                              | Fase         | Foco Principal                                            |
 | --- | ---------------------------------------------------------------------- | ------------ | --------------------------------------------------------- |
 | 1   | [Foundation & Scaffold](milestone_01_foundation.md)                    | 🏗️ Zero      | Tauri + React + SQLite + Clean Arch + Pipeline TDD        |
-| 2   | [Story Bible & Motor RAG](milestone_02_story_bible_rag.md)             | 📚 Dados     | Lorebook, FTS5, sqlite-vec, Injeção de Contexto RAG       |
+| 2   | [Story Codex & Motor RAG](milestone_02_story_codex_rag.md)             | 📚 Dados     | Lorebook, FTS5, sqlite-vec, Injeção de Contexto RAG       |
 | 3   | [Ideação CHI & Personagens](milestone_03_ideation_characters.md)       | 🧠 Criativo  | Método CHI (anti-clichê), OCEAN, Hauge, Worldbuilding CAD |
 | 4   | [Estrutura Narrativa & Capítulos](milestone_04_narrative_structure.md) | 🏛️ Estrutura | 6 Frameworks, Story Grid, Cena & Sequela, Beat Sheets     |
 | 5   | [Assistente de Escrita E.P.R.L.](milestone_05_writing_assistant.md)    | ✍️ Core      | CAD + Guardrails + RSIP, MRU, Editor TipTap WYSIWYG       |
@@ -27,7 +27,7 @@
 Milestone 1 (Foundation)
     │
     ▼
-Milestone 2 (Story Bible & RAG)
+Milestone 2 (Story Codex & RAG)
     │
     ├──────────────────────────────┐
     ▼                              ▼

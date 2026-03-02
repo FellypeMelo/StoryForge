@@ -10,7 +10,7 @@
 ## Pré-Condições
 
 - [x] Milestones 1–3 completos
-- [x] Premissa aprovada e personagens com fichas completas na Bíblia
+- [x] Premissa aprovada e personagens com fichas completas no Codex
 
 ---
 
@@ -26,7 +26,7 @@
   - Curva Fichteana (crises em sequência)
   - Estrutura de 7 Pontos (gancho → resolução)
   - Kishōtenketsu (4 atos)
-  - Narrativa Não Linear (marcadores temporais)
+  - Narrativa Non-linear (marcadores temporais)
 - [ ] 🔵 REFACTOR: Padrão Strategy para resolução de beats por framework
 
 ### Critério de Aceite
@@ -114,7 +114,7 @@ PROIBIDO gerar resoluções pacíficas ao final."
 ```
 Beat sheet gerado com mínimo 4 beats por capítulo.
 Validação Story Grid e Cena/Sequela aplicada automaticamente.
-Resultado persiste na Bíblia da História.
+Resultado persiste no Codex da História.
 ```
 
 ---

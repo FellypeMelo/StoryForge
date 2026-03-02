@@ -43,3 +43,5 @@ Sistemas de IA devem seguir o Princípio do Privilégio Mínimo Agêntico (_Leas
 Métricas contêm a dívida acumulada pelas IAs (Tech Debt Growth):
 
 - **Limites Físicos Impostos:** Os "Arquitetos de Revisão" chumbam barreiras em Fitness Functions (Thresholds inegociáveis de Linhas Máximas por Classe < 200, Funções Máx de 15 linhas) - Falhar na checagem bloqueia commit e forca reinício.
+
+

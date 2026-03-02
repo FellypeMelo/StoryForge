@@ -1,8 +1,8 @@
-# 📚 Milestone 2 — Story Bible & Motor RAG
+# 📚 Milestone 2 — Story Codex & Motor RAG
 
 > **Fase:** Core Data Layer  
-> **Objetivo:** Implementar o Lorebook (Bíblia da História) com persistência SQLite, busca semântica via `sqlite-vec`/FTS5 e pipeline RAG para injeção de contexto.  
-> **Base Teórica:** [`06_story_bible.md`](../agents/06_story_bible.md)  
+> **Objetivo:** Implementar o Lorebook (Codex da História) com persistência SQLite, busca semântica via `sqlite-vec`/FTS5 e pipeline RAG para injeção de contexto.  
+> **Base Teórica:** [`06_story_codex.md`](../agents/06_story_codex.md)  
 > **Compliance:** Lei 1 (TDD), Lei 2 (Clean Arch), Lei 3 (Economia de Contexto)
 
 ---
@@ -138,7 +138,7 @@ EmbeddingPort é interface no domínio (implementação plugável).
 - [ ] 🔴 RED: Teste para `ContextInjector` que gera bloco de continuidade
 - [ ] 🟢 GREEN: Implementar `ContextInjector` (use case):
   - Inputs: capítulo atual, entidades mencionadas
-  - Busca RAG: trechos relevantes da Bíblia
+  - Busca RAG: trechos relevantes do Codex
   - Output: prompt de continuidade formatado
 - [ ] 🔴 RED: Teste que valida injeção NÃO excede token budget (economia de contexto)
 - [ ] 🟢 GREEN: Implementar truncamento inteligente por relevância
@@ -149,7 +149,7 @@ EmbeddingPort é interface no domínio (implementação plugável).
 ```
 "SISTEMA DE CONTINUIDADE:
 Você está escrevendo o Livro [X], Capítulo [Y].
-Bíblia da História (trechos relevantes): [TRECHO RAG]
+Codex da História (trechos relevantes): [TRECHO RAG]
 Resumo do Capítulo Anterior: [RESUMO]
 Status Atual: [STATUS DOS PERSONAGENS]"
 ```
@@ -164,11 +164,11 @@ Caso de uso puro — sem dependência direta de SQLite ou LLM.
 
 ---
 
-## Etapa 2.7 — UI: Painel da Bíblia da História
+## Etapa 2.7 — UI: Painel do Codex da História
 
 ### Tarefas
 
-- [ ] Criar página `/bible` com tabs: Personagens, Locais, Mundo, Cronologia, Relações, Blacklist
+- [ ] Criar página `/codex` com tabs: Personagens, Locais, Mundo, Cronologia, Relações, Blacklist
 - [ ] Implementar listagem de cada entidade por tab
 - [ ] Implementar formulários de criação/edição (modal ou inline)
 - [ ] Implementar busca FTS5 no topo da página
@@ -194,7 +194,7 @@ Design limpo, consistente com AppShell do Milestone 1.
 | FTS5                 | Busca full-text para personagens, locais, timeline |
 | sqlite-vec           | Busca semântica vetorial com embeddings            |
 | Pipeline RAG         | `ContextInjector` com token budget                 |
-| UI Bíblia            | Painel completo com CRUD e busca                   |
+| UI Codex             | Painel completo com CRUD e busca                   |
 
 ---
 

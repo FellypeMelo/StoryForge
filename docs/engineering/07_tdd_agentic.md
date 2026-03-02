@@ -40,3 +40,5 @@ Não confie apenas na docilidade do Agent Planner — configure bloqueios de CI 
 
 **Exemplo `.claude/hooks/enforce-tdd-red-phase.ts`:**
 Qualquer alteração via _search_and_replace_ para `src/domain/` falha instantaneamente no terminal retornando erro caso não tenha encontrado a alteração correlata na pasta `tests/` com falhas recém inseridas ou corrigidas, abortando o envio.
+
+

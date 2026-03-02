@@ -11,7 +11,7 @@ This track implements a unified modal system to replace native `prompt` calls an
     - Accessibility support (ESC key to close, focus trapping).
 - **Location Modal:** Replace the `prompt` in `handleCreateLocation` with a `Modal` containing the `LocationForm`.
 - **World Rule Modal:** Replace the `prompt` in `handleCreateRule` with a `Modal` containing the `WorldRuleForm`.
-- **Character Wizard Modal:** Refactor `BibleDashboard` to show the `CharacterWizard` inside a `Modal` instead of replacing the main dashboard view.
+- **Character Wizard Modal:** Refactor `CodexDashboard` to show the `CharacterWizard` inside a `Modal` instead of replacing the main dashboard view.
 - **Form Integration:** Ensure all lore forms correctly trigger the same save/cancel logic previously used by the native prompts.
 
 ## Non-Functional Requirements
@@ -29,3 +29,5 @@ This track implements a unified modal system to replace native `prompt` calls an
 ## Out of Scope
 - Implementation of new lore categories beyond what exists.
 - Persistent state for modals (closing the modal clears the form unless auto-save is active).
+
+

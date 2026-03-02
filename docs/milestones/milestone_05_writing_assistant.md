@@ -10,7 +10,7 @@
 ## Pré-Condições
 
 - [x] Milestones 1–4 completos
-- [x] Beat sheets detalhados por capítulo disponíveis na Bíblia
+- [x] Beat sheets detalhados por capítulo disponíveis no Codex
 - [x] Pipeline RAG (Milestone 2) funcional para injeção de contexto
 - [x] LlmPort definida e implementada (Milestone 3)
 
@@ -73,7 +73,7 @@ Blacklist é extensível pelo autor.
 
 - [ ] 🔴 RED: Teste para Pilar 1 (CAD): gera prosa para um único beat com contexto injetado
 - [ ] 🟢 GREEN: Implementar `GenerateProseUseCase`:
-  - Input: WritingRequest + contexto RAG (da Bíblia)
+  - Input: WritingRequest + contexto RAG (do Codex)
   - Prompt com guardrails negativos injetados
   - Output: rascunho de 500–800 palavras
 - [ ] 🔴 RED: Teste para Pilar 2 (Guardrails Negativos): prompt contém proibições explícitas
@@ -131,7 +131,7 @@ Detector sugere reescrita via MRU.
 
 ```
 Beats marcados como "alta intensidade" recebem emotion prompting.
-Configuração por beat, não global.
+Configuração por beat, not global.
 ```
 
 ---

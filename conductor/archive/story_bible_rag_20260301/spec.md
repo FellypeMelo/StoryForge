@@ -1,7 +1,7 @@
-# Specification: Story Bible Persistence, Search & RAG Pipeline
+# Specification: Story Codex Persistence, Search & RAG Pipeline
 
 ## Overview
-This track implements the persistent storage layer, search capabilities (Full-Text and Semantic), and the RAG (Retrieval-Augmented Generation) pipeline for the StoryForge Lorebook. It also expands the UI into a comprehensive Story Bible dashboard.
+This track implements the persistent storage layer, search capabilities (Full-Text and Semantic), and the RAG (Retrieval-Augmented Generation) pipeline for the StoryForge Lorebook. It also expands the UI into a comprehensive Story Codex dashboard.
 
 ## Functional Requirements
 - **SQLite Persistence (Etapa 2.3):**
@@ -13,8 +13,8 @@ This track implements the persistent storage layer, search capabilities (Full-Te
 - **RAG Pipeline (Etapa 2.6):**
   - **ContextInjector:** A domain use case that automatically detects mentioned entities in a text and retrieves relevant lore snippets via Search/Vector ports.
   - **TokenBudgetCalculator:** A service to ensure the injected context does not exceed model limits, prioritizing snippets by relevance.
-- **Bible UI Dashboard (Etapa 2.7):**
-  - A full `/bible` panel with specialized tabs for each lore category.
+- **Codex UI Dashboard (Etapa 2.7):**
+  - A full `/Codex` panel with specialized tabs for each lore category.
   - **Live Search:** Top-level search bar with live filtering and a dedicated results panel.
   - **Injection Indicators:** Visual cues in the UI showing which lore items are currently "active" or "injected" in the AI's context.
 
@@ -33,3 +33,5 @@ This track implements the persistent storage layer, search capabilities (Full-Te
 ## Out of Scope
 - Implementation of the LLM provider for embedding generation (assumed via `EmbeddingPort` interface).
 - Advanced graph visualization for relationships.
+
+

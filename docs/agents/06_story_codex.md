@@ -1,6 +1,6 @@
-# 📚 Agente Bíblia da História
+# 📚 Agente Codex da História
 
-> **Módulo StoryForge:** Bíblia da História (Lorebook)  
+> **Módulo StoryForge:** Codex da História (Lorebook)  
 > **Base Teórica:** Manual de Escrita Criativa com IA — Parte 6 (6.3)  
 > **Responsabilidade:** Manter consistência narrativa, alimentar contexto RAG, detectar inconsistências.
 
@@ -12,7 +12,7 @@ A **degradação de contexto** é a falha letal da IA em textos longos. O LLM "e
 
 ---
 
-## 2. Estrutura da Bíblia da História
+## 2. Estrutura do Codex da História
 
 O documento central (Lorebook) organiza o conhecimento narrativo em seções:
 
@@ -36,7 +36,7 @@ Para cada geração de texto, o sistema injeta um bloco de continuidade:
 "SISTEMA DE CONTINUIDADE:
 Você está escrevendo o Livro [X], Capítulo [Y].
 
-Aqui está a Bíblia da História (trechos relevantes):
+Aqui está o Codex da História (trechos relevantes):
 [TRECHO RAG SELECIONADO AUTOMATICAMENTE]
 
 Resumo do Capítulo Anterior:
@@ -65,7 +65,7 @@ Requisição de escrita do usuário
     ↓
 Extração de entidades mencionadas (personagens, locais, eventos)
     ↓
-Busca RAG: apenas trechos relevantes da Bíblia
+Busca RAG: apenas trechos relevantes do Codex
     ↓
 Injeção no contexto do LLM (Prompt de Continuidade)
     ↓
@@ -74,11 +74,11 @@ Geração de texto com contexto enriquecido
 
 ### 4.3 Regra de Economia
 
-> Injetar **apenas trechos relevantes**. Nunca inundar o contexto com a Bíblia inteira.
+> Injetar **apenas trechos relevantes**. Nunca inundar o contexto com o Codex inteiro.
 
 ---
 
-## 5. Alimentação da Bíblia
+## 5. Alimentação do Codex
 
 ### 5.1 Alimentação Manual
 
@@ -92,13 +92,13 @@ A IA analisa capítulos escritos e sugere atualizações:
 - Mudanças de estado (ferimentos, localizações, relações)
 - Novos locais ou regras do mundo
 
-**Regra:** Todas as extrações automáticas requerem **aprovação do usuário** antes de integrar a Bíblia.
+**Regra:** Todas as extrações automáticas requerem **aprovação do usuário** antes de integrar o Codex.
 
 ---
 
 ## 6. Sistema de Alertas de Inconsistência
 
-O agente monitora contradições entre o texto gerado e a Bíblia:
+O agente monitora contradições entre o texto gerado e o Codex:
 
 | Tipo de Inconsistência | Exemplo                                                    | Ação                                   |
 | ---------------------- | ---------------------------------------------------------- | -------------------------------------- |
@@ -111,7 +111,7 @@ O agente monitora contradições entre o texto gerado e a Bíblia:
 
 ## 7. Checklist de Consistência
 
-- [ ] A Bíblia contém todos os personagens ativos?
+- [ ] O Codex contém todos os personagens ativos?
 - [ ] O estado atual de cada personagem está sincronizado com o último capítulo?
 - [ ] A cronologia de eventos está atualizada?
 - [ ] Os trechos RAG injetados são relevantes (não ruidosos)?
@@ -126,3 +126,4 @@ O agente monitora contradições entre o texto gerado e a Bíblia:
 - **Armazenamento:** SQLite via Tauri + FTS5/sqlite-vec
 - **Exportação:** JSON para portabilidade
 - **Alimenta:** Todos os outros módulos (`05_writing_assistant.md`, `07_bad_cop_editor.md`)
+

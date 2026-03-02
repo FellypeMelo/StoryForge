@@ -133,7 +133,7 @@ Todos os alertas são **não intrusivos**, com sugestões de melhoria.
 
 ## 6. Integração com StoryForge
 
-- **Input:** Capítulo escrito (de `05_writing_assistant.md`) + Bíblia da História
+- **Input:** Capítulo escrito (de `05_writing_assistant.md`) + Codex da História
 - **Output:** Relatório de auditoria com problemas numerados + Plano de Ação
 - **Modo:** Inline (comentários no editor) ou relatório separado
 - **Automático:** Detectores heurísticos rodam em background

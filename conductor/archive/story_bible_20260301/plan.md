@@ -1,4 +1,4 @@
-# Plan: Story Bible Domain & UI (Mocks)
+# Plan: Story Codex Domain & UI (Mocks)
 
 ## Phase 1: Domain Entities & Value Objects [checkpoint: b32102f]
 - [x] Task: Create Domain Value Objects for IDs (ProjectId, CharacterId, etc.) [b6fedc7]
@@ -39,9 +39,9 @@
 - [x] Task: Conductor - User Manual Verification 'Repository Ports' (Protocol in workflow.md) [a272179]
 
 ## Phase 3: UI Dashboard & Components (Mocks) [checkpoint: c1645b7]
-- [x] Task: Create Bible Dashboard Layout [c1645b7]
-    - [x] 🔴 RED: Test `BibleDashboard` layout and tabs existence.
-    - [x] 🟢 GREEN: Implement `BibleDashboard` with tabs using Tailwind.
+- [x] Task: Create Codex Dashboard Layout [c1645b7]
+    - [x] 🔴 RED: Test `CodexDashboard` layout and tabs existence.
+    - [x] 🟢 GREEN: Implement `CodexDashboard` with tabs using Tailwind.
 - [x] Task: Implement Entity List Views (Mocks) [c1645b7]
     - [x] 🔴 RED: Test `CharacterList` with mocked data.
     - [x] 🟢 GREEN: Implement `CharacterList`.
@@ -59,4 +59,6 @@
 
 ## Phase: Review Fixes
 - [x] Task: Apply review suggestions [2e4ea23]
+
+
 

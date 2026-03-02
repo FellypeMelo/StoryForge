@@ -30,3 +30,5 @@ This track focuses on enhancing the user experience and visual design of the cha
 ## Out of Scope
 - Backend changes to the Character database schema.
 - Image uploads for character portraits.
+
+

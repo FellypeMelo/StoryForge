@@ -131,6 +131,6 @@ Quero falhas humanas feias e realistas."
 
 - **Input:** Premissa (de `01_ideation_chi.md`) + papel na trama
 - **Output:** Ficha completa (OCEAN + Hauge + Voz + Tells)
-- **Persistência:** Ficha → Bíblia da História (consulta RAG)
+- **Persistência:** Ficha → Codex da História (consulta RAG)
 - **Uso contínuo:** Todas as gerações de texto consultam a ficha para coerência
 - **Próximo módulo:** `03_narrative_structure.md`

@@ -143,8 +143,8 @@ Eu atuarei como editor, fundindo as melhores frases."
 
 ## 8. Integração com StoryForge
 
-- **Input:** Beat sheet detalhado (de `04_chapter_architect.md`) + ficha do personagem + Bíblia
+- **Input:** Beat sheet detalhado (de `04_chapter_architect.md`) + ficha do personagem + Codex
 - **Output:** Prosa de 500–800 palavras por beat, em 3 passos (rascunho → crítica → final)
 - **Editor:** TipTap WYSIWYG com acionamento contextual (selecionar trecho → reescrever/expandir/refinar)
 - **Modo revisão:** Comentários/sugestões da IA inline
-- **Próximo módulo:** `06_story_bible.md` (alimentação contínua) e `07_bad_cop_editor.md` (auditoria)
+- **Próximo módulo:** `06_story_codex.md` (alimentação contínua) e `07_bad_cop_editor.md` (auditoria)

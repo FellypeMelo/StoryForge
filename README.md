@@ -27,7 +27,7 @@ O **StoryForge** não é apenas um editor de texto; é um laboratório de engenh
 | **Offline-First Absoluto**  | Dados nunca saem da máquina sem consentimento explícito. SQLite local como única fonte de verdade.                                    |
 | **Anti-Averaging Effect**   | Cada agente possui guardrails negativos que bloqueiam a saída estatisticamente mais provável (clichês, purple prose, diálogos de RH). |
 | **Causalidade Inquebrável** | Eventos conectados por "portanto" ou "mas" — nunca por "e então". Toda cena deve inverter polaridade de valor (Story Grid).           |
-| **Economia de Contexto**    | Injeção RAG cirúrgica: apenas trechos relevantes da Bíblia da História entram no prompt. Zero inundação de tokens.                    |
+| **Economia de Contexto**    | Injeção RAG cirúrgica: apenas trechos relevantes do Codex da História entram no prompt. Zero inundação de tokens.                    |
 | **Regra 70/30**             | 30% IA + 70% humano. A Fase 6 (Polimento Literário) é **100% humana** — intransferível.                                               |
 
 ---
@@ -47,7 +47,7 @@ Guiados pelo _Manual de Escrita Criativa com IA_, nossos agentes são treinados 
 | **Estrutura Narrativa**    | Diagramação macro e arcos de valor        | Story Grid, Save the Cat, Jornada do Herói       | [`03_narrative_structure.md`](docs/agents/03_narrative_structure.md) |
 | **Arquiteto de Capítulos** | Micro-ritmo de tensão ininterrupta        | Padrão Cena & Sequela, Tipologias de Cliffhanger | [`04_chapter_architect.md`](docs/agents/04_chapter_architect.md)     |
 | **Assistente de Escrita**  | Geração e refino de prosa literária       | Metodologia E.P.R.L., Show Don't Tell via MRU    | [`05_writing_assistant.md`](docs/agents/05_writing_assistant.md)     |
-| **Bíblia da História**     | Prevenção de degradação de contexto       | RAG Sistêmico, Alertas de Inconsistência         | [`06_story_bible.md`](docs/agents/06_story_bible.md)                 |
+| **Codex da História**      | Prevenção de degradação de contexto       | RAG Sistêmico, Alertas de Inconsistência         | [`06_story_codex.md`](docs/agents/06_story_codex.md)                 |
 | **Editor 'Bad Cop'**       | Auditoria estrutural rigorosa e brutal    | Detecção de IA-ismos, Análise Causal             | [`07_bad_cop_editor.md`](docs/agents/07_bad_cop_editor.md)           |
 | **Técnicas Avançadas**     | Voz não-confiável e simbolismo orgânico   | Motif Engineering, Regra 70/30 (Humano/IA)       | [`08_advanced_techniques.md`](docs/agents/08_advanced_techniques.md) |
 
@@ -91,7 +91,7 @@ O StoryForge implementa um pipeline completo de produção literária onde cada 
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ Fase 3: ESCRITA GUIADA (E.P.R.L.)                                       │
 │ Prosa de 500-800 palavras por beat (CAD + Guardrails + RSIP)            │
-│ Agente: 05_writing_assistant | Consulta: 06_story_bible (RAG)           │
+│ Agente: 05_writing_assistant | Consulta: 06_story_codex (RAG)           │
 └─────────────────────────────┬───────────────────────────────────────────┘
                               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -128,35 +128,13 @@ O StoryForge implementa um pipeline completo de produção literária onde cada 
 | **Orquestração de Agentes** | CrewAI (local) + LangGraph (CI/CD) | Squads modulares + pipelines ciclomáticos de infraestrutura     |
 | **CI/CD & Segurança**       | LangGraph + SonarQube (SAST)       | Pipeline automatizado com remediação agêntica self-healing      |
 
-### Topologia de Esquadrão (Engenharia)
-
-```
-                    ┌─────────────────────────────────┐
-                    │    HUMANO (Navigator)            │
-                    │    Spec-Driven, Veto Power       │
-                    └──────────────┬──────────────────┘
-                                   ▼
-                    ┌─────────────────────────────────┐
-                    │    Agente Supervisor (Router)    │
-                    │    LLM pesado, Memory Manager    │
-                    └──┬──────────┬──────────┬────────┘
-                       ▼          ▼          ▼
-              ┌────────────┐ ┌────────┐ ┌────────────┐
-              │ Architect  │ │  TDD   │ │ DevSecOps  │
-              │  Agent     │ │ Coder  │ │  Reviewer  │
-              ├────────────┤ ├────────┤ ├────────────┤
-              │ C4, Clean  │ │ Red →  │ │ SAST, OWASP│
-              │ Arch, DDD  │ │ Green  │ │ Sandboxing │
-              └────────────┘ └────────┘ └────────────┘
-```
-
 ---
 
 ## 🧲 Diferenciais Técnicos
 
-### Motor RAG da Bíblia da História
+### Motor RAG do Codex da História
 
-A **Bíblia da História** é o coração do sistema de consistência narrativa. Funciona como um Lorebook inteligente com pipeline RAG:
+O **Codex da História** é o coração do sistema de consistência narrativa. Funciona como um Lorebook inteligente com pipeline RAG:
 
 | Seção               | Conteúdo                                                |
 | ------------------- | ------------------------------------------------------- |
@@ -201,14 +179,7 @@ O módulo de auditoria automatizada inclui:
 - [ ] Construtor de Fichas OCEAN/Hauge
 - [ ] Editor WYSIWYG reativo para Metodologia E.P.R.L.
 - [ ] Integração com Ollama (V0 Local-First) e Provedores Cloud
-- [ ] Bíblia da História (Pipeline RAG Inicial)
-
-### Expansões Planejadas (V2.X)
-
-- Fluxos "Self-Healing" em revisão literária (Agente _Bad Cop_ autônomo).
-- Integração profunda LangGraph/CrewAI para brainstorming Socrático nativo no Editor.
-- Motor robusto de simulação vetorial `sqlite-vec`.
-- Workflows para Story Grid Avançado.
+- [x] Codex da História (Pipeline RAG Inicial)
 
 ---
 
@@ -223,7 +194,7 @@ StoryForge/
 │   │   ├── 03_narrative_structure.md    # 6 frameworks narrativos + Story Grid
 │   │   ├── 04_chapter_architect.md      # Padrão Cena & Sequela + Cliffhangers
 │   │   ├── 05_writing_assistant.md      # Metodologia E.P.R.L. (CAD + Guardrails + RSIP)
-│   │   ├── 06_story_bible.md            # Lorebook + Pipeline RAG + Alertas
+│   │   ├── 06_story_codex.md            # Lorebook + Pipeline RAG + Alertas
 │   │   ├── 07_bad_cop_editor.md         # Auditoria estrutural + Detectores heurísticos
 │   │   └── 08_advanced_techniques.md    # Motif Engineering, MPS, Workflow 6 Fases
 │   │
@@ -260,6 +231,7 @@ Antes de submeter qualquer contribuição, consulte as especificações de engen
 
 ## ⚖️ Licença
 
-Este projeto está licenciado sob a **GNU Affero General Public License v3.0** — veja o arquivo [`LICENSE`](LICENSE) para detalhes completos.
+Este projeto está licensed sob a **GNU Affero General Public License v3.0** — veja o arquivo [`LICENSE`](LICENSE) para detalhes completos.
 
 Copyright © 2026 Fellype Melo.
+

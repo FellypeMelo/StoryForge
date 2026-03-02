@@ -10,7 +10,7 @@
 ## Pré-Condições
 
 - [x] Milestone 1 completo (scaffold, IPC, testes)
-- [x] Milestone 2 completo (Bíblia da História, SQLite CRUD, RAG pipeline)
+- [x] Milestone 2 completo (Codex da História, SQLite CRUD, RAG pipeline)
 
 ---
 
@@ -59,7 +59,7 @@ interface LlmPort {
 
 ```
 Pipeline CHI executa 3 fases em sequência.
-Clichês extraídos são persistidos na Bíblia (BlacklistRepository).
+Clichês extraídos são persistidos no Codex (BlacklistRepository).
 LlmPort é interface no domínio (zero acoplamento com provedor).
 ```
 
@@ -70,7 +70,7 @@ LlmPort é interface no domínio (zero acoplamento com provedor).
 ### Tarefas (TDD)
 
 - [ ] 🔴 RED: Teste para `OceanProfile` (5 traços, scores Baixo/Médio/Alto)
-- [ ] 🔴 RED: Teste para validação: combinação que gera "defeito fatal" descrita
+- [ ] 🔴 RED: Teste para validação: combination que gera "defeito fatal" descrita
 - [ ] 🔴 RED: Teste para `HaugeArc` (Wound, Belief, Fear, Identity, Essence)
 - [ ] 🔴 RED: Teste para regra: Identity e Essence devem estar em oposição direta
 - [ ] 🔴 RED: Teste para `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism)
@@ -103,7 +103,7 @@ Cada trait OCEAN impacta decisões do personagem.
 ```
 Personagem gerado possui todos os 5 componentes (OCEAN, Hauge, Voz, Tells, falha moral).
 Anti-patterns detectados geram alerta (não bloqueio hard).
-Ficha salva na Bíblia da História via CharacterRepository.
+Ficha salva no Codex da História via CharacterRepository.
 ```
 
 ---
@@ -125,7 +125,7 @@ Ficha salva na Bíblia da História via CharacterRepository.
 ```
 Worldbuilding monolítico ("crie um mundo inteiro") é bloqueado.
 Cada passo mantém tema central ativo.
-Resultado persistido como WorldRules na Bíblia.
+Resultado persistido como WorldRules no Codex.
 ```
 
 ---

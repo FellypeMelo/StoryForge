@@ -68,3 +68,5 @@ Para o desenvolvimento em grande escala, a IA sofre de **Miopia Topológica** (n
    O LLM gera componentes complexos, mas não "pensa" na vida útil além de ciclos felizes (esquece Memory Leaks e Eventos Async).
 2. **Quebra Silenciosa de Refatoração:**
    Como no ReAct a atenção satura para iteração de longo prazo, a IA adota atalhos nocivos: `// resto do código permanece o mesmo`, estilhaçando projetos.
+
+

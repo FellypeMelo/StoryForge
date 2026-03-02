@@ -87,7 +87,7 @@ Cada detector implementa interface comum (strategy + observer).
 ### Critério de Aceite
 
 ```
-Motifs definidos na Bíblia da História.
+Motifs definidos no Codex da História.
 Injection automática nos prompts de escrita relevantes.
 Frequência escalona conforme progressão narrativa.
 ```
@@ -106,7 +106,7 @@ Frequência escalona conforme progressão narrativa.
 ### Regras
 
 1. Narrador nunca reconhece que mente/distorce.
-2. Pistas para o leitor vêm da ação, não da narração.
+2. Pistas para leitor vêm da ação, não da narração.
 3. Contraste causa desconforto crescente.
 
 ### Critério de Aceite

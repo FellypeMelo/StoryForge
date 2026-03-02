@@ -2,7 +2,7 @@
 
 ## Overview
 
-This track implements the core Character management system for StoryForge, following the Clean Architecture and TDD protocols established in Milestone 1. It focuses on the creation, persistence, and visual representation of characters within the Story Bible context.
+This track implements the core Character management system for StoryForge, following the Clean Architecture and TDD protocols established in Milestone 1. It focuses on the creation, persistence, and visual representation of characters within the Story Codex context.
 
 ## Functional Requirements
 
@@ -24,7 +24,7 @@ This track implements the core Character management system for StoryForge, follo
 
 ### UI Layer (Presentation)
 
-- **Story Bible Sidebar:** Integrated character management within the existing `AppShell` layout.
+- **Story Codex Sidebar:** Integrated character management within the existing `AppShell` layout.
 - **Character Gallery:** Grid view of characters with portraits and summary data.
 - **Profile Editor:** Comprehensive form for managing all character attributes using Tailwind CSS.
 
@@ -45,3 +45,5 @@ This track implements the core Character management system for StoryForge, follo
 
 - Inter-character relationship mapping.
 - Semantic search / Vector search (RAG integration).
+
+

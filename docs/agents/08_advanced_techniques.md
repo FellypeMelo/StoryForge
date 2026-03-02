@@ -130,3 +130,5 @@ A cura **não reside apenas em engenharia de prompt**, mas na atitude do autor d
 - **Modo Conservador:** IA sugere menos intervenções, priorizando a voz do autor
 - **Workflow:** Integrado ao pipeline completo (módulos 01 → 07)
 - **Painel:** Visualização do workflow em 6 fases com progresso
+
+

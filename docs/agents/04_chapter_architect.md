@@ -142,5 +142,5 @@ reconfortantes ou resumos no final do capítulo."
 
 - **Input:** Beat sheet macro (de `03_narrative_structure.md`) + fichas de personagens
 - **Output:** Beat sheet detalhado por capítulo, validado
-- **Persistência:** Beat sheets → Bíblia da História
+- **Persistência:** Beat sheets → Codex da História
 - **Próximo módulo:** `05_writing_assistant.md` (geração de prosa beat por beat)

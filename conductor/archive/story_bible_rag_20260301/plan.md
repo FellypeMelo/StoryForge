@@ -1,4 +1,4 @@
-# Plan: Story Bible Persistence, Search & RAG Pipeline
+# Plan: Story Codex Persistence, Search & RAG Pipeline
 
 ## Phase 1: SQLite Persistence & CRUD Repositories [checkpoint: 48abb36]
 - [x] Task: Implement SQL Migrations [55c6243]
@@ -42,18 +42,20 @@
     - [x] 🟢 GREEN: Orchestrate Search/Vector ports to build the continuity block.
 - [x] Task: Conductor - User Manual Verification 'RAG Pipeline & Context Management' (Protocol in workflow.md) [e9bf81c]
 
-## Phase 5: Story Bible UI Dashboard
-- [x] Task: Implement Bible Tabbed Interface [579abf2]
+## Phase 5: Story Codex UI Dashboard
+- [x] Task: Implement Codex Tabbed Interface [579abf2]
     - [x] 🔴 RED: Test navigation between Lore categories.
-    - [x] 🟢 GREEN: Expand `/bible` with specialized views for each entity type.
+    - [x] 🟢 GREEN: Expand `/Codex` with specialized views for each entity type.
 - [x] Task: Integrate Live Search & Results Panel [fd33b01]
     - [x] 🔴 RED: Test search results UI responsiveness.
     - [x] 🟢 GREEN: Connect SearchBar to SearchPort and display results in real-time.
 - [x] Task: Implement Injection Indicators [604dff6]
     - [x] 🔴 RED: Test UI state for "Active" lore entries.
     - [x] 🟢 GREEN: Add visual cues for items prioritized by the RAG pipeline.
-- [x] Task: Conductor - User Manual Verification 'Story Bible UI Dashboard' (Protocol in workflow.md) [604dff6]
+- [x] Task: Conductor - User Manual Verification 'Story Codex UI Dashboard' (Protocol in workflow.md) [604dff6]
 
 ## Phase: Review Fixes
 - [x] Task: Apply review suggestions [78d6518]
+
+
 

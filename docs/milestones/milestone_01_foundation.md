@@ -176,3 +176,5 @@ Sem bibliotecas de componentes externas (YAGNI).
 - [ ] Nenhum `new ConcreteClass()` no domínio?
 - [ ] Testes cobrem happy path + edge cases?
 - [ ] Zero dependências externas não aprovadas?
+
+

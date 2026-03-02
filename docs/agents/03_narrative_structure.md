@@ -122,6 +122,6 @@ Quebra da linearidade temporal para forçar o leitor a montar o quebra-cabeça t
 
 - **Input:** Premissa + personagens (de `01` e `02`)
 - **Output:** Beat sheet completo com framework escolhido + validação Story Grid
-- **Persistência:** Estrutura → Bíblia da História
+- **Persistência:** Estrutura → Codex da História
 - **Visual:** Criador visual de estruturas personalizadas (UI)
 - **Próximo módulo:** `04_chapter_architect.md`

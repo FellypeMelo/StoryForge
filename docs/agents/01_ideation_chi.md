@@ -26,7 +26,7 @@ Quando um LLM recebe um prompt simples de ideação, ele gera a premissa **estat
 
 1. **NUNCA** aceite a primeira sugestão do modelo como conceito final.
 2. **SEMPRE** execute a Fase 1 antes de qualquer geração criativa.
-3. A lista de clichês deve ser persistida na Bíblia da História como **blacklist ativa**.
+3. A lista de clichês deve ser persistida no Codex da História como **blacklist ativa**.
 4. A combinação da Fase 2 deve ser **genuinamente inesperada** — não derivações óbvias.
 
 ---
@@ -104,5 +104,5 @@ C) O Risco (O que acontece se ele falhar?)."
 
 - **Input:** Gênero desejado + disciplinas de cruzamento (opcional)
 - **Output:** 3 premissas validadas com conflito central definido
-- **Persistência:** Premissa aprovada + blacklist de clichês → Bíblia da História
+- **Persistência:** Premissa aprovada + blacklist de clichês → Codex da História
 - **Próximo módulo:** `02_character_builder.md` (personagens baseados na premissa)

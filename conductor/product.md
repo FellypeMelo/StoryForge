@@ -18,7 +18,7 @@ StoryForge is a world-class literary development platform that combats AI writin
 ## Core Objectives
 
 - **Abolish Clichés:** Use CHI methods and negative guardrails to prevent common AI tropes and purple prose.
-- **Consistency Protection:** Maintain narrative integrity via a systemic Story Bible powered by RAG.
+- **Consistency Protection:** Maintain narrative integrity via a systemic Story Codex powered by RAG.
 - **Privacy First:** Absolute offline-first architecture; your stories stay on your machine.
 - **User-Centric Simplicity:** Professional power delivered through an easy and simple interface.
 
@@ -28,13 +28,13 @@ StoryForge is a world-class literary development platform that combats AI writin
 
 - **CHI Ideation:** Anti-cliché worldbuilding and premise generation.
 - **Psychological Profiles:** Functional OCEAN-based character construction with persistence.
-- **Story Bible Foundation:** Comprehensive lore management including Locations, World Rules, Timeline Events, and Relationships.
+- **Story Codex Foundation:** Comprehensive lore management including Locations, World Rules, Timeline Events, and Relationships.
 - **Narrative Architect:** Multi-framework support (Save the Cat, Hero's Journey, etc.).
 
 ### Phase 3: Guided Writing (E.P.R.L.)
 
 - **Prosa Assistant:** Gearing production of 500-800 words per beat with strict stylistic guardrails.
-- **Story Bible Integration:** Context-aware prose generation using RAG.
+- **Story Codex Integration:** Context-aware prose generation using RAG.
 
 ### Phase 5: Structural Auditing
 
@@ -46,3 +46,5 @@ StoryForge is a world-class literary development platform that combats AI writin
 - **Platform:** Desktop application built with Rust (Tauri) for system safety and speed.
 - **Interface:** distraction-free UI using React + Tailwind CSS.
 - **Persistence:** Local SQLite with vector extensions for semantic search.
+
+

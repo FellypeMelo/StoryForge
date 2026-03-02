@@ -1,7 +1,7 @@
-# Specification: Story Bible Domain & UI (Mocks)
+# Specification: Story Codex Domain & UI (Mocks)
 
 ## Overview
-This track implements the foundational domain entities and repository interfaces (ports) for the StoryForge Lorebook (Story Bible), along with a primary UI dashboard to manage these entries using mocked data. This establishes the "Clean Architecture" boundaries before moving to SQLite persistence.
+This track implements the foundational domain entities and repository interfaces (ports) for the StoryForge Lorebook (Story Codex), along with a primary UI dashboard to manage these entries using mocked data. This establishes the "Clean Architecture" boundaries before moving to SQLite persistence.
 
 ## Functional Requirements
 - **Domain Entities:**
@@ -18,7 +18,7 @@ This track implements the foundational domain entities and repository interfaces
   - Interfaces for CRUD operations on all entities defined in `src/domain/ports`.
   - Search method signatures (FTS and Vector).
 - **UI Dashboard:**
-  - Tabbed interface for all entities in `/bible`.
+  - Tabbed interface for all entities in `/Codex`.
   - List views for existing entries using mocked data.
   - CRUD forms (Modals or Inline) for entity creation/editing.
   - Search bar interface (visual only).
@@ -39,3 +39,5 @@ This track implements the foundational domain entities and repository interfaces
 - SQLite implementation (migrations, actual DB persistence).
 - Real vector embeddings (llama.cpp integration).
 - RAG Pipeline logic.
+
+
