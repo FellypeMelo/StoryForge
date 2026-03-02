@@ -10,6 +10,12 @@ describe('ClicheBlacklist Entity', () => {
     expect(blacklist.bannedTerms).toContain('Chosen One');
   });
 
+  it('should throw error if bannedTerms is null or undefined', () => {
+    const genre = Genre.create('Fantasy');
+    expect(() => new ClicheBlacklist(genre, null as any)).toThrow('Banned terms list cannot be empty');
+    expect(() => new ClicheBlacklist(genre, undefined as any)).toThrow('Banned terms list cannot be empty');
+  });
+
   it('should throw error if bannedTerms is empty', () => {
     const genre = Genre.create('Sci-Fi');
     expect(() => {

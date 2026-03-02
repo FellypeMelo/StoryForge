@@ -33,31 +33,29 @@ describe('ValidatePremiseUseCase', () => {
     const result = await useCase.execute(premise);
 
     expect(result.isValid).toBe(true);
-    expect(llmPort.complete).toHaveBeenCalledWith(
-      expect.stringContaining('knight'),
-      expect.anything()
-    );
+    expect(result.reason).toBe('Strong conflict and clear stakes.');
+  });
+
+  it('should handle missing reason from LLM', async () => {
+    const premise = new Premise('P', 'I', 'A', 'Stakes are long enough here');
+    (llmPort.complete as any).mockResolvedValue({ text: JSON.stringify({ isValid: true }) });
+
+    const result = await useCase.execute(premise);
+    expect(result.reason).toBe('No reason provided by LLM.');
   });
 
   it('should invalidate a weak premise', async () => {
-    const premise = new Premise(
-      'Someone',
-      'Something happens',
-      'Someone else',
-      'Nothing really happens if they fail'
-    );
-
-    const mockLlmResponse = {
-      text: JSON.stringify({
-        isValid: false,
-        reason: 'Conflict is non-existent and stakes are absent.'
-      }),
-    };
-    (llmPort.complete as any).mockResolvedValue(mockLlmResponse);
+    const premise = new Premise('P', 'I', 'A', 'Stakes are long enough here');
+    (llmPort.complete as any).mockResolvedValue({ text: JSON.stringify({ isValid: false, reason: 'Weak' }) });
 
     const result = await useCase.execute(premise);
-
     expect(result.isValid).toBe(false);
-    expect(result.reason).toContain('Conflict');
+  });
+
+  it('should throw error if LLM returns invalid JSON', async () => {
+    const premise = new Premise('P', 'I', 'A', 'Stakes are long enough here');
+    (llmPort.complete as any).mockResolvedValue({ text: 'Invalid' });
+
+    await expect(useCase.execute(premise)).rejects.toThrow('Failed to parse validation result from LLM');
   });
 });

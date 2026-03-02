@@ -13,15 +13,31 @@ describe('Premise Entity', () => {
     expect(premise.antagonist).toBe('The dragon');
   });
 
-  it('should throw error if antagonist is empty', () => {
+  it('should throw error if antagonist is null or undefined', () => {
     expect(() => {
-      new Premise(
-        'A brave knight',
-        'The dragon returns',
-        '',
-        'The village safety'
-      );
+      new Premise('P', 'I', null as any, 'Stakes must be long enough');
     }).toThrow('Antagonist cannot be empty');
+    expect(() => {
+      new Premise('P', 'I', undefined as any, 'Stakes must be long enough');
+    }).toThrow('Antagonist cannot be empty');
+  });
+
+  it('should throw error if antagonist is empty or whitespace', () => {
+    expect(() => {
+      new Premise('P', 'I', '', 'Stakes must be long enough');
+    }).toThrow('Antagonist cannot be empty');
+    expect(() => {
+      new Premise('P', 'I', '   ', 'Stakes must be long enough');
+    }).toThrow('Antagonist cannot be empty');
+  });
+
+  it('should throw error if stakes are null or undefined', () => {
+    expect(() => {
+      new Premise('P', 'I', 'A', null as any);
+    }).toThrow('Stakes cannot be empty');
+    expect(() => {
+      new Premise('P', 'I', 'A', undefined as any);
+    }).toThrow('Stakes cannot be empty');
   });
 
   it('should throw error if stakes are too vague', () => {
@@ -35,14 +51,12 @@ describe('Premise Entity', () => {
     }).toThrow('Stakes are too vague');
   });
 
-  it('should throw error if stakes are empty', () => {
+  it('should throw error if stakes are empty or whitespace', () => {
     expect(() => {
-      new Premise(
-        'A brave knight',
-        'The dragon returns',
-        'The dragon',
-        '   '
-      );
+      new Premise('P', 'I', 'A', '');
+    }).toThrow('Stakes cannot be empty');
+    expect(() => {
+      new Premise('P', 'I', 'A', '   ');
     }).toThrow('Stakes cannot be empty');
   });
 });
