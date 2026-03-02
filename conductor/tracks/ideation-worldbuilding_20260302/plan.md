@@ -26,7 +26,7 @@ Implement the CHI method use cases.
 - [x] Task 2.1: TDD for `ExtractClichesUseCase`. (e4cc149)
 - [x] Task 2.2: TDD for `GeneratePremisesUseCase`. (dc6e25a)
 - [x] Task 2.3: TDD for `ValidatePremiseUseCase`. (39247ed)
-- [ ] Task 2.4: Implement `IdeationPipeline` composing the three phases.
+- [x] Task 2.4: Implement `IdeationPipeline` composing the three phases. (b4e9845)
 
 ### Verification
 - [ ] Pipeline tests passing with mocked `LlmPort`.
