@@ -10,14 +10,14 @@
 
 ## Phase 2: Category Implementations [checkpoint: fbe2add]
 - [x] Task: Integrate `LocationForm` into Modal [bfb63d6]
-    - [x] 🔴 RED: Test that clicking "Adicionar Local" in `BibleDashboard` opens the `SlideOver` with `LocationForm`.
+    - [x] 🔴 RED: Test that clicking "Adicionar Local" in `CodexDashboard` opens the `SlideOver` with `LocationForm`.
     - [x] 🟢 GREEN: Update `handleCreateLocation` to manage modal visibility state instead of using `prompt`.
 - [x] Task: Integrate `WorldRuleForm` into Modal [6df5125]
-    - [x] 🔴 RED: Test that clicking "Adicionar Regra" in `BibleDashboard` opens the `SlideOver` with `WorldRuleForm`.
+    - [x] 🔴 RED: Test that clicking "Adicionar Regra" in `CodexDashboard` opens the `SlideOver` with `WorldRuleForm`.
     - [x] 🟢 GREEN: Update `handleCreateRule` to manage modal visibility state.
 - [x] Task: Integrate `CharacterWizard` into Modal [19cdd9d]
     - [x] 🔴 RED: Test that clicking "Novo Personagem" opens the `SlideOver` containing the existing `CharacterWizard`.
-    - [x] 🟢 GREEN: Refactor `BibleDashboard` to show `CharacterWizard` inside the modal system.
+    - [x] 🟢 GREEN: Refactor `CodexDashboard` to show `CharacterWizard` inside the modal system.
 - [x] Task: Conductor - User Manual Verification 'Category Implementations' (Protocol in workflow.md) [fbe2add]
 
 ## Phase 3: Polish & Refinement [checkpoint: 1bc8d2e]
@@ -28,3 +28,5 @@
     - [x] 🔴 RED: Test that closing the modal and reopening it displays a fresh/reset form (matching spec "Out of Scope").
     - [x] 🟢 GREEN: Ensure form state is cleared when modal `onClose` is triggered.
 - [x] Task: Conductor - User Manual Verification 'Polish' (Protocol in workflow.md)
+
+
