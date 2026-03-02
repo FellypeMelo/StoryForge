@@ -22,11 +22,11 @@ This plan outlines the steps to refactor the StoryForge Rust backend into a modu
 - [x] Task: **GREEN**: Migrate Lore entities (Locations, Rules, etc.) and Project logic to their respective feature folders. c56fb6f
 - [x] Task: **REFACTOR**: Update Lore and Project commands to delegate logic to the Application layer. c56fb6f
 - [x] Task: **GREEN**: Decompose the remainder of `sqlite.rs` into modular feature-specific infrastructure files. c56fb6f
-- [ ] Task: Conductor - User Manual Verification 'Lore & Projects' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Lore & Projects' (Protocol in workflow.md) 3f488d4
 
 ## Phase 4: Integration & System Cleanup
-- [ ] Task: **REFACTOR**: Update `src-tauri/src/lib.rs` to register commands from the new feature modules.
-- [ ] Task: **RED**: Write integration tests to ensure cross-feature compatibility (e.g., character-project relations).
-- [ ] Task: **GREEN**: Verify entire system compiles and passes all existing tests.
-- [ ] Task: **REFACTOR**: Remove deprecated layered files (`application/`, `commands/`, `infrastructure/` if empty) and finalize `sqlite.rs` decomposition.
+- [x] Task: **REFACTOR**: Update `src-tauri/src/lib.rs` to register commands from the new feature modules. 3f488d4
+- [x] Task: **RED**: Write integration tests to ensure cross-feature compatibility (e.g., character-project relations). 3f488d4
+- [x] Task: **GREEN**: Verify entire system compiles and passes all existing tests. 3f488d4
+- [x] Task: **REFACTOR**: Remove deprecated layered files (`application/`, `commands/`, `infrastructure/` if empty) and finalize `sqlite.rs` decomposition. e4fe400
 - [ ] Task: Conductor - User Manual Verification 'Integration & Cleanup' (Protocol in workflow.md)
