@@ -1,10 +1,10 @@
+pub mod book;
 pub mod character;
 pub mod lore;
 
-use serde::{Serialize, Deserialize};
-use crate::domain::ports::DatabasePort;
 use crate::domain::error::AppResult;
-use std::sync::Arc;
+use crate::domain::ports::DatabasePort;
+use serde::{Deserialize, Serialize};
 
 use crate::infrastructure::sqlite::SqliteDatabase;
 
@@ -51,7 +51,7 @@ mod tests {
         let dir = tempdir().expect("Failed to create temp dir");
         let db_path = dir.path().join("test_health.db");
         let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
-        
+
         // Simulating the logic inside health_check since we can't easily mock tauri::State
         let status = HealthStatus {
             database: db.is_healthy(),
