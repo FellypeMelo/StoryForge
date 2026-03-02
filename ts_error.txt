@@ -1,0 +1,4 @@
+src/ui/components/__tests__/CodexDashboard.modals.test.tsx(17,13): error TS2739: Type '{}' is missing the following properties from type 'CodexDashboardProps': projectId, bookId, onBack
+src/ui/components/__tests__/CodexDashboard.modals.test.tsx(36,13): error TS2739: Type '{}' is missing the following properties from type 'CodexDashboardProps': projectId, bookId, onBack
+src/ui/components/__tests__/CodexDashboard.modals.test.tsx(55,13): error TS2739: Type '{}' is missing the following properties from type 'CodexDashboardProps': projectId, bookId, onBack
+src/ui/components/__tests__/CodexDashboard.modals.test.tsx(75,13): error TS2739: Type '{}' is missing the following properties from type 'CodexDashboardProps': projectId, bookId, onBack

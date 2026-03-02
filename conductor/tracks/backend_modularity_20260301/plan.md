@@ -3,10 +3,10 @@
 This plan outlines the steps to refactor the StoryForge Rust backend into a modular, feature-based architecture (Vertical Slicing), improving decoupling and error handling while adhering to AI-XP standards.
 
 ## Phase 1: Shared Domain Foundation & Error Handling
-- [ ] Task: **RED**: Define `AppError` enum and its conversions in `domain/errors.rs`.
-- [ ] Task: **GREEN**: Implement `AppError` and integrate with `domain/result.rs`.
-- [ ] Task: **RED**: Define standard `Repository` traits for core entities in `domain/ports/`.
-- [ ] Task: **GREEN**: Finalize trait definitions to support generic feature-based implementations.
+- [x] Task: **RED**: Define `AppError` enum and its conversions in `domain/errors.rs`. c56fb6f
+- [x] Task: **GREEN**: Implement `AppError` and integrate with `domain/result.rs`. c56fb6f
+- [x] Task: **RED**: Define standard `Repository` traits for core entities in `domain/ports/`. c56fb6f
+- [x] Task: **GREEN**: Finalize trait definitions to support generic feature-based implementations. c56fb6f
 - [ ] Task: Conductor - User Manual Verification 'Shared Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Modularizing the 'Characters' Feature

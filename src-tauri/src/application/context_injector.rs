@@ -1,4 +1,4 @@
-use crate::domain::error::AppResult;
+use crate::domain::result::AppResult;
 use crate::domain::ports::{EntityType, SearchPort, SearchResult};
 use crate::domain::token_budget::TokenBudgetCalculator;
 use crate::domain::value_objects::ProjectId;

@@ -1,7 +1,7 @@
 use crate::domain::blacklist_entry::BlacklistEntry;
 use crate::domain::book::Book;
 use crate::domain::character::Character;
-use crate::domain::error::AppResult;
+use crate::domain::result::AppResult;
 use crate::domain::location::Location;
 use crate::domain::project::Project;
 use crate::domain::relationship::Relationship;
@@ -40,6 +40,22 @@ pub trait VectorSearchPort {
 
 pub trait EmbeddingPort {
     fn generate_embedding(&self, text: &str) -> AppResult<Vec<f32>>;
+}
+
+// Base traits for standard operations
+pub trait Repository<T, ID> {
+    fn create(&self, entity: &T) -> AppResult<()>;
+    fn get_by_id(&self, id: &ID) -> AppResult<T>;
+    fn update(&self, entity: &T) -> AppResult<()>;
+    fn delete(&self, id: &ID) -> AppResult<()>;
+}
+
+pub trait ScopedRepository<T, ID>: Repository<T, ID> {
+    fn list_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<T>>;
+    fn list_by_book(&self, book_id: &BookId) -> AppResult<Vec<T>>;
+    fn list_global(&self, project_id: &ProjectId) -> AppResult<Vec<T>>;
+    fn move_to_book(&self, id: &ID, book_id: &BookId) -> AppResult<()>;
+    fn move_to_project(&self, id: &ID) -> AppResult<()>;
 }
 
 pub trait ProjectRepository {
@@ -159,4 +175,31 @@ pub struct SearchResult {
     pub entity_type: EntityType,
     pub snippet: String,
     pub score: f64,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_generic_repository_usage() {
+        struct MockRepo;
+        impl Repository<Character, CharacterId> for MockRepo {
+            fn create(&self, _entity: &Character) -> AppResult<()> { Ok(()) }
+            fn get_by_id(&self, _id: &CharacterId) -> AppResult<Character> { 
+                Character::new(ProjectId("test".to_string()), None, "Test".to_string()) 
+            }
+            fn update(&self, _entity: &Character) -> AppResult<()> { Ok(()) }
+            fn delete(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+        }
+        impl ScopedRepository<Character, CharacterId> for MockRepo {
+            fn list_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
+            fn list_by_book(&self, _book_id: &BookId) -> AppResult<Vec<Character>> { Ok(vec![]) }
+            fn list_global(&self, _project_id: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
+            fn move_to_book(&self, _id: &CharacterId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
+            fn move_to_project(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+        }
+        let repo = MockRepo;
+        assert!(repo.list_global(&ProjectId("test".to_string())).is_ok());
+    }
 }

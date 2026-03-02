@@ -1,4 +1,5 @@
-use crate::domain::error::{AppError, AppResult};
+use crate::domain::error::AppError;
+use crate::domain::result::AppResult;
 
 pub struct TokenBudgetCalculator {
     max_tokens: usize,

@@ -1,5 +1,5 @@
 use crate::domain::book::{Book, BookId, ProjectId};
-use crate::domain::error::AppResult;
+use crate::domain::result::AppResult;
 use crate::domain::ports::BookRepository;
 use crate::infrastructure::sqlite::SqliteDatabase;
 use tauri::State;

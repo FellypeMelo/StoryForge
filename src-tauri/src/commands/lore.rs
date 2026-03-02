@@ -1,5 +1,5 @@
 use crate::domain::blacklist_entry::BlacklistEntry;
-use crate::domain::error::AppResult;
+use crate::domain::result::AppResult;
 use crate::domain::location::Location;
 use crate::domain::ports::{
     BlacklistRepository, LocationRepository, ProjectRepository, RelationshipRepository, SearchPort,

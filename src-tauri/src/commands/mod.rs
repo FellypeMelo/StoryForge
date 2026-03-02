@@ -2,7 +2,7 @@ pub mod book;
 pub mod character;
 pub mod lore;
 
-use crate::domain::error::AppResult;
+use crate::domain::result::AppResult;
 use crate::domain::ports::DatabasePort;
 use serde::{Deserialize, Serialize};
 
