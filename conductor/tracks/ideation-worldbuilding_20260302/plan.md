@@ -31,7 +31,7 @@ Implement the CHI method use cases.
 ### Verification
 - [ ] Pipeline tests passing with mocked `LlmPort`.
 
-## Phase 3: Worldbuilding CAD
+## Phase 3: Worldbuilding CAD [checkpoint: b5440b8]
 
 Implement Context-Aware Decomposition for worldbuilding.
 
@@ -43,7 +43,8 @@ Implement Context-Aware Decomposition for worldbuilding.
 - [x] Task 3.5: Implement step 4 (Conflicts). (bad80e7)
 
 ### Verification
-- [ ] Pipeline isolates steps and persists `WorldRules`.
+- [x] Pipeline isolates steps and persists `WorldRules`.
+- [x] Domain and Application layers achieved >99% test coverage.
 
 ## Phase 4: Ideation UI
 
