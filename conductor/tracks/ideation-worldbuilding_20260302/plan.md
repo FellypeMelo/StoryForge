@@ -23,7 +23,7 @@ Create the core domain models and ports for Ideation.
 Implement the CHI method use cases.
 
 ### Tasks
-- [ ] Task 2.1: TDD for `ExtractClichesUseCase`.
+- [x] Task 2.1: TDD for `ExtractClichesUseCase`. (e4cc149)
 - [ ] Task 2.2: TDD for `GeneratePremisesUseCase`.
 - [ ] Task 2.3: TDD for `ValidatePremiseUseCase`.
 - [ ] Task 2.4: Implement `IdeationPipeline` composing the three phases.
