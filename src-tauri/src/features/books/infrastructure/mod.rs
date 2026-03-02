@@ -114,3 +114,6 @@ impl BookRepository for SqliteDatabase {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests;
