@@ -111,3 +111,6 @@ impl ProjectRepository for SqliteDatabase {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests;
