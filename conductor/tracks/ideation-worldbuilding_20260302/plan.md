@@ -36,11 +36,11 @@ Implement the CHI method use cases.
 Implement Context-Aware Decomposition for worldbuilding.
 
 ### Tasks
-- [ ] Task 3.1: TDD for `WorldbuildingPipeline`.
-- [ ] Task 3.2: Implement step 1 (Physics/Magic).
-- [ ] Task 3.3: Implement step 2 (Economy).
-- [ ] Task 3.4: Implement step 3 (Sociology/Religion).
-- [ ] Task 3.5: Implement step 4 (Conflicts).
+- [x] Task 3.1: TDD for `WorldbuildingPipeline`. (bad80e7)
+- [x] Task 3.2: Implement step 1 (Physics/Magic). (bad80e7)
+- [x] Task 3.3: Implement step 2 (Economy). (bad80e7)
+- [x] Task 3.4: Implement step 3 (Sociology/Religion). (bad80e7)
+- [x] Task 3.5: Implement step 4 (Conflicts). (bad80e7)
 
 ### Verification
 - [ ] Pipeline isolates steps and persists `WorldRules`.
