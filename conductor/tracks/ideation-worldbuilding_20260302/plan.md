@@ -12,7 +12,7 @@ Create the core domain models and ports for Ideation.
 ### Tasks
 - [x] Task 1.1: TDD for `Premise` entity with validation rules. (c236942)
 - [x] Task 1.2: TDD for `ClicheBlacklist` and `CrossPollinationSeed` entities. (4a15f65)
-- [ ] Task 1.3: Define `LlmPort` interface in `src/domain/ideation/ports/`.
+- [x] Task 1.3: Define `LlmPort` interface in `src/domain/ideation/ports/`. (11a2817)
 - [ ] Task 1.4: Refactor domain with Value Objects (`Genre`, `AcademicDiscipline`).
 
 ### Verification
