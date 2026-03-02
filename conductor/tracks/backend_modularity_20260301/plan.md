@@ -15,13 +15,13 @@ This plan outlines the steps to refactor the StoryForge Rust backend into a modu
 - [x] Task: **REFACTOR**: Decouple `characters.rs` commands from direct DB calls, using the new application layer. c56fb6f
 - [x] Task: **RED**: Write tests for the modular `CharacterRepository` implementation. c56fb6f
 - [x] Task: **GREEN**: Implement `CharacterRepository` in `features/characters/infrastructure/`. c56fb6f
-- [ ] Task: Conductor - User Manual Verification 'Characters Feature' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Characters Feature' (Protocol in workflow.md) accbf7d
 
 ## Phase 3: Modularizing 'Lore' & 'Projects' Features
-- [ ] Task: **RED**: Create `features/lore` and `features/projects` modules with corresponding TDD tests.
-- [ ] Task: **GREEN**: Migrate Lore entities (Locations, Rules, etc.) and Project logic to their respective feature folders.
-- [ ] Task: **REFACTOR**: Update Lore and Project commands to delegate logic to the Application layer.
-- [ ] Task: **GREEN**: Decompose the remainder of `sqlite.rs` into modular feature-specific infrastructure files.
+- [x] Task: **RED**: Create `features/lore` and `features/projects` modules with corresponding TDD tests. c56fb6f
+- [x] Task: **GREEN**: Migrate Lore entities (Locations, Rules, etc.) and Project logic to their respective feature folders. c56fb6f
+- [x] Task: **REFACTOR**: Update Lore and Project commands to delegate logic to the Application layer. c56fb6f
+- [x] Task: **GREEN**: Decompose the remainder of `sqlite.rs` into modular feature-specific infrastructure files. c56fb6f
 - [ ] Task: Conductor - User Manual Verification 'Lore & Projects' (Protocol in workflow.md)
 
 ## Phase 4: Integration & System Cleanup

@@ -14,11 +14,8 @@ pub struct Project {
 impl Project {
     pub fn new(name: String, description: String) -> AppResult<Self> {
         if name.trim().is_empty() {
-            return Err(AppError::Validation(
-                "Project name cannot be empty".to_string(),
-            ));
+            return Err(AppError::Validation("Project name cannot be empty".to_string()));
         }
-
         Ok(Self {
             id: ProjectId::new(),
             name,
@@ -26,4 +23,12 @@ impl Project {
             created_at: String::new(),
         })
     }
+}
+
+pub trait ProjectRepository {
+    fn create_project(&self, project: &Project) -> AppResult<()>;
+    fn get_project_by_id(&self, id: &ProjectId) -> AppResult<Project>;
+    fn list_all_projects(&self) -> AppResult<Vec<Project>>;
+    fn update_project(&self, project: &Project) -> AppResult<()>;
+    fn delete_project(&self, id: &ProjectId) -> AppResult<()>;
 }

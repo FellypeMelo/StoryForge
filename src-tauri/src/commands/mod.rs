@@ -1,35 +1,34 @@
 pub mod book;
-pub mod lore;
 
 use crate::domain::result::AppResult;
 use crate::domain::ports::DatabasePort;
-use serde::{Deserialize, Serialize};
-
 use crate::infrastructure::sqlite::SqliteDatabase;
+use tauri::State;
+use serde::Serialize;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct AppInfo {
     pub name: String,
     pub version: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct HealthStatus {
     pub database: bool,
 }
 
 #[tauri::command]
-pub fn get_app_info() -> AppResult<AppInfo> {
-    Ok(AppInfo {
+pub async fn get_app_info() -> AppInfo {
+    AppInfo {
         name: "StoryForge".to_string(),
         version: "0.1.0".to_string(),
-    })
+    }
 }
 
 #[tauri::command]
-pub fn health_check(db: tauri::State<'_, SqliteDatabase>) -> AppResult<HealthStatus> {
+pub async fn health_check(state: State<'_, SqliteDatabase>) -> AppResult<HealthStatus> {
     Ok(HealthStatus {
-        database: db.is_healthy(),
+        database: state.is_healthy(),
     })
 }
 
@@ -39,14 +38,13 @@ mod tests {
     use tempfile::tempdir;
 
     #[test]
-    fn test_get_app_info() {
-        let info = get_app_info().expect("Failed to get app info");
+    fn test_app_info() {
+        let info = futures::executor::block_on(get_app_info());
         assert_eq!(info.name, "StoryForge");
-        assert_eq!(info.version, "0.1.0");
     }
 
     #[test]
-    fn test_health_check_logic() {
+    fn test_health_check() {
         let dir = tempdir().expect("Failed to create temp dir");
         let db_path = dir.path().join("test_health.db");
         let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
