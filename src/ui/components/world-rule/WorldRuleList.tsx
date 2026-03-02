@@ -72,6 +72,11 @@ export function WorldRuleList({
                       Injetado
                     </span>
                   )}
+                  {!rule.bookId && (
+                    <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+                      Universo
+                    </span>
+                  )}
                 </div>
                 <span className="text-[10px] font-mono tracking-tighter text-text-muted opacity-50 uppercase">
                   {rule.id.value.slice(0, 8)}
@@ -88,3 +93,5 @@ export function WorldRuleList({
     </div>
   );
 };
+
+

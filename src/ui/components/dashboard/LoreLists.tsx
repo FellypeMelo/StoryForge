@@ -35,12 +35,17 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
       </div>
       <div className="space-y-4">
         {events.map((event) => (
-          <div key={event.id.value} onClick={() => onSelect?.(event)} className="group bg-bg-base border border-border-subtle p-6 rounded-lg flex gap-6 hover:border-text-main transition-all cursor-pointer">
+          <div key={event.id.value} onClick={() => onSelect?.(event)} className="group bg-bg-base border border-border-subtle p-6 rounded-lg flex gap-6 hover:border-text-main transition-all cursor-pointer relative">
+            {!event.bookId && (
+              <span className="absolute top-4 right-4 text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+                Universo
+              </span>
+            )}
             <div className="text-text-muted group-hover:text-text-main transition-colors mt-1">
               <Clock size={20} />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif text-text-main">{event.date || "Data Desconhecida"}</h3>
+              <h3 className="font-serif text-text-main pr-16">{event.date || "Data Desconhecida"}</h3>
               <p className="text-sm text-text-muted leading-relaxed">{event.description}</p>
             </div>
           </div>
@@ -82,9 +87,14 @@ export function RelationshipList({ relationships, onSelect, onCreateNew }: Relat
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {relationships.map((rel) => (
-          <div key={rel.id.value} onClick={() => onSelect?.(rel)} className="bg-bg-hover/50 border border-border-subtle p-4 rounded-lg flex items-center gap-4 hover:border-text-main transition-all cursor-pointer">
-            <GitBranch size={18} className="text-text-muted" />
-            <span className="text-sm font-sans text-text-main">{rel.type}</span>
+          <div key={rel.id.value} onClick={() => onSelect?.(rel)} className="bg-bg-hover/50 border border-border-subtle p-4 rounded-lg flex items-center gap-4 hover:border-text-main transition-all cursor-pointer relative">
+            <GitBranch size={18} className="text-text-muted shrink-0" />
+            <span className="text-sm font-sans text-text-main flex-1">{rel.type}</span>
+            {!rel.bookId && (
+              <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+                Universo
+              </span>
+            )}
           </div>
         ))}
       </div>
@@ -127,9 +137,16 @@ export function BlacklistList({ entries, onSelect, onCreateNew }: BlacklistListP
           <div key={entry.id.value} onClick={() => onSelect?.(entry)} className="bg-bg-hover border border-red-500/20 px-4 py-2 rounded-md flex items-center gap-3 hover:border-red-500 transition-all cursor-pointer">
             <Ban size={14} className="text-red-500" />
             <span className="text-sm font-mono text-text-main">{entry.term}</span>
+            {!entry.bookId && (
+              <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+                Universo
+              </span>
+            )}
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+

@@ -72,6 +72,11 @@ export function CharacterList({
                       Injetado
                     </span>
                   )}
+                  {!char.bookId && (
+                    <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+                      Universo
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -102,3 +107,5 @@ export function CharacterList({
     </div>
   );
 };
+
+
