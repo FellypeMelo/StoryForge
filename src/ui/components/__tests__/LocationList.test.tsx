@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { LocationList } from "../location/LocationList";
 import { Location } from "../../../domain/location";
-import { LocationId } from "../../../domain/value-objects/bible-ids";
+import { LocationId } from "../../../domain/value-objects/codex-ids";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 
 const pId = ProjectId.generate();
@@ -35,3 +35,5 @@ describe("LocationList", () => {
     expect(screen.getByText(/Nenhum local encontrado/i)).toBeInTheDocument();
   });
 });
+
+

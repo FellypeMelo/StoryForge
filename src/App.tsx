@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { AppShell } from "./ui/components/layout/AppShell";
-import { CharacterList } from "./ui/components/character/CharacterList";
-import { CharacterForm } from "./ui/components/character/CharacterForm";
-import { Character } from "./domain/character";
+import { CodexDashboard } from "./ui/components/dashboard/CodexDashboard";
+import { ProjectSelector } from "./ui/components/project/ProjectSelector";
+import { BookSelector } from "./ui/components/book/BookSelector";
 
 interface AppInfo {
   name: string;
@@ -19,24 +19,8 @@ export function App() {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState<string>("dashboard");
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
-
-  // Initializing with a default project for now
-  const activeProjectId = "project-1";
-
-  const fetchCharacters = async () => {
-    setIsLoading(true);
-    try {
-      const list = await invoke<Character[]>("list_characters", { projectId: activeProjectId });
-      setCharacters(list);
-    } catch (err) {
-      console.error("Failed to fetch characters:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() => localStorage.getItem("storyforge_last_project"));
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(() => localStorage.getItem("storyforge_last_book"));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,86 +38,60 @@ export function App() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (currentPath === "personas") {
-      fetchCharacters();
-      setEditingCharacter(null); // Reset edit state when navigating back to gallery
-    }
-  }, [currentPath]);
-
-  const handleCreateCharacter = async () => {
-    try {
-      const name = prompt("Digite o nome do personagem:");
-      if (!name) return;
-
-      const newChar = await invoke<Character>("create_character", {
-        projectId: activeProjectId,
-        name,
-      });
-      setEditingCharacter(newChar);
-    } catch (err) {
-      console.error("Failed to create character:", err);
-      alert("Falha ao criar o personagem: " + err);
-    }
+  const handleSelectProject = (projectId: string) => {
+    setSelectedProjectId(projectId);
+    localStorage.setItem("storyforge_last_project", projectId);
+    setSelectedBookId(null);
+    localStorage.removeItem("storyforge_last_book");
   };
 
-  const handleSaveCharacter = async (char: Character) => {
-    try {
-      await invoke("update_character", { character: char });
-      setEditingCharacter(null);
-      await fetchCharacters();
-    } catch (err) {
-      console.error("Failed to update character:", err);
-      alert("Falha ao atualizar o personagem: " + err);
-    }
+  const handleSelectBook = (bookId: string) => {
+    setSelectedBookId(bookId);
+    localStorage.setItem("storyforge_last_book", bookId);
+    setCurrentPath("dashboard");
+  };
+
+  const handleBackToProjects = () => {
+    setSelectedProjectId(null);
+    localStorage.removeItem("storyforge_last_project");
+    setSelectedBookId(null);
+    localStorage.removeItem("storyforge_last_book");
   };
 
   const renderContent = () => {
-    switch (currentPath) {
-      case "personas":
-        if (editingCharacter) {
-          return (
-            <CharacterForm
-              character={editingCharacter}
-              onSave={handleSaveCharacter}
-              onCancel={() => setEditingCharacter(null)}
-            />
-          );
-        }
-        return (
-          <div className="space-y-12 py-8">
-            <header className="space-y-6">
-              <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
-                Personagens
-              </h1>
-              <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
-                Gerencie seus personagens e a profundidade psicológica deles.
-              </p>
-            </header>
+    if (!selectedProjectId) {
+      return <ProjectSelector onSelectProject={handleSelectProject} />;
+    }
 
-            {isLoading ? (
-              <div className="py-20 flex justify-center">
-                <span className="text-text-muted font-mono animate-pulse">
-                  Consultando os arquivos...
-                </span>
-              </div>
-            ) : (
-              <CharacterList
-                characters={characters}
-                onCreateNew={handleCreateCharacter}
-                onSelect={(char) => setEditingCharacter(char)}
-              />
-            )}
-          </div>
-        );
+    if (!selectedBookId) {
+      return (
+        <BookSelector
+          projectId={selectedProjectId}
+          onSelectBook={handleSelectBook}
+          onBack={handleBackToProjects}
+        />
+      );
+    }
+
+    switch (currentPath) {
+      case "codex":
+        return <CodexDashboard projectId={selectedProjectId} bookId={selectedBookId} onBack={() => setCurrentPath("dashboard")} />;
       case "dashboard":
       default:
         return (
           <div className="space-y-16 py-8">
             <header className="space-y-6">
-              <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
-                Bem-vindo à Forja
-              </h1>
+              <div className="flex justify-between items-center w-full">
+                <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
+                  Bem-vindo à Forja
+                </h1>
+                <button 
+                  onClick={handleBackToProjects}
+                  className="px-4 py-2 text-sm border border-border-default rounded text-text-muted hover:text-text-main hover:border-text-main transition-colors"
+                >
+                  Trocar Universo
+                </button>
+              </div>
               <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
                 Este é o seu espaço de trabalho. Aqui, você forjará mundos, dará vida a personagens e
                 tecerá narrativas intrincadas.
@@ -149,7 +107,7 @@ export function App() {
             <section className="grid grid-cols-1 md:grid-cols-2 gap-16 font-sans">
               <div className="space-y-6">
                 <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">
-                  Status do Projeto
+                  Status do Sistema
                 </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-end border-b border-border-subtle pb-2">
@@ -176,17 +134,20 @@ export function App() {
                   Ações Rápidas
                 </h3>
                 <div className="flex flex-col gap-3">
-                  <button className="text-left bg-bg-hover hover:bg-border-subtle px-5 py-4 rounded transition-colors text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer">
-                    Iniciar um Novo Capítulo
+                  <button 
+                    onClick={() => {}}
+                    className="text-left bg-bg-hover hover:bg-border-subtle px-5 py-4 rounded transition-colors text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
+                  >
+                    Detalhes do Livro
                     <span className="text-text-muted group-hover:text-text-main transition-colors font-serif">
                       →
                     </span>
                   </button>
                   <button
-                    onClick={() => setCurrentPath("personas")}
-                    className="text-left bg-transparent hover:bg-bg-hover px-5 py-4 rounded transition-colors text-text-muted hover:text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
+                    onClick={() => setCurrentPath("codex")}
+                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
                   >
-                    Desenvolver Perfil de Personagem
+                    Codex da História (Lore)
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                       →
                     </span>
@@ -212,3 +173,5 @@ export function App() {
 }
 
 export default App;
+
+

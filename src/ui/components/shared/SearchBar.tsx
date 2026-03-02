@@ -17,3 +17,5 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     </div>
   );
 }
+
+

@@ -47,3 +47,5 @@ describe("CharacterList", () => {
     expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
   });
 });
+
+

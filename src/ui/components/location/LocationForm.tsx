@@ -66,3 +66,5 @@ export function LocationForm({ location, onSave, onCancel }: LocationFormProps) 
     </form>
   );
 }
+
+

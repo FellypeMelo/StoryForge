@@ -68,3 +68,5 @@ describe("CharacterForm", () => {
     expect(screen.getByText(/Nome é obrigatório/i)).toBeInTheDocument();
   });
 });
+
+

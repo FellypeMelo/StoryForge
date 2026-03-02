@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { WorldRuleList } from "../world-rule/WorldRuleList";
 import { WorldRule } from "../../../domain/world-rule";
-import { WorldRuleId } from "../../../domain/value-objects/bible-ids";
+import { WorldRuleId } from "../../../domain/value-objects/codex-ids";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 
 const pId = ProjectId.generate();
@@ -35,3 +35,5 @@ describe("WorldRuleList", () => {
     expect(screen.getByText(/Nenhuma regra encontrada/i)).toBeInTheDocument();
   });
 });
+
+

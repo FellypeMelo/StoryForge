@@ -102,3 +102,5 @@ export function OceanRadarChart({ scores, size = 300 }: OceanRadarChartProps) {
     </div>
   );
 }
+
+

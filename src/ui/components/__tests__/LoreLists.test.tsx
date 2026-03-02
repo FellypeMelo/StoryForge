@@ -6,9 +6,9 @@ import { Relationship } from "../../../domain/relationship";
 import { BlacklistEntry } from "../../../domain/blacklist-entry";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 import { CharacterId } from "../../../domain/value-objects/character-id";
-import { TimelineEventId } from "../../../domain/value-objects/bible-ids";
-import { RelationshipId } from "../../../domain/value-objects/bible-ids";
-import { BlacklistEntryId } from "../../../domain/value-objects/bible-ids";
+import { TimelineEventId } from "../../../domain/value-objects/codex-ids";
+import { RelationshipId } from "../../../domain/value-objects/codex-ids";
+import { BlacklistEntryId } from "../../../domain/value-objects/codex-ids";
 
 describe("LoreLists", () => {
   const projectId = ProjectId.create("550e8400-e29b-41d4-a716-446655440000");
@@ -67,3 +67,5 @@ describe("LoreLists", () => {
     });
   });
 });
+
+

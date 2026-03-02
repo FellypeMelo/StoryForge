@@ -1,7 +1,6 @@
 import { ReactNode, useState, useEffect } from "react";
 import {
   BookOpen,
-  Users,
   Layout,
   Settings,
   ShieldCheck,
@@ -128,11 +127,11 @@ export function AppShell({
             onClick={() => onNavigate?.("manuscript")}
           />
           <NavItem
-            icon={Users}
-            label="Personagens"
-            active={currentPath === "personas"}
+            icon={BookOpen}
+            label="Codex da História"
+            active={currentPath === "codex"}
             collapsed={collapsed}
-            onClick={() => onNavigate?.("personas")}
+            onClick={() => onNavigate?.("codex")}
           />
           <NavItem
             icon={Layout}
@@ -171,3 +170,5 @@ export function AppShell({
     </div>
   );
 };
+
+

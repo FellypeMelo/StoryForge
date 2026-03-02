@@ -72,3 +72,5 @@ export function WorldRuleForm({ rule, onSave, onCancel }: WorldRuleFormProps) {
     </form>
   );
 }
+
+

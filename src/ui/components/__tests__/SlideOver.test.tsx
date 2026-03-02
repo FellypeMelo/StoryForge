@@ -65,3 +65,5 @@ test("SlideOver renders full width on mobile screens", () => {
   const panel = screen.getByTestId("slideover-panel");
   expect(panel).toHaveClass("w-full");
 });
+
+

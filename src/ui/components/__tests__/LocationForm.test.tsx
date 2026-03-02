@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { LocationForm } from "../location/LocationForm";
 import { Location } from "../../../domain/location";
-import { LocationId } from "../../../domain/value-objects/bible-ids";
+import { LocationId } from "../../../domain/value-objects/codex-ids";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 
 const locId = LocationId.generate();
@@ -35,3 +35,5 @@ describe("LocationForm", () => {
     expect(saved.name).toBe("New City");
   });
 });
+
+
