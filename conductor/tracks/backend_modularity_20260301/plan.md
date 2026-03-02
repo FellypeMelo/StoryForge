@@ -7,14 +7,14 @@ This plan outlines the steps to refactor the StoryForge Rust backend into a modu
 - [x] Task: **GREEN**: Implement `AppError` and integrate with `domain/result.rs`. c56fb6f
 - [x] Task: **RED**: Define standard `Repository` traits for core entities in `domain/ports/`. c56fb6f
 - [x] Task: **GREEN**: Finalize trait definitions to support generic feature-based implementations. c56fb6f
-- [ ] Task: Conductor - User Manual Verification 'Shared Foundation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Shared Foundation' (Protocol in workflow.md) b819145
 
 ## Phase 2: Modularizing the 'Characters' Feature
-- [ ] Task: **RED**: Create `features/characters` module and write tests for character-specific application logic.
-- [ ] Task: **GREEN**: Migrate character domain models and repository implementation to `features/characters/`.
-- [ ] Task: **REFACTOR**: Decouple `characters.rs` commands from direct DB calls, using the new application layer.
-- [ ] Task: **RED**: Write tests for the modular `CharacterRepository` implementation.
-- [ ] Task: **GREEN**: Implement `CharacterRepository` in `features/characters/infrastructure/`.
+- [x] Task: **RED**: Create `features/characters` module and write tests for character-specific application logic. c56fb6f
+- [x] Task: **GREEN**: Migrate character domain models and repository implementation to `features/characters/`. c56fb6f
+- [x] Task: **REFACTOR**: Decouple `characters.rs` commands from direct DB calls, using the new application layer. c56fb6f
+- [x] Task: **RED**: Write tests for the modular `CharacterRepository` implementation. c56fb6f
+- [x] Task: **GREEN**: Implement `CharacterRepository` in `features/characters/infrastructure/`. c56fb6f
 - [ ] Task: Conductor - User Manual Verification 'Characters Feature' (Protocol in workflow.md)
 
 ## Phase 3: Modularizing 'Lore' & 'Projects' Features

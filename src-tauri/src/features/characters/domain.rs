@@ -72,6 +72,18 @@ impl Character {
     }
 }
 
+pub trait CharacterRepository {
+    fn create_character(&self, character: &Character) -> AppResult<()>;
+    fn get_character_by_id(&self, id: &CharacterId) -> AppResult<Character>;
+    fn list_characters_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Character>>;
+    fn list_characters_by_book(&self, book_id: &BookId) -> AppResult<Vec<Character>>;
+    fn list_global_characters(&self, project_id: &ProjectId) -> AppResult<Vec<Character>>;
+    fn move_character_to_book(&self, id: &CharacterId, book_id: &BookId) -> AppResult<()>;
+    fn move_character_to_project(&self, id: &CharacterId) -> AppResult<()>;
+    fn update_character(&self, character: &Character) -> AppResult<()>;
+    fn delete_character(&self, id: &CharacterId) -> AppResult<()>;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

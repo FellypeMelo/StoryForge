@@ -1,8 +1,9 @@
 use crate::domain::ports::{
-    BlacklistRepository, BookRepository, CharacterRepository, DatabasePort, EmbeddingPort,
+    BlacklistRepository, BookRepository, DatabasePort, EmbeddingPort,
     EntityType, LocationRepository, ProjectRepository, RelationshipRepository, SearchPort,
     SearchResult, TimelineRepository, VectorSearchPort, WorldRuleRepository,
 };
+use crate::features::characters::domain::CharacterRepository;
 use rusqlite::{params, Connection, Result, Row};
 use std::path::Path;
 use std::sync::{Mutex, Once};
@@ -27,7 +28,7 @@ static SQLITE_VEC_INIT: Once = Once::new();
 
 use crate::domain::blacklist_entry::BlacklistEntry;
 use crate::domain::book::Book;
-use crate::domain::character::{Character, OceanScores};
+use crate::features::characters::domain::{Character, OceanScores};
 use crate::domain::error::AppError;
 use crate::domain::result::AppResult;
 use crate::domain::location::Location;
@@ -659,324 +660,6 @@ impl BookRepository for SqliteDatabase {
         if rows_affected == 0 {
             return Err(AppError::NotFound(format!(
                 "Book with id {} not found",
-                id.0
-            )));
-        }
-        Ok(())
-    }
-}
-
-impl CharacterRepository for SqliteDatabase {
-    fn create_character(&self, character: &Character) -> AppResult<()> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        conn.execute(
-            "INSERT INTO characters (
-                id, project_id, book_id, name, age, occupation, physical_description, 
-                goal, motivation, internal_conflict, voice, mannerisms,
-                ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            params![
-                character.id.0,
-                character.project_id.0,
-                character.book_id.as_ref().map(|id| id.0.clone()),
-                character.name,
-                character.age,
-                character.occupation,
-                character.physical_description,
-                character.goal,
-                character.motivation,
-                character.internal_conflict,
-                character.voice,
-                character.mannerisms,
-                character.ocean_scores.openness,
-                character.ocean_scores.conscientiousness,
-                character.ocean_scores.extraversion,
-                character.ocean_scores.agreeableness,
-                character.ocean_scores.neuroticism,
-            ],
-        )
-        .map_err(AppError::from)?;
-        Ok(())
-    }
-
-    fn get_character_by_id(&self, id: &CharacterId) -> AppResult<Character> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        let character = conn
-            .query_row(
-                "SELECT 
-                id, project_id, book_id, name, age, occupation, physical_description, 
-                goal, motivation, internal_conflict, voice, mannerisms,
-                ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
-            FROM characters WHERE id = ?",
-                [id.0.clone()],
-                |row: &Row| {
-                    Ok(Character {
-                        id: CharacterId(row.get(0)?),
-                        project_id: ProjectId(row.get(1)?),
-                        book_id: row.get::<_, Option<String>>(2)?.map(BookId),
-                        name: row.get(3)?,
-                        age: row.get(4)?,
-                        occupation: row.get(5)?,
-                        physical_description: row.get(6)?,
-                        goal: row.get(7)?,
-                        motivation: row.get(8)?,
-                        internal_conflict: row.get(9)?,
-                        voice: row.get(10)?,
-                        mannerisms: row.get(11)?,
-                        ocean_scores: OceanScores {
-                            openness: row.get(12)?,
-                            conscientiousness: row.get(13)?,
-                            extraversion: row.get(14)?,
-                            agreeableness: row.get(15)?,
-                            neuroticism: row.get(16)?,
-                        },
-                    })
-                },
-            )
-            .map_err(|e| match e {
-                rusqlite::Error::QueryReturnedNoRows => {
-                    AppError::NotFound(format!("Character with id {} not found", id.0))
-                }
-                _ => AppError::from(e),
-            })?;
-        Ok(character)
-    }
-
-    fn list_characters_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Character>> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        let mut stmt = conn
-            .prepare(
-                "SELECT 
-                id, project_id, book_id, name, age, occupation, physical_description, 
-                goal, motivation, internal_conflict, voice, mannerisms,
-                ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
-            FROM characters WHERE project_id = ?",
-            )
-            .map_err(AppError::from)?;
-
-        let character_iter = stmt
-            .query_map([project_id.0.clone()], |row: &Row| {
-                Ok(Character {
-                    id: CharacterId(row.get(0)?),
-                    project_id: ProjectId(row.get(1)?),
-                    book_id: row.get::<_, Option<String>>(2)?.map(BookId),
-                    name: row.get(3)?,
-                    age: row.get(4)?,
-                    occupation: row.get(5)?,
-                    physical_description: row.get(6)?,
-                    goal: row.get(7)?,
-                    motivation: row.get(8)?,
-                    internal_conflict: row.get(9)?,
-                    voice: row.get(10)?,
-                    mannerisms: row.get(11)?,
-                    ocean_scores: OceanScores {
-                        openness: row.get(12)?,
-                        conscientiousness: row.get(13)?,
-                        extraversion: row.get(14)?,
-                        agreeableness: row.get(15)?,
-                        neuroticism: row.get(16)?,
-                    },
-                })
-            })
-            .map_err(AppError::from)?;
-
-        let mut characters = Vec::new();
-        for char in character_iter {
-            characters.push(char?);
-        }
-        Ok(characters)
-    }
-
-    fn list_characters_by_book(&self, book_id: &BookId) -> AppResult<Vec<Character>> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        let mut stmt = conn
-            .prepare(
-                "SELECT 
-                id, project_id, book_id, name, age, occupation, physical_description, 
-                goal, motivation, internal_conflict, voice, mannerisms,
-                ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
-            FROM characters WHERE book_id = ?",
-            )
-            .map_err(AppError::from)?;
-
-        let character_iter = stmt
-            .query_map([book_id.0.clone()], |row: &Row| {
-                Ok(Character {
-                    id: CharacterId(row.get(0)?),
-                    project_id: ProjectId(row.get(1)?),
-                    book_id: row.get::<_, Option<String>>(2)?.map(BookId),
-                    name: row.get(3)?,
-                    age: row.get(4)?,
-                    occupation: row.get(5)?,
-                    physical_description: row.get(6)?,
-                    goal: row.get(7)?,
-                    motivation: row.get(8)?,
-                    internal_conflict: row.get(9)?,
-                    voice: row.get(10)?,
-                    mannerisms: row.get(11)?,
-                    ocean_scores: OceanScores {
-                        openness: row.get(12)?,
-                        conscientiousness: row.get(13)?,
-                        extraversion: row.get(14)?,
-                        agreeableness: row.get(15)?,
-                        neuroticism: row.get(16)?,
-                    },
-                })
-            })
-            .map_err(AppError::from)?;
-
-        let mut characters = Vec::new();
-        for char in character_iter {
-            characters.push(char?);
-        }
-        Ok(characters)
-    }
-
-    fn list_global_characters(&self, project_id: &ProjectId) -> AppResult<Vec<Character>> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        let mut stmt = conn
-            .prepare(
-                "SELECT 
-                id, project_id, book_id, name, age, occupation, physical_description, 
-                goal, motivation, internal_conflict, voice, mannerisms,
-                ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
-            FROM characters WHERE project_id = ? AND book_id IS NULL",
-            )
-            .map_err(AppError::from)?;
-
-        let character_iter = stmt
-            .query_map([project_id.0.clone()], |row: &Row| {
-                Ok(Character {
-                    id: CharacterId(row.get(0)?),
-                    project_id: ProjectId(row.get(1)?),
-                    book_id: row.get::<_, Option<String>>(2)?.map(BookId),
-                    name: row.get(3)?,
-                    age: row.get(4)?,
-                    occupation: row.get(5)?,
-                    physical_description: row.get(6)?,
-                    goal: row.get(7)?,
-                    motivation: row.get(8)?,
-                    internal_conflict: row.get(9)?,
-                    voice: row.get(10)?,
-                    mannerisms: row.get(11)?,
-                    ocean_scores: OceanScores {
-                        openness: row.get(12)?,
-                        conscientiousness: row.get(13)?,
-                        extraversion: row.get(14)?,
-                        agreeableness: row.get(15)?,
-                        neuroticism: row.get(16)?,
-                    },
-                })
-            })
-            .map_err(AppError::from)?;
-
-        let mut characters = Vec::new();
-        for char in character_iter {
-            characters.push(char?);
-        }
-        Ok(characters)
-    }
-
-    fn move_character_to_book(&self, id: &CharacterId, book_id: &BookId) -> AppResult<()> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        conn.execute(
-            "UPDATE characters SET book_id = ? WHERE id = ?",
-            params![book_id.0, id.0],
-        )
-        .map_err(AppError::from)?;
-        Ok(())
-    }
-
-    fn move_character_to_project(&self, id: &CharacterId) -> AppResult<()> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        conn.execute(
-            "UPDATE characters SET book_id = NULL WHERE id = ?",
-            params![id.0],
-        )
-        .map_err(AppError::from)?;
-        Ok(())
-    }
-
-    fn update_character(&self, character: &Character) -> AppResult<()> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        let rows_affected = conn
-            .execute(
-                "UPDATE characters SET 
-                name = ?, age = ?, occupation = ?, physical_description = ?, 
-                goal = ?, motivation = ?, internal_conflict = ?, voice = ?, mannerisms = ?,
-                ocean_openness = ?, ocean_conscientiousness = ?, ocean_extraversion = ?,
-                ocean_agreeableness = ?, ocean_neuroticism = ?
-            WHERE id = ?",
-                params![
-                    character.name,
-                    character.age,
-                    character.occupation,
-                    character.physical_description,
-                    character.goal,
-                    character.motivation,
-                    character.internal_conflict,
-                    character.voice,
-                    character.mannerisms,
-                    character.ocean_scores.openness,
-                    character.ocean_scores.conscientiousness,
-                    character.ocean_scores.extraversion,
-                    character.ocean_scores.agreeableness,
-                    character.ocean_scores.neuroticism,
-                    character.id.0,
-                ],
-            )
-            .map_err(AppError::from)?;
-
-        if rows_affected == 0 {
-            return Err(AppError::NotFound(format!(
-                "Character with id {} not found",
-                character.id.0
-            )));
-        }
-        Ok(())
-    }
-
-    fn delete_character(&self, id: &CharacterId) -> AppResult<()> {
-        let conn = self
-            .connection
-            .lock()
-            .map_err(|e| AppError::Internal(e.to_string()))?;
-        let rows_affected = conn
-            .execute("DELETE FROM characters WHERE id = ?", [id.0.clone()])
-            .map_err(AppError::from)?;
-
-        if rows_affected == 0 {
-            return Err(AppError::NotFound(format!(
-                "Character with id {} not found",
                 id.0
             )));
         }
@@ -2221,7 +1904,7 @@ mod tests {
         character.age = 30;
         character.occupation = "Writer".to_string();
 
-        let repo: &dyn crate::domain::ports::CharacterRepository = &db;
+        let repo: &dyn CharacterRepository = &db;
 
         // Create
         repo.create_character(&character)
@@ -2722,7 +2405,7 @@ mod tests {
             .unwrap();
         }
 
-        let repo_char: &dyn crate::domain::ports::CharacterRepository = &db;
+        let repo_char: &dyn CharacterRepository = &db;
         let repo_loc: &dyn crate::domain::ports::LocationRepository = &db;
         let repo_wr: &dyn crate::domain::ports::WorldRuleRepository = &db;
         let repo_te: &dyn crate::domain::ports::TimelineRepository = &db;

@@ -1,6 +1,6 @@
-use crate::domain::character::{BookId, Character, CharacterId, ProjectId};
+use crate::features::characters::domain::{BookId, Character, CharacterId, ProjectId};
+use crate::features::characters::application::CharacterService;
 use crate::domain::result::AppResult;
-use crate::domain::ports::CharacterRepository;
 use crate::infrastructure::sqlite::SqliteDatabase;
 use tauri::State;
 
@@ -11,14 +11,14 @@ pub async fn create_character(
     book_id: Option<String>,
     name: String,
 ) -> AppResult<Character> {
-    let character = Character::new(ProjectId(project_id), book_id.map(BookId), name)?;
-    state.create_character(&character)?;
-    Ok(character)
+    let service = CharacterService::new(state.inner());
+    service.create_character(ProjectId(project_id), book_id.map(BookId), name)
 }
 
 #[tauri::command]
 pub async fn get_character(state: State<'_, SqliteDatabase>, id: String) -> AppResult<Character> {
-    state.get_character_by_id(&CharacterId(id))
+    let service = CharacterService::new(state.inner());
+    service.get_character(CharacterId(id))
 }
 
 #[tauri::command]
@@ -26,7 +26,8 @@ pub async fn list_characters(
     state: State<'_, SqliteDatabase>,
     project_id: String,
 ) -> AppResult<Vec<Character>> {
-    state.list_characters_by_project(&ProjectId(project_id))
+    let service = CharacterService::new(state.inner());
+    service.list_characters_by_project(ProjectId(project_id))
 }
 
 #[tauri::command]
@@ -34,7 +35,8 @@ pub async fn list_characters_by_book(
     state: State<'_, SqliteDatabase>,
     book_id: String,
 ) -> AppResult<Vec<Character>> {
-    state.list_characters_by_book(&BookId(book_id))
+    let service = CharacterService::new(state.inner());
+    service.list_characters_by_book(BookId(book_id))
 }
 
 #[tauri::command]
@@ -42,7 +44,8 @@ pub async fn list_global_characters(
     state: State<'_, SqliteDatabase>,
     project_id: String,
 ) -> AppResult<Vec<Character>> {
-    state.list_global_characters(&ProjectId(project_id))
+    let service = CharacterService::new(state.inner());
+    service.list_global_characters(ProjectId(project_id))
 }
 
 #[tauri::command]
@@ -51,7 +54,8 @@ pub async fn move_character_to_book(
     id: String,
     book_id: String,
 ) -> AppResult<()> {
-    state.move_character_to_book(&CharacterId(id), &BookId(book_id))
+    let service = CharacterService::new(state.inner());
+    service.move_character_to_book(CharacterId(id), BookId(book_id))
 }
 
 #[tauri::command]
@@ -59,7 +63,8 @@ pub async fn move_character_to_project(
     state: State<'_, SqliteDatabase>,
     id: String,
 ) -> AppResult<()> {
-    state.move_character_to_project(&CharacterId(id))
+    let service = CharacterService::new(state.inner());
+    service.move_character_to_project(CharacterId(id))
 }
 
 #[tauri::command]
@@ -67,25 +72,12 @@ pub async fn update_character(
     state: State<'_, SqliteDatabase>,
     character: Character,
 ) -> AppResult<()> {
-    state.update_character(&character)
+    let service = CharacterService::new(state.inner());
+    service.update_character(character)
 }
 
 #[tauri::command]
 pub async fn delete_character(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
-    state.delete_character(&CharacterId(id))
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_domain_logic_in_command_context() {
-        let project_id = "proj-123".to_string();
-        let name = "Protagonist".to_string();
-
-        let character = Character::new(ProjectId(project_id.clone()), None, name.clone()).unwrap();
-        assert_eq!(character.name, name);
-        assert_eq!(character.project_id.0, project_id);
-    }
+    let service = CharacterService::new(state.inner());
+    service.delete_character(CharacterId(id))
 }

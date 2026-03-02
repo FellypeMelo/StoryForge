@@ -1,6 +1,7 @@
 pub mod application;
 pub mod commands;
 pub mod domain;
+pub mod features;
 pub mod infrastructure;
 
 use crate::infrastructure::sqlite::SqliteDatabase;
@@ -29,16 +30,16 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::get_app_info,
             commands::health_check,
-            commands::character::create_character,
-            commands::character::get_character,
-            commands::character::list_characters,
-            commands::character::list_characters_by_book,
-            commands::character::list_global_characters,
-            commands::character::move_character_to_book,
-            commands::character::move_character_to_project,
-            commands::character::update_character,
-            commands::character::delete_character,
-            commands::lore::create_project,
+            features::characters::commands::create_character,
+            features::characters::commands::get_character,
+            features::characters::commands::list_characters,
+            features::characters::commands::list_characters_by_book,
+            features::characters::commands::list_global_characters,
+            features::characters::commands::move_character_to_book,
+            features::characters::commands::move_character_to_project,
+            features::characters::commands::update_character,
+            features::characters::commands::delete_character,
+            commands::book::create_book,
             commands::lore::list_projects,
             commands::lore::create_location,
             commands::lore::list_locations,

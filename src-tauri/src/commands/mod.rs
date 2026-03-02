@@ -1,5 +1,4 @@
 pub mod book;
-pub mod character;
 pub mod lore;
 
 use crate::domain::result::AppResult;

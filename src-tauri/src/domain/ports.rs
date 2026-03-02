@@ -1,6 +1,5 @@
 use crate::domain::blacklist_entry::BlacklistEntry;
 use crate::domain::book::Book;
-use crate::domain::character::Character;
 use crate::domain::result::AppResult;
 use crate::domain::location::Location;
 use crate::domain::project::Project;
@@ -11,6 +10,7 @@ use crate::domain::value_objects::{
     WorldRuleId,
 };
 use crate::domain::world_rule::WorldRule;
+use crate::features::characters::domain::Character;
 
 pub trait DatabasePort {
     fn is_healthy(&self) -> bool;
@@ -72,18 +72,6 @@ pub trait BookRepository {
     fn list_books_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Book>>;
     fn update_book(&self, book: &Book) -> AppResult<()>;
     fn delete_book(&self, id: &BookId) -> AppResult<()>;
-}
-
-pub trait CharacterRepository {
-    fn create_character(&self, character: &Character) -> AppResult<()>;
-    fn get_character_by_id(&self, id: &CharacterId) -> AppResult<Character>;
-    fn list_characters_by_project(&self, project_id: &ProjectId) -> AppResult<Vec<Character>>;
-    fn list_characters_by_book(&self, book_id: &BookId) -> AppResult<Vec<Character>>;
-    fn list_global_characters(&self, project_id: &ProjectId) -> AppResult<Vec<Character>>;
-    fn move_character_to_book(&self, id: &CharacterId, book_id: &BookId) -> AppResult<()>;
-    fn move_character_to_project(&self, id: &CharacterId) -> AppResult<()>;
-    fn update_character(&self, character: &Character) -> AppResult<()>;
-    fn delete_character(&self, id: &CharacterId) -> AppResult<()>;
 }
 
 pub trait LocationRepository {

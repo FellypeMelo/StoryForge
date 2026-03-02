@@ -1,6 +1,5 @@
 pub mod blacklist_entry;
 pub mod book;
-pub mod character;
 pub mod error;
 pub mod location;
 pub mod ports;
