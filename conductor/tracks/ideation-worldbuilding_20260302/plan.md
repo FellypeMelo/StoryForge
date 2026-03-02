@@ -5,7 +5,7 @@
 **Created:** 2026-03-02
 **Status:** [ ] Not Started
 
-## Phase 1: Domain & Ports
+## Phase 1: Domain & Ports [checkpoint: e97bb11]
 
 Create the core domain models and ports for Ideation.
 
