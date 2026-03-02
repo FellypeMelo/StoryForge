@@ -1,5 +1,5 @@
 import { WorldRule } from "../world-rule";
-import { WorldRuleId } from "../value-objects/bible-ids";
+import { WorldRuleId } from "../value-objects/codex-ids";
 import { ProjectId } from "../value-objects/project-id";
 import { Result, DomainError } from "../result";
 
@@ -9,3 +9,5 @@ export interface WorldRuleRepository {
   findByProject(projectId: ProjectId): Promise<Result<WorldRule[], DomainError>>;
   delete(id: WorldRuleId): Promise<Result<void, DomainError>>;
 }
+
+

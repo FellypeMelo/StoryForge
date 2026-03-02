@@ -7,20 +7,32 @@ describe("Project Entity", () => {
     const id = ProjectId.generate();
     const project = Project.create({
       id,
-      title: "My Epic Story",
-      genre: "Fantasy",
+      name: "My Epic Universe",
+      description: "A sprawling fantasy world",
       createdAt: new Date(),
     });
 
     expect(project.id.equals(id)).toBe(true);
-    expect(project.title).toBe("My Epic Story");
+    expect(project.name).toBe("My Epic Universe");
+    expect(project.description).toBe("A sprawling fantasy world");
   });
 
-  it("should fail validation for empty title", () => {
+  it("should create a Project with default description", () => {
+    const id = ProjectId.generate();
+    const project = Project.create({
+      id,
+      name: "Minimal Project",
+    });
+
+    expect(project.name).toBe("Minimal Project");
+    expect(project.description).toBe("");
+  });
+
+  it("should fail validation for empty name", () => {
     const data = {
       id: ProjectId.generate().value,
-      title: "",
-      genre: "Fantasy",
+      name: "",
+      description: "Some description",
       createdAt: new Date().toISOString(),
     };
     const result = ProjectSchema.safeParse(data);

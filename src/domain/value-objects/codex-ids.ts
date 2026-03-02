@@ -54,3 +54,5 @@ export class BlacklistEntryId extends Id {
   }
   public static generate(): BlacklistEntryId { return new BlacklistEntryId(crypto.randomUUID()); }
 }
+
+

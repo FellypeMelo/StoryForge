@@ -23,3 +23,5 @@ impl From<rusqlite::Error> for AppError {
         AppError::Database(err.to_string())
     }
 }
+
+

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { TimelineEvent, TimelineEventSchema } from "./timeline-event";
-import { TimelineEventId } from "./value-objects/bible-ids";
+import { TimelineEventId } from "./value-objects/codex-ids";
 import { ProjectId } from "./value-objects/project-id";
 
 describe("TimelineEvent Entity", () => {
@@ -29,3 +29,5 @@ describe("TimelineEvent Entity", () => {
     expect(result.success).toBe(false);
   });
 });
+
+

@@ -28,3 +28,5 @@ describe("CharacterId", () => {
     expect(id1.equals(id3)).toBe(false);
   });
 });
+
+

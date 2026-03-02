@@ -1,5 +1,5 @@
 import { Location } from "../location";
-import { LocationId } from "../value-objects/bible-ids";
+import { LocationId } from "../value-objects/codex-ids";
 import { ProjectId } from "../value-objects/project-id";
 import { Result, DomainError } from "../result";
 
@@ -9,3 +9,5 @@ export interface LocationRepository {
   findByProject(projectId: ProjectId): Promise<Result<Location[], DomainError>>;
   delete(id: LocationId): Promise<Result<void, DomainError>>;
 }
+
+

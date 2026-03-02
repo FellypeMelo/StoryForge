@@ -19,3 +19,5 @@ export class CharacterId extends Id {
     return new CharacterId(crypto.randomUUID());
   }
 }
+
+

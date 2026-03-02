@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
 use crate::domain::error::{AppError, AppResult};
-pub use crate::domain::value_objects::{CharacterId, ProjectId};
+pub use crate::domain::value_objects::{BookId, CharacterId, ProjectId};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OceanScores {
@@ -27,6 +27,7 @@ impl Default for OceanScores {
 pub struct Character {
     pub id: CharacterId,
     pub project_id: ProjectId,
+    pub book_id: Option<BookId>,
     pub name: String,
     pub age: u32,
     pub occupation: String,
@@ -40,10 +41,7 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn new(
-        project_id: ProjectId,
-        name: String,
-    ) -> AppResult<Self> {
+    pub fn new(project_id: ProjectId, book_id: Option<BookId>, name: String) -> AppResult<Self> {
         if name.trim().is_empty() {
             return Err(AppError::Validation("Name cannot be empty".to_string()));
         }
@@ -51,6 +49,7 @@ impl Character {
         Ok(Self {
             id: CharacterId::new(),
             project_id,
+            book_id,
             name,
             age: 0,
             occupation: String::new(),
@@ -79,8 +78,8 @@ mod tests {
     #[test]
     fn test_character_creation_fails_with_empty_name() {
         let project_id = ProjectId("test-project".to_string());
-        let result = Character::new(project_id, "".to_string());
-        
+        let result = Character::new(project_id, None, "".to_string());
+
         assert!(result.is_err());
         if let Err(AppError::Validation(msg)) = result {
             assert_eq!(msg, "Name cannot be empty");
@@ -92,11 +91,27 @@ mod tests {
     #[test]
     fn test_character_creation_succeeds_with_valid_data() {
         let project_id = ProjectId("test-project".to_string());
-        let result = Character::new(project_id, "Protagonist".to_string());
-        
+        let result = Character::new(project_id, None, "Protagonist".to_string());
+
         assert!(result.is_ok());
         let character = result.unwrap();
         assert_eq!(character.name, "Protagonist");
+        assert!(character.book_id.is_none());
         assert!(!character.id.0.is_empty());
+    }
+
+    #[test]
+    fn test_character_creation_with_book_id() {
+        let project_id = ProjectId("test-project".to_string());
+        let book_id = BookId("test-book".to_string());
+        let result = Character::new(
+            project_id,
+            Some(book_id.clone()),
+            "Book Character".to_string(),
+        );
+
+        assert!(result.is_ok());
+        let character = result.unwrap();
+        assert_eq!(character.book_id, Some(book_id));
     }
 }

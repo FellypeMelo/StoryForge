@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Relationship, RelationshipSchema } from "./relationship";
-import { RelationshipId } from "./value-objects/bible-ids";
+import { RelationshipId } from "./value-objects/codex-ids";
 import { CharacterId as CharId } from "./value-objects/character-id";
 import { ProjectId } from "./value-objects/project-id";
 
@@ -35,3 +35,5 @@ describe("Relationship Entity", () => {
     expect(result.success).toBe(false);
   });
 });
+
+

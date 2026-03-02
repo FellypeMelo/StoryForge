@@ -1,11 +1,13 @@
 import { z } from "zod";
-import { LocationId, LocationIdSchema } from "./value-objects/bible-ids";
+import { LocationId, LocationIdSchema } from "./value-objects/codex-ids";
 import { ProjectId, ProjectIdSchema } from "./value-objects/project-id";
+import { BookId, BookIdSchema } from "./value-objects/book-id";
 
 export const LocationSchema = z.object({
   id: LocationIdSchema,
   projectId: ProjectIdSchema,
-  name: z.string().min(1, "Name cannot be empty"),
+  bookId: BookIdSchema.optional(),
+  name: z.string().min(1, "O nome da localização é obrigatório"),
   description: z.string().default(""),
   symbolicMeaning: z.string().default(""),
 });
@@ -13,6 +15,7 @@ export const LocationSchema = z.object({
 export interface LocationProps {
   id: LocationId;
   projectId: ProjectId;
+  bookId?: BookId;
   name: string;
   description: string;
   symbolicMeaning: string;
@@ -24,6 +27,7 @@ export class Location {
   public static create(props: {
     id: LocationId;
     projectId: ProjectId;
+    bookId?: BookId;
     name: string;
     description?: string;
     symbolicMeaning?: string;
@@ -31,6 +35,7 @@ export class Location {
     const validated = LocationSchema.parse({
       id: props.id.value,
       projectId: props.projectId.value,
+      bookId: props.bookId?.value,
       name: props.name,
       description: props.description,
       symbolicMeaning: props.symbolicMeaning,
@@ -40,16 +45,16 @@ export class Location {
       ...validated,
       id: LocationId.create(validated.id),
       projectId: ProjectId.create(validated.projectId),
+      bookId: validated.bookId ? BookId.create(validated.bookId) : undefined,
     });
   }
 
-  public static generate(projectId: ProjectId, name: string): Location {
-    return new Location({
+  public static generate(projectId: ProjectId, name: string, bookId?: BookId): Location {
+    return Location.create({
       id: LocationId.generate(),
       projectId,
+      bookId,
       name,
-      description: "",
-      symbolicMeaning: "",
     });
   }
 
@@ -63,6 +68,10 @@ export class Location {
 
   public get projectId(): ProjectId {
     return this.props.projectId;
+  }
+
+  public get bookId(): BookId | undefined {
+    return this.props.bookId;
   }
 
   public get name(): string {

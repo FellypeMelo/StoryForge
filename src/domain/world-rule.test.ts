@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { WorldRule, WorldRuleSchema } from "./world-rule";
-import { WorldRuleId } from "./value-objects/bible-ids";
+import { WorldRuleId } from "./value-objects/codex-ids";
 import { ProjectId } from "./value-objects/project-id";
 
 describe("WorldRule Entity", () => {
@@ -30,3 +30,5 @@ describe("WorldRule Entity", () => {
     expect(result.success).toBe(false);
   });
 });
+
+

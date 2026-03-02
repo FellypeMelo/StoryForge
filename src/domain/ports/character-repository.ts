@@ -9,3 +9,5 @@ export interface CharacterRepository {
   findByProject(projectId: ProjectId): Promise<Result<Character[], DomainError>>;
   delete(id: CharacterId): Promise<Result<void, DomainError>>;
 }
+
+

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { LocationId, WorldRuleId } from "./bible-ids";
+import { LocationId, WorldRuleId } from "./codex-ids";
 
-describe("Bible IDs", () => {
+describe("Codex IDs", () => {
   it("LocationId should validate UUID", () => {
     const validUuid = crypto.randomUUID();
     const id = LocationId.create(validUuid);
@@ -16,3 +16,5 @@ describe("Bible IDs", () => {
     expect(id1.equals(id2)).toBe(false);
   });
 });
+
+

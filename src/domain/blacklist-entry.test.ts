@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { BlacklistEntry, BlacklistEntrySchema } from "./blacklist-entry";
-import { BlacklistEntryId } from "./value-objects/bible-ids";
+import { BlacklistEntryId } from "./value-objects/codex-ids";
 import { ProjectId } from "./value-objects/project-id";
 
 describe("BlacklistEntry Entity", () => {
@@ -32,3 +32,5 @@ describe("BlacklistEntry Entity", () => {
     expect(result.success).toBe(false);
   });
 });
+
+

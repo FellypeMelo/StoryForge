@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Location, LocationSchema } from "./location";
-import { LocationId } from "./value-objects/bible-ids";
+import { LocationId } from "./value-objects/codex-ids";
 import { ProjectId } from "./value-objects/project-id";
 
 describe("Location Entity", () => {
@@ -29,3 +29,5 @@ describe("Location Entity", () => {
     expect(result.success).toBe(false);
   });
 });
+
+

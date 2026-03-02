@@ -1,5 +1,5 @@
 import { TimelineEvent } from "../timeline-event";
-import { TimelineEventId } from "../value-objects/bible-ids";
+import { TimelineEventId } from "../value-objects/codex-ids";
 import { ProjectId } from "../value-objects/project-id";
 import { Result, DomainError } from "../result";
 
@@ -9,3 +9,5 @@ export interface TimelineRepository {
   findByProject(projectId: ProjectId): Promise<Result<TimelineEvent[], DomainError>>;
   delete(id: TimelineEventId): Promise<Result<void, DomainError>>;
 }
+
+

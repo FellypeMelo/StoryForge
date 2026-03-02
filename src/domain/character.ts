@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { CharacterId, CharacterIdSchema } from "./value-objects/character-id";
 import { ProjectId, ProjectIdSchema } from "./value-objects/project-id";
+import { BookId, BookIdSchema } from "./value-objects/book-id";
 
 export const OceanScoresSchema = z.object({
   openness: z.number().min(0).max(100).default(50),
@@ -15,6 +16,7 @@ export type OceanScores = z.infer<typeof OceanScoresSchema>;
 export const CharacterSchema = z.object({
   id: CharacterIdSchema,
   projectId: ProjectIdSchema,
+  bookId: BookIdSchema.optional(),
   name: z.string().default(""),
   age: z.number().int().min(0).default(0),
   occupation: z.string().default(""),
@@ -36,6 +38,7 @@ export const CharacterSchema = z.object({
 export interface CharacterProps {
   id: CharacterId;
   projectId: ProjectId;
+  bookId?: BookId;
   name: string;
   age: number;
   occupation: string;
@@ -51,10 +54,11 @@ export interface CharacterProps {
 export class Character {
   private constructor(private readonly props: CharacterProps) {}
 
-  public static generate(projectId: ProjectId, name: string): Character {
+  public static generate(projectId: ProjectId, name: string, bookId?: BookId): Character {
     return Character.create({
       id: CharacterId.generate(),
       projectId,
+      bookId,
       name,
     });
   }
@@ -62,6 +66,7 @@ export class Character {
   public static create(props: {
     id: CharacterId;
     projectId: ProjectId;
+    bookId?: BookId;
     name: string;
     age?: number;
     occupation?: string;
@@ -76,6 +81,7 @@ export class Character {
     const validated = CharacterSchema.parse({
       id: props.id.value,
       projectId: props.projectId.value,
+      bookId: props.bookId?.value,
       name: props.name,
       age: props.age,
       occupation: props.occupation,
@@ -92,6 +98,7 @@ export class Character {
       ...validated,
       id: CharacterId.create(validated.id),
       projectId: ProjectId.create(validated.projectId),
+      bookId: validated.bookId ? BookId.create(validated.bookId) : undefined,
     });
   }
 
@@ -105,6 +112,10 @@ export class Character {
 
   public get projectId(): ProjectId {
     return this.props.projectId;
+  }
+
+  public get bookId(): BookId | undefined {
+    return this.props.bookId;
   }
 
   public get name(): string {
@@ -127,3 +138,5 @@ export class Character {
     return `${this.name}, ${this.age} anos. ${this.props.occupation}. Objetivos: ${this.props.goal}. Conflito: ${this.props.internal_conflict}.`;
   }
 }
+
+
