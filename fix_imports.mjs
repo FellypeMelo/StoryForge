@@ -22,7 +22,7 @@ const files = walk(srcDir);
 
 const componentMoves = {
     'AppShell': 'layout',
-    'BibleDashboard': 'dashboard',
+    'CodexDashboard': 'dashboard',
     'CharacterForm': 'character',
     'CharacterList': 'character',
     'CharacterWizard': 'character',
