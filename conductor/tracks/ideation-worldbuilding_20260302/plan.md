@@ -18,7 +18,7 @@ Create the core domain models and ports for Ideation.
 ### Verification
 - [ ] Domain tests passing and no infrastructure dependencies in domain layer.
 
-## Phase 2: CHI Pipeline Use Cases
+## Phase 2: CHI Pipeline Use Cases [checkpoint: 32d8061]
 
 Implement the CHI method use cases.
 
