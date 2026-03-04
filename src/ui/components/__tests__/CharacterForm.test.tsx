@@ -31,29 +31,36 @@ const mockCharacter = Character.create({
 });
 
 describe("CharacterForm", () => {
-  it("should render all form fields with initial data", () => {
+  it("should render all form fields with initial data including Hauge and Voice", () => {
     render(<CharacterForm character={mockCharacter} onSave={() => {}} onCancel={() => {}} />);
 
     expect(screen.getByDisplayValue("Original Name")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Writer")).toBeInTheDocument();
     expect(screen.getByDisplayValue("30")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Tall and thin")).toBeInTheDocument();
+    
+    // Hauge fields
+    expect(screen.getByLabelText(/A Ferida/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Crença Limitante/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/O Medo/i)).toBeInTheDocument();
+    
+    // Voice fields
+    expect(screen.getByLabelText(/Ritmo /i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Nível de Formalidade/i)).toBeInTheDocument();
   });
 
-  it("should call onSave with updated data when form is submitted", async () => {
+  it("should call onSave with updated Hauge Arc and Physical Tells", async () => {
     const onSave = vi.fn();
     render(<CharacterForm character={mockCharacter} onSave={onSave} onCancel={() => {}} />);
 
-    const nameInput = screen.getByLabelText(/Nome/i);
-    fireEvent.change(nameInput, { target: { value: "Updated Name" } });
+    const woundInput = screen.getByLabelText(/A Ferida/i);
+    fireEvent.change(woundInput, { target: { value: "Childhood Trauma" } });
 
     const saveButton = screen.getByText(/Salvar Alterações/i);
     fireEvent.click(saveButton);
 
     expect(onSave).toHaveBeenCalled();
     const savedCharacter = onSave.mock.calls[0][0] as Character;
-    expect(savedCharacter.name).toBe("Updated Name");
-    expect(savedCharacter.id.equals(charId)).toBe(true);
+    expect(savedCharacter.toProps().hauge_wound).toBe("Childhood Trauma");
   });
 
   it("should show validation error for empty name", () => {

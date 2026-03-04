@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Character, CharacterProps, OceanScores } from "../../../domain/character";
-import { Save, X, User, Brain, ScrollText } from "lucide-react";
+import { Save, X, User, Brain, ScrollText, Target, ShieldAlert, Zap, Mic, Fingerprint, Plus, Trash2 } from "lucide-react";
 
 interface CharacterFormProps {
   character: Character;
@@ -26,6 +26,31 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
     }
   };
 
+  const handleListChange = (field: "physical_tells" | "voice_verbal_tics", index: number, value: string) => {
+    setFormData((prev) => {
+      const currentList = JSON.parse(prev[field] || "[]") as string[];
+      const newList = [...currentList];
+      newList[index] = value;
+      return { ...prev, [field]: JSON.stringify(newList) };
+    });
+  };
+
+  const addListItem = (field: "physical_tells" | "voice_verbal_tics") => {
+    setFormData((prev) => {
+      const currentList = JSON.parse(prev[field] || "[]") as string[];
+      return { ...prev, [field]: JSON.stringify([...currentList, ""]) };
+    });
+  };
+
+  const removeListItem = (field: "physical_tells" | "voice_verbal_tics", index: number) => {
+    setFormData((prev) => {
+      const currentList = JSON.parse(prev[field] || "[]") as string[];
+      if (field === "physical_tells" && currentList.length <= 3) return prev; // min 3 requirement
+      const newList = currentList.filter((_, i) => i !== index);
+      return { ...prev, [field]: JSON.stringify(newList) };
+    });
+  };
+
   const handleOceanChange = (trait: keyof OceanScores, value: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -42,13 +67,21 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
       setErrors({ name: "Nome é obrigatório" });
       return;
     }
-    onSave(
-      Character.create({
-        ...formData,
-        id: formData.id,
-        projectId: formData.projectId,
-      }),
-    );
+
+    try {
+      onSave(
+        Character.create({
+          ...formData,
+          id: formData.id,
+          projectId: formData.projectId,
+        }),
+      );
+    } catch (error) {
+      console.error("Validation error:", error);
+      if (error instanceof Error) {
+        alert(`Erro de validação: ${error.message}`);
+      }
+    }
   };
 
   const oceanTraits: { key: keyof OceanScores; label: string }[] = [
@@ -182,11 +215,218 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
         </div>
       </section>
 
+      {/* Michael Hauge's Character Arc */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 text-text-muted">
+          <Target size={18} />
+          <h3 className="text-xs font-bold tracking-widest uppercase">Arco de Michael Hauge</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2 space-y-2">
+            <label htmlFor="hauge_wound" className="text-xs font-medium text-text-muted flex items-center gap-2">
+              <Zap size={12} className="text-amber-500" /> A Ferida (Wound)
+            </label>
+            <textarea
+              id="hauge_wound"
+              name="hauge_wound"
+              value={formData.hauge_wound}
+              onChange={handleChange}
+              rows={2}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+              placeholder="O evento traumático do passado..."
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="hauge_belief" className="text-xs font-medium text-text-muted">
+              Crença Limitante (Belief)
+            </label>
+            <input
+              id="hauge_belief"
+              name="hauge_belief"
+              type="text"
+              value={formData.hauge_belief}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              placeholder="A mentira em que acreditam"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="hauge_fear" className="text-xs font-medium text-text-muted flex items-center gap-2">
+              <ShieldAlert size={12} className="text-red-500" /> O Medo (Fear)
+            </label>
+            <input
+              id="hauge_fear"
+              name="hauge_fear"
+              type="text"
+              value={formData.hauge_fear}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              placeholder="O que os impede de mudar"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="hauge_identity" className="text-xs font-medium text-text-muted">
+              Identidade / Máscara (Identity)
+            </label>
+            <input
+              id="hauge_identity"
+              name="hauge_identity"
+              type="text"
+              value={formData.hauge_identity}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              placeholder="Como se protegem do mundo"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="hauge_essence" className="text-xs font-medium text-text-muted">
+              Essência (Essence)
+            </label>
+            <input
+              id="hauge_essence"
+              name="hauge_essence"
+              type="text"
+              value={formData.hauge_essence}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors border-dashed border-purple-500/30"
+              placeholder="Quem são verdadeiramente por dentro"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Voice Profile */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 text-text-muted">
+          <Mic size={18} />
+          <h3 className="text-xs font-bold tracking-widest uppercase">Perfil de Voz e Dicção</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="voice_sentence_length" className="text-xs font-medium text-text-muted">
+              Ritmo / Comprimento de Frase
+            </label>
+            <input
+              id="voice_sentence_length"
+              name="voice_sentence_length"
+              type="text"
+              value={formData.voice_sentence_length}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              placeholder="ex. Frases curtas e ríspidas"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="voice_formality" className="text-xs font-medium text-text-muted">
+              Nível de Formalidade
+            </label>
+            <input
+              id="voice_formality"
+              name="voice_formality"
+              type="text"
+              value={formData.voice_formality}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              placeholder="ex. Arcaico, Gírias de rua, Acadêmico"
+            />
+          </div>
+          <div className="md:col-span-2 space-y-2">
+            <label htmlFor="voice_evasion_mechanism" className="text-xs font-medium text-text-muted">
+              Mecanismo de Evasão
+            </label>
+            <input
+              id="voice_evasion_mechanism"
+              name="voice_evasion_mechanism"
+              type="text"
+              value={formData.voice_evasion_mechanism}
+              onChange={handleChange}
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              placeholder="O que fazem quando não querem responder algo?"
+            />
+          </div>
+
+          <div className="md:col-span-2 space-y-4">
+            <div className="flex justify-between items-center">
+              <label className="text-xs font-medium text-text-muted">Cacoetes Verbais (Tics)</label>
+              <button
+                type="button"
+                onClick={() => addListItem("voice_verbal_tics")}
+                className="text-[10px] flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors"
+              >
+                <Plus size={10} /> Adicionar Tic
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {JSON.parse(formData.voice_verbal_tics || "[]").map((tic: string, index: number) => (
+                <div key={index} className="flex items-center gap-2 bg-bg-hover border border-border-subtle rounded px-2 py-1">
+                  <input
+                    value={tic}
+                    onChange={(e) => handleListChange("voice_verbal_tics", index, e.target.value)}
+                    className="bg-transparent outline-none text-xs font-sans text-text-main min-w-[80px]"
+                    placeholder="Tic verbal..."
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeListItem("voice_verbal_tics", index)}
+                    className="text-text-muted hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 size={10} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Physical Tells */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 text-text-muted">
+          <Fingerprint size={18} />
+          <h3 className="text-xs font-bold tracking-widest uppercase">Expressões Involuntárias (Physical Tells)</h3>
+        </div>
+
+        <div className="space-y-4">
+          <p className="text-[10px] text-text-muted italic">Mínimo de 3 comportamentos para um perfil completo.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {JSON.parse(formData.physical_tells || "[]").map((tell: string, index: number) => (
+              <div key={index} className="relative group">
+                <textarea
+                  value={tell}
+                  onChange={(e) => handleListChange("physical_tells", index, e.target.value)}
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-xs text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                  rows={2}
+                  placeholder={`Tell #${index + 1}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeListItem("physical_tells", index)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity disabled:hidden"
+                  disabled={JSON.parse(formData.physical_tells || "[]").length <= 3}
+                >
+                  <X size={8} />
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => addListItem("physical_tells")}
+              className="flex flex-col items-center justify-center border border-dashed border-border-subtle rounded hover:bg-bg-hover transition-colors min-h-[60px]"
+            >
+              <Plus size={16} className="text-text-muted" />
+              <span className="text-[10px] text-text-muted font-bold uppercase tracking-tighter">Novo Tell</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Narrative Elements */}
       <section className="space-y-6 pb-12">
         <div className="flex items-center gap-3 text-text-muted">
           <ScrollText size={18} />
-          <h3 className="text-xs font-bold tracking-widest uppercase">Núcleo Narrativo</h3>
+          <h3 className="text-xs font-bold tracking-widest uppercase">Objetivos e Motivação</h3>
         </div>
 
         <div className="space-y-6">
@@ -217,51 +457,6 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="Por que eles querem isso?"
             />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="internal_conflict" className="text-xs font-medium text-text-muted">
-              Conflito Interno (A Ferida)
-            </label>
-            <textarea
-              id="internal_conflict"
-              name="internal_conflict"
-              value={formData.internal_conflict}
-              onChange={handleChange}
-              rows={2}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
-              placeholder="A força interna que os impede de avançar..."
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-            <div className="space-y-2">
-              <label htmlFor="voice" className="text-xs font-medium text-text-muted">
-                Voz e Dicção
-              </label>
-              <input
-                id="voice"
-                name="voice"
-                type="text"
-                value={formData.voice}
-                onChange={handleChange}
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                placeholder="Como eles falam?"
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="mannerisms" className="text-xs font-medium text-text-muted">
-                Maneirismos
-              </label>
-              <input
-                id="mannerisms"
-                name="mannerisms"
-                type="text"
-                value={formData.mannerisms}
-                onChange={handleChange}
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                placeholder="Peculiaridades físicas, atos inconscientes..."
-              />
-            </div>
           </div>
         </div>
       </section>

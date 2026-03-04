@@ -185,6 +185,22 @@ export class Character {
     return this.props.hauge_wound;
   }
 
+  public get verbal_tics(): string[] {
+    try {
+      return JSON.parse(this.props.voice_verbal_tics || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  public get physical_tells_list(): string[] {
+    try {
+      return JSON.parse(this.props.physical_tells || "[\"\", \"\", \"\"]");
+    } catch {
+      return ["", "", ""];
+    }
+  }
+
   public isComplete(): boolean {
     // A character is complete if it has Hauge Arc data and deep voice profile
     return (

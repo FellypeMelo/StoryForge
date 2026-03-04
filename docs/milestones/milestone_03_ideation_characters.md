@@ -69,14 +69,14 @@ LlmPort é interface no domínio (zero acoplamento com provedor).
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para `OceanProfile` (5 traços, scores Baixo/Médio/Alto)
-- [ ] 🔴 RED: Teste para validação: combination que gera "defeito fatal" descrita
-- [ ] 🔴 RED: Teste para `HaugeArc` (Wound, Belief, Fear, Identity, Essence)
-- [ ] 🔴 RED: Teste para regra: Identity e Essence devem estar em oposição direta
-- [ ] 🔴 RED: Teste para `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism)
-- [ ] 🔴 RED: Teste para `PhysicalTells` (lista de 3 comportamentos involuntários)
-- [ ] 🟢 GREEN: Implementar `CharacterSheet` agregando OCEAN + Hauge + Voz + Tells
-- [ ] 🔵 REFACTOR: Validar completude via método `isComplete()` no aggregate root
+- [x] 🔴 RED: Teste para `OceanProfile` (5 traços, scores Baixo/Médio/Alto)
+- [x] 🔴 RED: Teste para validação: combination que gera "defeito fatal" descrita
+- [x] 🔴 RED: Teste para `HaugeArc` (Wound, Belief, Fear, Identity, Essence)
+- [x] 🔴 RED: Teste para regra: Identity e Essence devem estar em oposição direta
+- [x] 🔴 RED: Teste para `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism)
+- [x] 🔴 RED: Teste para `PhysicalTells` (lista de 3 comportamentos involuntários)
+- [x] 🟢 GREEN: Implementar `CharacterSheet` agregando OCEAN + Hauge + Voz + Tells
+- [x] 🔵 REFACTOR: Validar completude via método `isComplete()` no aggregate root
 
 ### Critério de Aceite
 
@@ -92,11 +92,11 @@ Cada trait OCEAN impacta decisões do personagem.
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para `GenerateCharacterUseCase` — dado premissa + role, retorna CharacterSheet
-- [ ] 🟢 GREEN: Implementar com prompt DRTD (C+R+K+O) conforme template do doc
-- [ ] 🔴 RED: Teste para regra negativa: personagem "terapeuta perfeito" é rejeitado
-- [ ] 🟢 GREEN: Implementar guardrail que detecta anti-patterns (voz genérica, otimismo artificial)
-- [ ] 🔵 REFACTOR: Extrair `CharacterValidator` como serviço de domínio
+- [x] 🔴 RED: Teste para `GenerateCharacterUseCase` — dado premissa + role, retorna CharacterSheet
+- [x] 🟢 GREEN: Implementar com prompt DRTD (C+R+K+O) conforme template do doc
+- [x] 🔴 RED: Teste para regra negativa: personagem "terapeuta perfeito" é rejeitado
+- [x] 🟢 GREEN: Implementar guardrail que detecta anti-patterns (voz genérica, otimismo artificial)
+- [x] 🔵 REFACTOR: Extrair `CharacterValidator` como serviço de domínio
 
 ### Critério de Aceite
 
@@ -139,8 +139,8 @@ Resultado persistido como WorldRules no Codex.
 - [x] Exibir 3 premissas geradas (Fase 2) com cards comparativos
 - [x] Formulário de validação da premissa (Fase 3) com checklist interativa
 - [x] Criar página `/characters` com listagem de fichas
-- [ ] Formulário de criação com seções: OCEAN, Hauge, Voz, Tells
-- [ ] Visualização da ficha completa com indicador de completude
+- [x] Formulário de criação com seções: OCEAN, Hauge, Voz, Tells
+- [x] Visualização da ficha completa com indicador de completude
 
 ### Critério de Aceite
 
@@ -158,7 +158,7 @@ Design consistente com AppShell.
 | ----------------- | ------------ | ----------------------------------------------------- |
 | Método CHI        | ✅ Concluído | Pipeline de 3 fases (clichês → premissas → validação) |
 | Worldbuilding CAD | ✅ Concluído | Pipeline de 4 passos decompostos                      |
-| CharacterSheet    | ❌ Pendente  | Aggregate root com OCEAN + Hauge + Voz + Tells        |
+| CharacterSheet    | ✅ Concluído | Aggregate root com OCEAN + Hauge + Voz + Tells        |
 | LlmPort           | ✅ Concluído | Interface de domínio para comunicação com LLM         |
 | UI Ideação        | ✅ Concluído | Wizard de 3 etapas para geração de premissas          |
-| UI Personagens    | ⚠️ Parcial   | CRUD de fichas com indicador de completude            |
+| UI Personagens    | ✅ Concluído | CRUD de fichas com suporte a psicologia profunda      |
