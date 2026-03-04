@@ -53,7 +53,7 @@
     - 🔴 RED: Testar regra: Personagem "terapeuta perfeito" ou "Mary Sue" deve ser rejeitado/alertado.
     - 🔴 RED: Detectar vozes genéricas ou otimismo artificial.
     - 🟢 GREEN: Implementar `CharacterValidator` como Domain Service.
-- [~] **Task 2.3: Persistência no Codex**
+- [x] **Task 2.3: Persistência no Codex** [f04ca43]
     - 🟢 GREEN: Integrar com `CharacterRepository` para salvar fichas completas.
 
 
