@@ -25,12 +25,12 @@
     - 🔴 RED: Testar `OceanProfile` com 5 traços e scores semânticos (Baixo/Médio/Alto).
     - 🔴 RED: Validar combinação que gera "defeito fatal".
     - 🟢 GREEN: Implementar entidade.
-- [ ] **Task 1.2: Arco de Hauge (TDD)**
-
-  - 🔴 RED: Testar `HaugeArc` (Wound, Belief, Fear, Identity, Essence).
-  - 🔴 RED: Validar regra: `Identity` e `Essence` devem estar em oposição direta.
-  - 🟢 GREEN: Implementar entidade.
+- [x] **Task 1.2: Arco de Hauge (TDD)** [f836631]
+    - 🔴 RED: Testar `HaugeArc` (Wound, Belief, Fear, Identity, Essence).
+    - 🔴 RED: Validar regra: `Identity` e `Essence` devem estar em oposição direta.
+    - 🟢 GREEN: Implementar entidade.
 - [ ] **Task 1.3: Perfil de Voz e Tells (TDD)**
+
   - 🔴 RED: Testar `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism).
   - 🔴 RED: Testar `PhysicalTells` (lista obrigatória de 3 comportamentos).
   - 🟢 GREEN: Implementar entidades.
