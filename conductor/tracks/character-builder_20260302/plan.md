@@ -16,7 +16,7 @@
 
 ---
 
-## 🏗️ Fase 1: Domínio - Ficha de Personagem Completa (Etapa 3.3)
+## 🏗️ Fase 1: Domínio - Ficha de Personagem Completa (Etapa 3.3) [checkpoint: 6f62afe]
 
 **Objetivo:** Transformar a entidade básica em um Aggregate Root robusto com perfis psicológicos e narrativos.
 
@@ -39,7 +39,6 @@
     - 🟢 GREEN: Implementar Aggregate Root.
     - 🔵 REFACTOR: Garantir que cada trait OCEAN impacte métodos de decisão do domínio.
 
-
 ---
 
 ## 🧠 Fase 2: Casos de Uso - Gerador de Personagens (Etapa 3.4)
@@ -47,10 +46,10 @@
 **Objetivo:** Orquestrar a geração inteligente via LLM com guardrails de qualidade literária.
 
 ### Tarefas
+- [~] **Task 2.1: GenerateCharacterUseCase (TDD)**
+    - 🔴 RED: Testar fluxo: Premissa + Role -> LLM -> `CharacterSheet`.
+    - 🟢 GREEN: Implementar use case com prompt DRTD (C+R+K+O) via `LlmPort`.
 
-- [ ] **Task 2.1: GenerateCharacterUseCase (TDD)**
-  - 🔴 RED: Testar fluxo: Premissa + Role -> LLM -> `CharacterSheet`.
-  - 🟢 GREEN: Implementar use case com prompt DRTD (C+R+K+O) via `LlmPort`.
 - [ ] **Task 2.2: Guardrail de Anti-Patterns (TDD)**
   - 🔴 RED: Testar regra: Personagem "terapeuta perfeito" ou "Mary Sue" deve ser rejeitado/alertado.
   - 🔴 RED: Detectar vozes genéricas ou otimismo artificial.
