@@ -65,20 +65,21 @@
 
 ### Tarefas
 
-- [ ] **Task 3.1: Expansão do CharacterWizard**
-  - [ ] Adicionar seção para Arco de Hauge (Ferida, Crença, Medo).
-  - [ ] Adicionar controles para Voz e Dicção.
-  - [ ] Implementar listagem visual de Physical Tells.
-- [ ] **Task 3.2: Feedback de Completude**
-  - [ ] Implementar indicador visual (barra de progresso ou badge) baseado no `isComplete()` da entidade.
-- [ ] **Task 3.3: Visualização da Ficha Completa**
-  - [ ] Dashboard do personagem integrando OCEAN Radar + Resumo Narrativo.
+- [x] **Task 3.1: Expansão do CharacterWizard** [9805105]
+  - [x] Adicionar seção para Arco de Hauge (Ferida, Crença, Medo).
+  - [x] Adicionar controles para Voz e Dicção.
+  - [x] Implementar listagem visual de Physical Tells.
+- [x] **Task 3.2: Feedback de Completude** [61c47c5]
+  - [x] Implementar indicador visual (barra de progresso ou badge) baseado no `isComplete()` da entidade.
+- [x] **Task 3.3: Visualização da Ficha Completa** [5aa101d]
+  - [x] Dashboard do personagem integrando OCEAN Radar + Resumo Narrativo.
+  - [x] Botão "Gerar com IA" no contexto de personagem integrado ao `GenerateCharacterUseCase`.
 
 ---
 
 ## ✅ Verificação Final
 
-- [ ] Todos os testes unitários e de integração passando (`npm test`).
-- [ ] Validação de Clean Architecture (Domínio não importa Infra).
-- [ ] Carregamento e salvamento de rascunhos no `localStorage` via Wizard.
-- [ ] App compila sem erros de TypeScript.
+- [x] Todos os testes unitários e de integração passando (`npm test`).
+- [x] Validação de Clean Architecture (Domínio não importa Infra).
+- [x] Carregamento e salvamento de rascunhos no `localStorage` via Wizard.
+- [x] App compila sem erros de TypeScript.
