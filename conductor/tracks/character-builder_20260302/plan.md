@@ -49,13 +49,13 @@
 - [x] **Task 2.1: GenerateCharacterUseCase (TDD)** [0b97705]
     - 🔴 RED: Testar fluxo: Premissa + Role -> LLM -> `CharacterSheet`.
     - 🟢 GREEN: Implementar use case com prompt DRTD (C+R+K+O) via `LlmPort`.
-- [~] **Task 2.2: Guardrail de Anti-Patterns (TDD)**
+- [x] **Task 2.2: Guardrail de Anti-Patterns (TDD)** [32f414d]
     - 🔴 RED: Testar regra: Personagem "terapeuta perfeito" ou "Mary Sue" deve ser rejeitado/alertado.
     - 🔴 RED: Detectar vozes genéricas ou otimismo artificial.
     - 🟢 GREEN: Implementar `CharacterValidator` como Domain Service.
+- [~] **Task 2.3: Persistência no Codex**
+    - 🟢 GREEN: Integrar com `CharacterRepository` para salvar fichas completas.
 
-- [ ] **Task 2.3: Persistência no Codex**
-  - 🟢 GREEN: Integrar com `CharacterRepository` para salvar fichas completas.
 
 ---
 
