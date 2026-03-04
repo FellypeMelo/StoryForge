@@ -83,3 +83,9 @@
 - [x] Validação de Clean Architecture (Domínio não importa Infra).
 - [x] Carregamento e salvamento de rascunhos no `localStorage` via Wizard.
 - [x] App compila sem erros de TypeScript.
+
+---
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions f8000bf
+
