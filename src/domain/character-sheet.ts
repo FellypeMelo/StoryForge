@@ -19,4 +19,20 @@ export class CharacterSheet {
   public isComplete(): boolean {
     return !!this.props.hauge;
   }
+
+  public get ocean(): OceanProfile {
+    return this.props.ocean;
+  }
+
+  public get hauge(): HaugeArc | undefined {
+    return this.props.hauge;
+  }
+
+  public get voice(): VoiceProfile {
+    return this.props.voice;
+  }
+
+  public get tells(): PhysicalTells {
+    return this.props.tells;
+  }
 }
