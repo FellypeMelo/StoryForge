@@ -60,6 +60,9 @@ Implement the UI wizard for the CHI method.
 ### Verification
 - [x] UI correctly persists state across wizard steps.
 
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (e8368b2)
+
 ## Final Verification
 - [x] All tests passing.
 - [x] App builds successfully.
