@@ -17,15 +17,15 @@
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para entidade `Project` (id, title, genre, createdAt)
-- [ ] 🔴 RED: Teste para entidade `Character` com validação de campos obrigatórios
-- [ ] 🔴 RED: Teste para entidade `Location` (name, description, symbolicMeaning)
-- [ ] 🔴 RED: Teste para entidade `WorldRule` (category, content, hierarchy)
-- [ ] 🔴 RED: Teste para entidade `TimelineEvent` (date, description, causalDependencies)
-- [ ] 🔴 RED: Teste para entidade `Relationship` (characterA, characterB, type)
-- [ ] 🔴 RED: Teste para entidade `BlacklistEntry` (term, category, reason)
-- [ ] 🟢 GREEN: Implementar todas as entidades no `domain/entities/`
-- [ ] 🔵 REFACTOR: Extrair Value Objects — `ProjectId`, `CharacterId`, `LocationId`
+- [x] 🔴 RED: Teste para entidade `Project` (id, title, genre, createdAt)
+- [x] 🔴 RED: Teste para entidade `Character` com validação de campos obrigatórios
+- [x] 🔴 RED: Teste para entidade `Location` (name, description, symbolicMeaning)
+- [x] 🔴 RED: Teste para entidade `WorldRule` (category, content, hierarchy)
+- [x] 🔴 RED: Teste para entidade `TimelineEvent` (date, description, causalDependencies)
+- [x] 🔴 RED: Teste para entidade `Relationship` (characterA, characterB, type)
+- [x] 🔴 RED: Teste para entidade `BlacklistEntry` (term, category, reason)
+- [x] 🟢 GREEN: Implementar todas as entidades no `domain/entities/`
+- [x] 🔵 REFACTOR: Extrair Value Objects — `ProjectId`, `CharacterId`, `LocationId`
 
 ### Critério de Aceite
 
@@ -41,13 +41,13 @@ Entidades são puras — zero dependências de infraestrutura.
 
 ### Tarefas
 
-- [ ] Definir interface `ProjectRepository` no `domain/ports/`
-- [ ] Definir interface `CharacterRepository` com CRUD + busca por projeto
-- [ ] Definir interface `LocationRepository`
-- [ ] Definir interface `WorldRuleRepository`
-- [ ] Definir interface `TimelineRepository` com ordenação causal
-- [ ] Definir interface `RelationshipRepository` com busca por grafo
-- [ ] Definir interface `BlacklistRepository`
+- [x] Definir interface `ProjectRepository` no `domain/ports/`
+- [x] Definir interface `CharacterRepository` com CRUD + busca por projeto
+- [x] Definir interface `LocationRepository`
+- [x] Definir interface `WorldRuleRepository`
+- [x] Definir interface `TimelineRepository` com ordenação causal
+- [x] Definir interface `RelationshipRepository` com busca por grafo
+- [x] Definir interface `BlacklistRepository`
 
 ### Critério de Aceite
 
@@ -62,12 +62,12 @@ Cada método retorna Result<T, DomainError>.
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste de integração para `SqliteProjectRepository.create()`
-- [ ] 🔴 RED: Teste de integração para `SqliteProjectRepository.findById()`
-- [ ] 🟢 GREEN: Implementar `SqliteProjectRepository` com migrations
-- [ ] Repetir ciclo TDD para cada repositório (Character, Location, WorldRule, Timeline, Relationship, Blacklist)
-- [ ] 🔵 REFACTOR: Extrair helper de mapping row → entity
-- [ ] Implementar migration SQL para todas as tabelas
+- [x] 🔴 RED: Teste de integração para `SqliteProjectRepository.create()`
+- [x] 🔴 RED: Teste de integração para `SqliteProjectRepository.findById()`
+- [x] 🟢 GREEN: Implementar `SqliteProjectRepository` com migrations
+- [x] Repetir ciclo TDD para cada repositório (Character, Location, WorldRule, Timeline, Relationship, Blacklist)
+- [x] 🔵 REFACTOR: Extrair helper de mapping row → entity
+- [x] Implementar migration SQL para todas as tabelas
 
 ### Schema SQL Esperado
 
@@ -96,11 +96,11 @@ Queries parametrizadas (zero SQL injection).
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste que busca personagem por nome parcial
-- [ ] 🔴 RED: Teste que busca eventos de timeline por descrição
-- [ ] 🟢 GREEN: Criar tabelas virtuais FTS5 para characters, locations, timeline
-- [ ] 🟢 GREEN: Implementar `SearchPort` com método `search(query, entityType)`
-- [ ] 🔵 REFACTOR: Normalizar resultados em tipo unificado `SearchResult`
+- [x] 🔴 RED: Teste que busca personagem por nome parcial
+- [x] 🔴 RED: Teste que busca eventos de timeline por descrição
+- [x] 🟢 GREEN: Criar tabelas virtuais FTS5 para characters, locations, timeline
+- [x] 🟢 GREEN: Implementar `SearchPort` com método `search(query, entityType)`
+- [x] 🔵 REFACTOR: Normalizar resultados em tipo unificado `SearchResult`
 
 ### Critério de Aceite
 
@@ -115,12 +115,12 @@ Resultados ranqueados por relevância FTS5.
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste que insere embedding vetorial e recupera por similaridade
-- [ ] 🟢 GREEN: Integrar extensão `sqlite-vec` no Rust (via libsqlite3-sys)
-- [ ] 🟢 GREEN: Criar tabela de embeddings vinculada a entidades
-- [ ] 🔴 RED: Teste que busca "medo de abandono" e retorna personagem com Ferida compatível
-- [ ] 🟢 GREEN: Implementar `VectorSearchPort` com método `findSimilar(embedding, topK)`
-- [ ] 🔵 REFACTOR: Abstrair geração de embeddings atrás de `EmbeddingPort`
+- [x] 🔴 RED: Teste que insere embedding vetorial e recupera por similaridade
+- [x] 🟢 GREEN: Integrar extensão `sqlite-vec` no Rust (via libsqlite3-sys)
+- [x] 🟢 GREEN: Criar tabela de embeddings vinculada a entidades
+- [x] 🔴 RED: Teste que busca "medo de abandono" e retorna personagem com Ferida compatível
+- [x] 🟢 GREEN: Implementar `VectorSearchPort` com método `findSimilar(embedding, topK)`
+- [x] 🔵 REFACTOR: Abstrair geração de embeddings atrás de `EmbeddingPort`
 
 ### Critério de Aceite
 
@@ -135,14 +135,14 @@ EmbeddingPort é interface no domínio (implementação plugável).
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para `ContextInjector` que gera bloco de continuidade
-- [ ] 🟢 GREEN: Implementar `ContextInjector` (use case):
+- [x] 🔴 RED: Teste para `ContextInjector` que gera bloco de continuidade
+- [x] 🟢 GREEN: Implementar `ContextInjector` (use case):
   - Inputs: capítulo atual, entidades mencionadas
   - Busca RAG: trechos relevantes do Codex
   - Output: prompt de continuidade formatado
-- [ ] 🔴 RED: Teste que valida injeção NÃO excede token budget (economia de contexto)
-- [ ] 🟢 GREEN: Implementar truncamento inteligente por relevância
-- [ ] 🔵 REFACTOR: Extrair `TokenBudgetCalculator` como serviço puro
+- [x] 🔴 RED: Teste que valida injeção NÃO excede token budget (economia de contexto)
+- [x] 🟢 GREEN: Implementar truncamento inteligente por relevância
+- [x] 🔵 REFACTOR: Extrair `TokenBudgetCalculator` como serviço puro
 
 ### Template de Saída Esperado
 
@@ -168,11 +168,11 @@ Caso de uso puro — sem dependência direta de SQLite ou LLM.
 
 ### Tarefas
 
-- [ ] Criar página `/codex` com tabs: Personagens, Locais, Mundo, Cronologia, Relações, Blacklist
-- [ ] Implementar listagem de cada entidade por tab
-- [ ] Implementar formulários de criação/edição (modal ou inline)
-- [ ] Implementar busca FTS5 no topo da página
-- [ ] Implementar visualização de estado atual (snapshot) por personagem
+- [x] Criar página `/codex` com tabs: Personagens, Locais, Mundo, Cronologia, Relações, Blacklist
+- [x] Implementar listagem de cada entidade por tab
+- [x] Implementar formulários de criação/edição (modal ou inline)
+- [x] Implementar busca FTS5 no topo da página
+- [x] Implementar visualização de estado atual (snapshot) por personagem
 
 ### Critério de Aceite
 
@@ -186,22 +186,22 @@ Design limpo, consistente com AppShell do Milestone 1.
 
 ## Entregáveis do Milestone 2
 
-| Artefato             | Descrição                                          |
-| -------------------- | -------------------------------------------------- |
-| Modelo de domínio    | 7 entidades com Value Objects para IDs             |
-| Ports (interfaces)   | 7 interfaces de repositório no domínio             |
-| Implementação SQLite | CRUD completo com migrations versionadas           |
-| FTS5                 | Busca full-text para personagens, locais, timeline |
-| sqlite-vec           | Busca semântica vetorial com embeddings            |
-| Pipeline RAG         | `ContextInjector` com token budget                 |
-| UI Codex             | Painel completo com CRUD e busca                   |
+| Artefato             | Status  | Descrição                                          |
+| -------------------- | ------- | -------------------------------------------------- |
+| Modelo de domínio    | ✅ Done | 7 entidades com Value Objects para IDs             |
+| Ports (interfaces)   | ✅ Done | 7 interfaces de repositório no domínio             |
+| Implementação SQLite | ✅ Done | CRUD completo com migrations versionadas           |
+| FTS5                 | ✅ Done | Busca full-text para personagens, locais, timeline |
+| sqlite-vec           | ✅ Done | Busca semântica vetorial com embeddings            |
+| Pipeline RAG         | ✅ Done | `ContextInjector` com token budget                 |
+| UI Codex             | ✅ Done | Painel completo com CRUD e busca                   |
 
 ---
 
 ## Checklist de Merge (GEMINI.md)
 
-- [ ] Domínio puro — zero imports de `rusqlite` ou Tauri?
-- [ ] Queries SQL parametrizadas (anti SQL Injection)?
-- [ ] Value Objects para todos os IDs?
-- [ ] Testes de integração para cada repositório?
-- [ ] Token budget testado com edge cases?
+- [x] Domínio puro — zero imports de `rusqlite` ou Tauri?
+- [x] Queries SQL parametrizadas (anti SQL Injection)?
+- [x] Value Objects para todos os IDs?
+- [x] Testes de integração para cada repositório?
+- [x] Token budget testado com edge cases?

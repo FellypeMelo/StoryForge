@@ -6,11 +6,19 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*_logs.txt
+*_stdout.txt
+*_stderr.txt
+ts_error.txt
+test_output.txt
 
 node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+coverage/
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +30,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Tauri
+src-tauri/target/

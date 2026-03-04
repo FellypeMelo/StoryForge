@@ -151,6 +151,9 @@ Before marking any task complete, verify:
 - [ ] Works correctly on mobile (if applicable)
 - [ ] Documentation updated if needed
 - [ ] No security vulnerabilities introduced
+- [ ] **A IA foi restrita e enjaulada a responder a implementação sintática APENAS depois da formalização do teste falho (Fase RED provada)?**
+- [ ] **Os testes unitários ou mocks possuem mecanismos absolutos de autolimpeza (Ex: rm_rf com identificadores criptográficos) para evitar envenenamento de estado cruzado?**
+- [ ] **Os castigos sistêmicos de Rollback (git checkout .) estão sendo aplicados rotineiramente para zerar alucinações cognitivas do modelo?**
 
 ## Development Commands
 

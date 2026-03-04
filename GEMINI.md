@@ -56,6 +56,14 @@ Proibido criar abstrações sem 3 casos reais de uso conflitantes.
 Funções máximas: 15 linhas lógicas. Classes: <200 linhas.
 ```
 
+### 🔒 Lei 6: Protocolo de Confinamento e Autolimpeza
+
+```
+- [ ] A IA foi restrita e enjaulada a responder a implementação sintática APENAS depois da formalização do teste falho (Fase RED provada)?
+- [ ] Os testes unitários ou mocks possuem mecanismos absolutos de autolimpeza (Ex: rm_rf com identificadores criptográficos) para evitar envenenamento de estado cruzado?
+- [ ] Os castigos sistêmicos de Rollback (git checkout .) estão sendo aplicados rotineiramente para zerar alucinações cognitivas do modelo?
+```
+
 ---
 
 ## 🏗️ ARQUITETURA MULTIAGENTES
