@@ -29,12 +29,12 @@
     - 🔴 RED: Testar `HaugeArc` (Wound, Belief, Fear, Identity, Essence).
     - 🔴 RED: Validar regra: `Identity` e `Essence` devem estar em oposição direta.
     - 🟢 GREEN: Implementar entidade.
-- [ ] **Task 1.3: Perfil de Voz e Tells (TDD)**
-
-  - 🔴 RED: Testar `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism).
-  - 🔴 RED: Testar `PhysicalTells` (lista obrigatória de 3 comportamentos).
-  - 🟢 GREEN: Implementar entidades.
+- [x] **Task 1.3: Perfil de Voz e Tells (TDD)** [a8a56a2]
+    - 🔴 RED: Testar `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism).
+    - 🔴 RED: Testar `PhysicalTells` (lista obrigatória de 3 comportamentos).
+    - 🟢 GREEN: Implementar entidades.
 - [ ] **Task 1.4: CharacterSheet Aggregate Root (TDD)**
+
   - 🔴 RED: Testar agregação dos 4 componentes.
   - 🔴 RED: Validar método `isComplete()` (CharacterSheet sem Hauge é sinalizada como rascunho).
   - 🟢 GREEN: Implementar Aggregate Root.
