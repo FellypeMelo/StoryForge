@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Character, CharacterProps, OceanScores } from "../../../domain/character";
-import { ChevronLeft, ChevronRight, Save, X, User, Brain, ScrollText, Info } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, X, User, Brain, ScrollText, Info, Target, Zap, Volume2, Plus, Trash2 } from "lucide-react";
 import { OceanRadarChart } from "./OceanRadarChart";
 
 interface CharacterWizardProps {
@@ -9,17 +9,17 @@ interface CharacterWizardProps {
   onCancel: () => void;
 }
 
-export function CharacterWizard({
-  character,
-  onSave,
-  onCancel
-}: CharacterWizardProps) {
+export function CharacterWizard({ character, onSave, onCancel }: CharacterWizardProps) {
   const DRAFT_KEY = `character_draft_${character.id.value}`;
-  
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<CharacterProps>(character.toProps());
   const [errors, setErrors] = useState<{ name?: string }>({});
   const [hoveredTrait, setHoveredTrait] = useState<string | null>(null);
+
+  // Parse JSON strings from formData for UI
+  const [verbalTics, setVerbalTics] = useState<string[]>([]);
+  const [physicalTells, setPhysicalTells] = useState<string[]>([]);
 
   // Load draft on mount
   useEffect(() => {
@@ -28,18 +28,32 @@ export function CharacterWizard({
       try {
         const draft = JSON.parse(saved);
         setFormData(draft);
+        setVerbalTics(JSON.parse(draft.voice_verbal_tics || "[]"));
+        setPhysicalTells(JSON.parse(draft.physical_tells || "[]"));
       } catch (e) {
         console.error("Failed to parse draft", e);
       }
+    } else {
+      setVerbalTics(JSON.parse(formData.voice_verbal_tics || "[]"));
+      setPhysicalTells(JSON.parse(formData.physical_tells || "[]"));
     }
   }, []);
+
+  // Update formData when arrays change
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      voice_verbal_tics: JSON.stringify(verbalTics),
+      physical_tells: JSON.stringify(physicalTells)
+    }));
+  }, [verbalTics, physicalTells]);
 
   // Auto-save on data change
   useEffect(() => {
     localStorage.setItem(DRAFT_KEY, JSON.stringify(formData));
   }, [formData]);
 
-  const nextStep = () => setStep((s) => Math.min(s + 1, 3));
+  const nextStep = () => setStep((s) => Math.min(s + 1, 4));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -72,6 +86,22 @@ export function CharacterWizard({
     }));
   };
 
+  const addVerbalTic = () => setVerbalTics(prev => [...prev, ""]);
+  const updateVerbalTic = (index: number, value: string) => {
+    const newTics = [...verbalTics];
+    newTics[index] = value;
+    setVerbalTics(newTics);
+  };
+  const removeVerbalTic = (index: number) => setVerbalTics(prev => prev.filter((_, i) => i !== index));
+
+  const addPhysicalTell = () => setPhysicalTells(prev => [...prev, ""]);
+  const updatePhysicalTell = (index: number, value: string) => {
+    const newTells = [...physicalTells];
+    newTells[index] = value;
+    setPhysicalTells(newTells);
+  };
+  const removePhysicalTell = (index: number) => setPhysicalTells(prev => prev.filter((_, i) => i !== index));
+
   const getSemanticLabel = (value: number) => {
     if (value <= 30) return "Baixo";
     if (value <= 70) return "Moderado";
@@ -79,15 +109,37 @@ export function CharacterWizard({
   };
 
   const oceanTraits: { key: keyof OceanScores; label: string; description: string }[] = [
-    { key: "openness", label: "Abertura", description: "Curiosidade intelectual, criatividade e preferência por novidade." },
-    { key: "conscientiousness", label: "Consciência", description: "Organização, persistência e motivação em comportamentos dirigidos a objetivos." },
-    { key: "extraversion", label: "Extroversão", description: "Sociabilidade, assertividade e busca por estimulação externa." },
-    { key: "agreeableness", label: "Amabilidade", description: "Qualidade das orientações interpessoais, empatia e cooperação." },
-    { key: "neuroticism", label: "Neuroticismo", description: "Tendência a experienciar emoções negativas como ansiedade ou raiva." },
+    {
+      key: "openness",
+      label: "Abertura",
+      description: "Curiosidade intelectual, criatividade e preferência por novidade.",
+    },
+    {
+      key: "conscientiousness",
+      label: "Consciência",
+      description: "Organização, persistência e motivação em comportamentos dirigidos a objetivos.",
+    },
+    {
+      key: "extraversion",
+      label: "Extroversão",
+      description: "Sociabilidade, assertividade e busca por estimulação externa.",
+    },
+    {
+      key: "agreeableness",
+      label: "Amabilidade",
+      description: "Qualidade das orientações interpessoais, empatia e cooperação.",
+    },
+    {
+      key: "neuroticism",
+      label: "Neuroticismo",
+      description: "Tendência a experienciar emoções negativas como ansiedade ou raiva.",
+    },
   ];
 
   const CharacterCounter = ({ current, limit }: { current: number; limit: number }) => (
-    <div className={`text-[10px] font-mono mt-1 text-right ${current > limit ? "text-red-500 font-bold" : "text-text-muted"}`}>
+    <div
+      className={`text-[10px] font-mono mt-1 text-right ${current > limit ? "text-red-500 font-bold" : "text-text-muted"}`}
+    >
       {current} / {limit}
     </div>
   );
@@ -116,12 +168,12 @@ export function CharacterWizard({
           <div>
             <h2 className="text-xl font-serif text-text-main">Novo Personagem</h2>
             <p className="text-[10px] font-mono text-text-muted uppercase tracking-wider">
-              Passo {step} de 3
+              Passo {step} de 4
             </p>
           </div>
         </div>
-        
-        {step === 3 && (
+
+        {step === 4 && (
           <button
             onClick={handleFinalSave}
             className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-md shadow-text-main/10"
@@ -143,7 +195,9 @@ export function CharacterWizard({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2 space-y-2">
-                <label htmlFor="name" className="text-xs font-medium text-text-muted">Nome</label>
+                <label htmlFor="name" className="text-xs font-medium text-text-muted">
+                  Nome
+                </label>
                 <input
                   id="name"
                   name="name"
@@ -157,7 +211,9 @@ export function CharacterWizard({
                 {errors.name && <p className="text-[10px] text-red-500 font-sans">{errors.name}</p>}
               </div>
               <div className="space-y-2">
-                <label htmlFor="age" className="text-xs font-medium text-text-muted">Idade</label>
+                <label htmlFor="age" className="text-xs font-medium text-text-muted">
+                  Idade
+                </label>
                 <input
                   id="age"
                   name="age"
@@ -168,7 +224,9 @@ export function CharacterWizard({
                 />
               </div>
               <div className="md:col-span-3 space-y-2">
-                <label htmlFor="occupation" className="text-xs font-medium text-text-muted">Ocupação</label>
+                <label htmlFor="occupation" className="text-xs font-medium text-text-muted">
+                  Ocupação
+                </label>
                 <input
                   id="occupation"
                   name="occupation"
@@ -180,17 +238,70 @@ export function CharacterWizard({
                 />
               </div>
               <div className="md:col-span-3 space-y-2">
-                <label htmlFor="physical_description" className="text-xs font-medium text-text-muted">Descrição Física</label>
+                <label
+                  htmlFor="physical_description"
+                  className="text-xs font-medium text-text-muted"
+                >
+                  Descrição Física
+                </label>
                 <textarea
                   id="physical_description"
                   name="physical_description"
                   value={formData.physical_description}
                   onChange={handleChange}
-                  rows={4}
+                  rows={3}
                   className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                   placeholder="Traços visuais, estilo, presença..."
                 />
-                <CharacterCounter current={formData.physical_description.trim().length} limit={500} />
+                <CharacterCounter
+                  current={formData.physical_description.trim().length}
+                  limit={500}
+                />
+              </div>
+
+              <div className="md:col-span-3 space-y-4 pt-4 border-t border-border-subtle">
+                <div className="space-y-2">
+                  <label htmlFor="goal" className="text-xs font-medium text-text-muted">
+                    Objetivo Concreto
+                  </label>
+                  <input
+                    id="goal"
+                    name="goal"
+                    type="text"
+                    value={formData.goal}
+                    onChange={handleChange}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    placeholder="O que eles querem agora?"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="motivation" className="text-xs font-medium text-text-muted">
+                    Motivação
+                  </label>
+                  <input
+                    id="motivation"
+                    name="motivation"
+                    type="text"
+                    value={formData.motivation}
+                    onChange={handleChange}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    placeholder="Por que eles querem isso?"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="internal_conflict" className="text-xs font-medium text-text-muted">
+                    Conflito Interno
+                  </label>
+                  <textarea
+                    id="internal_conflict"
+                    name="internal_conflict"
+                    value={formData.internal_conflict}
+                    onChange={handleChange}
+                    rows={2}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                    placeholder="A força interna que os impede de avançar..."
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -200,7 +311,9 @@ export function CharacterWizard({
           <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
             <div className="flex items-center gap-3 text-text-muted">
               <Brain size={18} />
-              <h3 className="text-xs font-bold tracking-widest uppercase">Perfil Psicológico (OCEAN)</h3>
+              <h3 className="text-xs font-bold tracking-widest uppercase">
+                Perfil Psicológico (OCEAN)
+              </h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -209,12 +322,12 @@ export function CharacterWizard({
                 {hoveredTrait && (
                   <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
                     <div className="bg-text-main text-bg-base text-[10px] p-3 rounded shadow-xl max-w-[150px] animate-in zoom-in-95 duration-200 text-center font-sans leading-relaxed">
-                      {oceanTraits.find(t => t.key === hoveredTrait)?.description}
+                      {oceanTraits.find((t) => t.key === hoveredTrait)?.description}
                     </div>
                   </div>
                 )}
               </div>
-              
+
               <div className="space-y-6 bg-bg-hover/30 p-6 rounded-lg border border-border-subtle">
                 {oceanTraits.map((trait) => (
                   <div key={trait.key} className="space-y-3">
@@ -258,74 +371,171 @@ export function CharacterWizard({
         {step === 3 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
             <div className="flex items-center gap-3 text-text-muted">
-              <ScrollText size={18} />
-              <h3 className="text-xs font-bold tracking-widest uppercase">Núcleo Narrativo</h3>
+              <Target size={18} />
+              <h3 className="text-xs font-bold tracking-widest uppercase">Arco de Hauge</h3>
             </div>
 
             <div className="space-y-6">
-              <div className="space-y-2">
-                <label htmlFor="goal" className="text-xs font-medium text-text-muted">Objetivo Concreto</label>
-                <input
-                  id="goal"
-                  name="goal"
-                  type="text"
-                  value={formData.goal}
-                  onChange={handleChange}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                  placeholder="O que eles querem agora?"
-                />
-                <CharacterCounter current={formData.goal.length} limit={200} />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="motivation" className="text-xs font-medium text-text-muted">Motivação</label>
-                <input
-                  id="motivation"
-                  name="motivation"
-                  type="text"
-                  value={formData.motivation}
-                  onChange={handleChange}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                  placeholder="Por que eles querem isso?"
-                />
-                <CharacterCounter current={formData.motivation.length} limit={300} />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="internal_conflict" className="text-xs font-medium text-text-muted">Conflito Interno</label>
-                <textarea
-                  id="internal_conflict"
-                  name="internal_conflict"
-                  value={formData.internal_conflict}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
-                  placeholder="A força interna que os impede de avançar..."
-                />
-                <CharacterCounter current={formData.internal_conflict.length} limit={500} />
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="voice" className="text-xs font-medium text-text-muted">Voz e Dicção</label>
-                  <input
-                    id="voice"
-                    name="voice"
-                    type="text"
-                    value={formData.voice}
+                  <label htmlFor="hauge_wound" className="text-xs font-medium text-text-muted">Ferida (Wound)</label>
+                  <textarea
+                    id="hauge_wound"
+                    name="hauge_wound"
+                    value={formData.hauge_wound}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                    placeholder="Como eles falam?"
+                    rows={2}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                    placeholder="O trauma do passado..."
                   />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="mannerisms" className="text-xs font-medium text-text-muted">Maneirismos</label>
+                  <label htmlFor="hauge_fear" className="text-xs font-medium text-text-muted">Medo (Fear)</label>
+                  <textarea
+                    id="hauge_fear"
+                    name="hauge_fear"
+                    value={formData.hauge_fear}
+                    onChange={handleChange}
+                    rows={2}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                    placeholder="O que os impede de agir..."
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="hauge_belief" className="text-xs font-medium text-text-muted">Crença Limitante (Belief)</label>
+                <input
+                  id="hauge_belief"
+                  name="hauge_belief"
+                  type="text"
+                  value={formData.hauge_belief}
+                  onChange={handleChange}
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                  placeholder="A mentira em que eles acreditam..."
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border-subtle">
+                <div className="space-y-2">
+                  <label htmlFor="hauge_identity" className="text-xs font-medium text-text-muted">Identidade (Máscara)</label>
                   <input
-                    id="mannerisms"
-                    name="mannerisms"
+                    id="hauge_identity"
+                    name="hauge_identity"
                     type="text"
-                    value={formData.mannerisms}
+                    value={formData.hauge_identity}
                     onChange={handleChange}
                     className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
-                    placeholder="Peculiaridades físicas..."
+                    placeholder="Quem eles fingem ser..."
                   />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="hauge_essence" className="text-xs font-medium text-text-muted">Essência (Verdade)</label>
+                  <input
+                    id="hauge_essence"
+                    name="hauge_essence"
+                    type="text"
+                    value={formData.hauge_essence}
+                    onChange={handleChange}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    placeholder="Quem eles realmente são..."
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
+            <div className="flex items-center gap-3 text-text-muted">
+              <Volume2 size={18} />
+              <h3 className="text-xs font-bold tracking-widest uppercase">Voz e Presença</h3>
+            </div>
+
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label htmlFor="voice_sentence_length" className="text-xs font-medium text-text-muted">Extensão das Frases</label>
+                  <input
+                    id="voice_sentence_length"
+                    name="voice_sentence_length"
+                    type="text"
+                    value={formData.voice_sentence_length}
+                    onChange={handleChange}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    placeholder="ex. Curta e grossa, Prolixa..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="voice_formality" className="text-xs font-medium text-text-muted">Formalidade</label>
+                  <input
+                    id="voice_formality"
+                    name="voice_formality"
+                    type="text"
+                    value={formData.voice_formality}
+                    onChange={handleChange}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    placeholder="ex. Arcaica, Gírias de rua..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="voice_evasion_mechanism" className="text-xs font-medium text-text-muted">Mecanismo de Evasão</label>
+                  <input
+                    id="voice_evasion_mechanism"
+                    name="voice_evasion_mechanism"
+                    type="text"
+                    value={formData.voice_evasion_mechanism}
+                    onChange={handleChange}
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    placeholder="ex. Muda de assunto, Sarcasmo..."
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-medium text-text-muted">Tiques Verbais</label>
+                  <button onClick={addVerbalTic} className="p-1 hover:bg-bg-hover rounded text-text-main transition-colors">
+                    <Plus size={14} />
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {verbalTics.map((tic, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        value={tic}
+                        onChange={(e) => updateVerbalTic(i, e.target.value)}
+                        className="flex-1 bg-bg-hover border border-border-subtle p-2 rounded text-sm outline-none focus:border-text-main"
+                        placeholder="ex. 'Sabe?', 'Tipo...'"
+                      />
+                      <button onClick={() => removeVerbalTic(i)} className="p-2 text-text-muted hover:text-red-500 transition-colors">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-border-subtle">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-medium text-text-muted">Physical Tells (Mínimo 3)</label>
+                  <button onClick={addPhysicalTell} className="p-1 hover:bg-bg-hover rounded text-text-main transition-colors">
+                    <Plus size={14} />
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 gap-2">
+                  {physicalTells.map((tell, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        value={tell}
+                        onChange={(e) => updatePhysicalTell(i, e.target.value)}
+                        className="flex-1 bg-bg-hover border border-border-subtle p-2 rounded text-sm outline-none focus:border-text-main"
+                        placeholder="ex. Evita contato visual, Batuca os dedos..."
+                      />
+                      <button onClick={() => removePhysicalTell(i)} className="p-2 text-text-muted hover:text-red-500 transition-colors">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -339,8 +549,8 @@ export function CharacterWizard({
           onClick={prevStep}
           disabled={step === 1}
           className={`flex items-center gap-2 px-4 py-2 rounded font-sans text-sm transition-all ${
-            step === 1 
-              ? "text-text-muted/30 cursor-not-allowed" 
+            step === 1
+              ? "text-text-muted/30 cursor-not-allowed"
               : "text-text-main hover:bg-bg-hover cursor-pointer"
           }`}
         >
@@ -350,10 +560,10 @@ export function CharacterWizard({
 
         <button
           onClick={nextStep}
-          disabled={step === 3}
+          disabled={step === 4}
           className={`flex items-center gap-2 px-6 py-2 rounded font-sans font-bold text-sm transition-all ${
-            step === 3 
-              ? "text-text-muted/30 cursor-not-allowed" 
+            step === 4
+              ? "text-text-muted/30 cursor-not-allowed"
               : "bg-text-main text-bg-base hover:opacity-90 cursor-pointer shadow-md shadow-text-main/10"
           }`}
         >
@@ -364,5 +574,3 @@ export function CharacterWizard({
     </div>
   );
 }
-
-
