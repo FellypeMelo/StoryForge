@@ -27,7 +27,8 @@ StoryForge is a world-class literary development platform that combats AI writin
 ### Phase 1 & 2: Structural Planning
 
 - **CHI Ideation:** Anti-cliché worldbuilding and premise generation.
-- **Psychological Profiles:** Functional OCEAN-based character construction with persistence.
+- **Psychological Profiles:** Functional OCEAN-based character construction integrated with Michael Hauge's "Identity vs Essence" framework and persistent Story Codex storage.
+- **Deep Character Dashboard:** Visual analytics including OCEAN Radar charts and narrative arc summaries for every cast member.
 - **Story Codex Foundation:** Comprehensive lore management including Locations, World Rules, Timeline Events, and Relationships.
 - **Narrative Architect:** Multi-framework support (Save the Cat, Hero's Journey, etc.).
 
@@ -46,5 +47,3 @@ StoryForge is a world-class literary development platform that combats AI writin
 - **Platform:** Desktop application built with Rust (Tauri) for system safety and speed.
 - **Interface:** distraction-free UI using React + Tailwind CSS.
 - **Persistence:** Local SQLite with vector extensions for semantic search.
-
-
