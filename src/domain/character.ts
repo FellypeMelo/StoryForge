@@ -178,6 +178,15 @@ export class Character {
     return this.props.hauge_wound;
   }
 
+  public isComplete(): boolean {
+    // A character is complete if it has Hauge Arc data and deep voice profile
+    return (
+      !!this.props.hauge_identity &&
+      !!this.props.voice_sentence_length &&
+      JSON.parse(this.props.physical_tells || "[]").length >= 3
+    );
+  }
+
   public toSnapshot(): string {
     return `${this.name}, ${this.age} anos. ${this.props.occupation}. Objetivos: ${this.props.goal}. Conflito: ${this.props.internal_conflict}.`;
   }

@@ -22,7 +22,7 @@ describe("Character Entity", () => {
         extraversion: 60,
         agreeableness: 90,
         neuroticism: 20,
-      }
+      },
     });
 
     expect(character.id.equals(id)).toBe(true);
@@ -61,7 +61,7 @@ describe("Character Entity", () => {
       age: 30,
       occupation: "Knight",
       goal: "Protect the king",
-      internal_conflict: "Secret love for the queen"
+      internal_conflict: "Secret love for the queen",
     });
 
     const snapshot = character.toSnapshot();
@@ -70,5 +70,20 @@ describe("Character Entity", () => {
     expect(snapshot).toContain("Knight");
     expect(snapshot).toContain("Protect the king");
     expect(snapshot).toContain("Secret love for the queen");
+  });
+
+  it("should return correct completeness status", () => {
+    const incompleteChar = Character.generate(ProjectId.generate(), "Draft");
+    expect(incompleteChar.isComplete()).toBe(false);
+
+    const completeChar = Character.create({
+      id: CharacterId.generate(),
+      projectId: ProjectId.generate(),
+      name: "Complete",
+      hauge_identity: "The Hero",
+      voice_sentence_length: "Short",
+      physical_tells: '["T1", "T2", "T3"]'
+    });
+    expect(completeChar.isComplete()).toBe(true);
   });
 });
