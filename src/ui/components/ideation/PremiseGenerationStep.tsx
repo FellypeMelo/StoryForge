@@ -5,7 +5,7 @@ import { CrossPollinationSeed } from "../../../domain/ideation/cross-pollination
 import { Genre } from "../../../domain/value-objects/genre";
 import { AcademicDiscipline } from "../../../domain/value-objects/academic-discipline";
 import { ClicheBlacklist } from "../../../domain/ideation/cliche-blacklist";
-import { LlmPort } from "../../../domain/ideation/ports/llm-port";
+import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 
 interface PremiseGenerationStepProps {
   state: IdeationState;
@@ -24,36 +24,6 @@ const DISCIPLINES = [
   "Teoria dos Jogos",
   "Entomologia"
 ];
-
-// Dummy LLM Port for now (Mocking the AI response)
-class DummyLlmPort implements LlmPort {
-  async complete(prompt: string): Promise<{ text: string }> {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const premises = [
-      {
-        protagonist: "Um botânico que vive isolado em uma estação espacial",
-        incitingIncident: "Descobre que as plantas que cultiva estão mimetizando a voz de sua esposa falecida",
-        antagonist: "A corporação que quer extrair o 'óleo da memória' das plantas",
-        stakes: "A sanidade do protagonista e a preservação da última conexão com sua amada"
-      },
-      {
-        protagonist: "Uma especialista em biologia marinha com fobia de água",
-        incitingIncident: "Encontra um artefato abissal que reage apenas ao seu DNA",
-        antagonist: "Uma seita que acredita que o artefato é a chave para o apocalipse",
-        stakes: "O equilíbrio dos oceanos e a sobrevivência das cidades costeiras"
-      },
-      {
-        protagonist: "Um arqueólogo de dados em um futuro distópico",
-        incitingIncident: "Recupera um HD de 2024 que contém a localização de uma semente física real",
-        antagonist: "A inteligência artificial que controla o suprimento de comida sintética",
-        stakes: "A chance de restaurar a biodiversidade no planeta Terra"
-      }
-    ];
-
-    return { text: JSON.stringify(premises) };
-  }
-}
 
 export function PremiseGenerationStep({ state, updateState, onNext, onBack }: PremiseGenerationStepProps) {
   const [loading, setLoading] = useState(false);

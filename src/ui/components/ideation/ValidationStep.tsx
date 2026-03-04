@@ -5,10 +5,8 @@ import { WorldbuildingPipeline } from "../../../application/worldbuilding/worldb
 import { Premise as PremiseEntity } from "../../../domain/ideation/premise";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 import { WorldRuleRepository } from "../../../domain/ports/world-rule-repository";
-import { WorldRule } from "../../../domain/world-rule";
-import { Result } from "../../../domain/result";
-import { LlmPort } from "../../../domain/ideation/ports/llm-port";
-import { invoke } from "@tauri-apps/api/core";
+import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
+import { TauriWorldRuleRepository } from "../../../infrastructure/tauri/tauri-world-rule-repository";
 
 interface ValidationStepProps {
   state: IdeationState;
@@ -17,49 +15,6 @@ interface ValidationStepProps {
   onFinish: () => void;
   projectId: string;
   bookId: string;
-}
-
-// Adapter for WorldRuleRepository using Tauri
-class TauriWorldRuleRepository implements Partial<WorldRuleRepository> {
-  constructor(private readonly bookId: string) {}
-
-  async save(rule: WorldRule): Promise<Result<void, any>> {
-    try {
-      const props = rule.toProps();
-      await invoke("create_world_rule", {
-        projectId: props.projectId.value,
-        bookId: this.bookId,
-        category: props.category,
-        content: props.content,
-      });
-      return { success: true, data: undefined };
-    } catch (error) {
-      return { success: false, error: error as any };
-    }
-  }
-}
-
-// Dummy LLM Port for now (Mocking the AI response)
-class DummyLlmPort implements LlmPort {
-  async complete(prompt: string): Promise<{ text: string }> {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    if (prompt.includes("analyze")) {
-      return { 
-        text: JSON.stringify({ 
-          isValid: true, 
-          reason: "Conflito central forte. A subversão do botânico mimetizando a voz da esposa cria uma carga emocional imediata e riscos claros." 
-        }) 
-      };
-    }
-    
-    if (prompt.includes("Physics")) return { text: "Regras de física baseadas em ressonância sonora vegetal." };
-    if (prompt.includes("Economy")) return { text: "Economia de troca de sementes de memória." };
-    if (prompt.includes("Sociology")) return { text: "Sociedade organizada em clãs de jardineiros estelares." };
-    if (prompt.includes("Zones")) return { text: "Conflitos entre tecnocratas e preservacionistas orgânicos." };
-
-    return { text: "Mock response for worldbuilding step." };
-  }
 }
 
 export function ValidationStep({ state, updateState, onBack, onFinish, projectId, bookId }: ValidationStepProps) {

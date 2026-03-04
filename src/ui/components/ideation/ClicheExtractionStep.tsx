@@ -3,11 +3,8 @@ import { IdeationState } from "./IdeationWizard";
 import { ExtractClichesUseCase } from "../../../application/ideation/extract-cliches";
 import { Genre } from "../../../domain/value-objects/genre";
 import { ProjectId } from "../../../domain/value-objects/project-id";
-import { LlmPort } from "../../../domain/ideation/ports/llm-port";
-import { BlacklistRepository } from "../../../domain/ports/blacklist-repository";
-import { BlacklistEntry } from "../../../domain/blacklist-entry";
-import { Result } from "../../../domain/result";
-import { invoke } from "@tauri-apps/api/core";
+import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
+import { TauriBlacklistRepository } from "../../../infrastructure/tauri/tauri-blacklist-repository";
 
 interface ClicheExtractionStepProps {
   state: IdeationState;
@@ -18,38 +15,6 @@ interface ClicheExtractionStepProps {
 
 const GENRES = ["Fantasia", "Ficção Científica", "Cyberpunk", "Terror", "Romance", "Policial", "Épico"];
 
-// Adapter for BlacklistRepository using Tauri
-class TauriBlacklistRepository implements Partial<BlacklistRepository> {
-  async save(entry: BlacklistEntry): Promise<Result<void, any>> {
-    try {
-      const props = entry.toProps();
-      await invoke("create_blacklist_entry", {
-        projectId: props.projectId.value,
-        term: props.term,
-        category: props.category,
-        reason: props.reason,
-      });
-      return { success: true, data: undefined };
-    } catch (error) {
-      return { success: false, error: error as any };
-    }
-  }
-}
-
-// Dummy LLM Port for now (Mocking the AI response)
-class DummyLlmPort implements LlmPort {
-  async complete(prompt: string): Promise<{ text: string }> {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    if (prompt.includes("Fantasia")) {
-      return { text: "O Escolhido, O Lorde das Trevas, Espada Mágica, Profecia Antiga, Mentor que Morre" };
-    }
-    if (prompt.includes("Ficção Científica")) {
-      return { text: "IA Assassina, Império Galáctico, Viagem no Tempo, Alienígenas Hostis, Arma de Destruição em Massa" };
-    }
-    return { text: "Cliche 1, Cliche 2, Cliche 3, Cliche 4, Cliche 5" };
-  }
-}
-
 export function ClicheExtractionStep({ state, updateState, onNext, projectId }: ClicheExtractionStepProps) {
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +24,7 @@ export function ClicheExtractionStep({ state, updateState, onNext, projectId }: 
     
     try {
       const llmPort = new DummyLlmPort();
-      const blacklistRepo = new TauriBlacklistRepository() as BlacklistRepository;
+      const blacklistRepo = new TauriBlacklistRepository();
       const useCase = new ExtractClichesUseCase(llmPort, blacklistRepo);
       
       const result = await useCase.execute(
