@@ -4,11 +4,17 @@ import { CharacterSheet } from "../../domain/character-sheet";
 import { OceanProfile, OceanTraitScore } from "../../domain/ocean-profile";
 import { HaugeArc } from "../../domain/hauge-arc";
 import { VoiceProfile, PhysicalTells } from "../../domain/voice-profile";
+import { CharacterRepository } from "../../domain/ports/character-repository";
+import { ProjectId } from "../../domain/value-objects/project-id";
+import { CharacterId } from "../../domain/value-objects/character-id";
 
 export class GenerateCharacterUseCase {
-  constructor(private readonly llmPort: LlmPort) {}
+  constructor(
+    private readonly llmPort: LlmPort,
+    private readonly repository: CharacterRepository
+  ) {}
 
-  async execute(premise: Premise, role: string): Promise<CharacterSheet> {
+  async execute(projectId: ProjectId, name: string, premise: Premise, role: string): Promise<CharacterSheet> {
     const prompt = `Context: You are a professional character architect.
 Role: Character Generator.
 Knowledge: You use the OCEAN psychological profile and Michael Hauge's character arc framework.
@@ -79,13 +85,26 @@ No preamble, no explanation. Just the JSON object.`;
 
       const tells = PhysicalTells.create(data.tells);
 
-      return CharacterSheet.create({
+      const characterSheet = CharacterSheet.create({
+        id: CharacterId.generate(),
+        projectId,
+        name,
         ocean,
         hauge,
         voice,
         tells,
       });
+
+      const saveResult = await this.repository.save(characterSheet);
+      if (!saveResult.success) {
+        throw new Error(`Failed to save character: ${saveResult.error.message}`);
+      }
+
+      return characterSheet;
     } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to parse character from LLM: ${error.message}`);
+      }
       throw new Error("Failed to parse character from LLM");
     }
   }

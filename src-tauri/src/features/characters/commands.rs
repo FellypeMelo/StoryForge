@@ -7,12 +7,10 @@ use tauri::State;
 #[tauri::command]
 pub async fn create_character(
     state: State<'_, SqliteDatabase>,
-    project_id: String,
-    book_id: Option<String>,
-    name: String,
-) -> AppResult<Character> {
+    character: Character,
+) -> AppResult<()> {
     let service = CharacterService::new(state.inner());
-    service.create_character(ProjectId(project_id), book_id.map(BookId), name)
+    service.repository.create_character(&character)
 }
 
 #[tauri::command]

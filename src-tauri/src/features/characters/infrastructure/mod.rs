@@ -17,8 +17,11 @@ impl CharacterRepository for SqliteDatabase {
                 id, project_id, book_id, name, age, occupation, physical_description, 
                 goal, motivation, internal_conflict, voice, mannerisms,
                 ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                ocean_agreeableness, ocean_neuroticism,
+                hauge_wound, hauge_belief, hauge_fear, hauge_identity, hauge_essence,
+                voice_sentence_length, voice_formality, voice_verbal_tics, voice_evasion_mechanism,
+                physical_tells
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             params![
                 character.id.0,
                 character.project_id.0,
@@ -37,6 +40,16 @@ impl CharacterRepository for SqliteDatabase {
                 character.ocean_scores.extraversion,
                 character.ocean_scores.agreeableness,
                 character.ocean_scores.neuroticism,
+                character.hauge_wound,
+                character.hauge_belief,
+                character.hauge_fear,
+                character.hauge_identity,
+                character.hauge_essence,
+                character.voice_sentence_length,
+                character.voice_formality,
+                character.voice_verbal_tics,
+                character.voice_evasion_mechanism,
+                character.physical_tells,
             ],
         )
         .map_err(AppError::from)?;
@@ -54,7 +67,10 @@ impl CharacterRepository for SqliteDatabase {
                 id, project_id, book_id, name, age, occupation, physical_description, 
                 goal, motivation, internal_conflict, voice, mannerisms,
                 ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
+                ocean_agreeableness, ocean_neuroticism,
+                hauge_wound, hauge_belief, hauge_fear, hauge_identity, hauge_essence,
+                voice_sentence_length, voice_formality, voice_verbal_tics, voice_evasion_mechanism,
+                physical_tells
             FROM characters WHERE id = ?",
                 [id.0.clone()],
                 |row: &Row| {
@@ -78,6 +94,16 @@ impl CharacterRepository for SqliteDatabase {
                             agreeableness: row.get(15)?,
                             neuroticism: row.get(16)?,
                         },
+                        hauge_wound: row.get(17)?,
+                        hauge_belief: row.get(18)?,
+                        hauge_fear: row.get(19)?,
+                        hauge_identity: row.get(20)?,
+                        hauge_essence: row.get(21)?,
+                        voice_sentence_length: row.get(22)?,
+                        voice_formality: row.get(23)?,
+                        voice_verbal_tics: row.get(24)?,
+                        voice_evasion_mechanism: row.get(25)?,
+                        physical_tells: row.get(26)?,
                     })
                 },
             )
@@ -101,7 +127,10 @@ impl CharacterRepository for SqliteDatabase {
                 id, project_id, book_id, name, age, occupation, physical_description, 
                 goal, motivation, internal_conflict, voice, mannerisms,
                 ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
+                ocean_agreeableness, ocean_neuroticism,
+                hauge_wound, hauge_belief, hauge_fear, hauge_identity, hauge_essence,
+                voice_sentence_length, voice_formality, voice_verbal_tics, voice_evasion_mechanism,
+                physical_tells
             FROM characters WHERE project_id = ?",
             )
             .map_err(AppError::from)?;
@@ -128,6 +157,16 @@ impl CharacterRepository for SqliteDatabase {
                         agreeableness: row.get(15)?,
                         neuroticism: row.get(16)?,
                     },
+                    hauge_wound: row.get(17)?,
+                    hauge_belief: row.get(18)?,
+                    hauge_fear: row.get(19)?,
+                    hauge_identity: row.get(20)?,
+                    hauge_essence: row.get(21)?,
+                    voice_sentence_length: row.get(22)?,
+                    voice_formality: row.get(23)?,
+                    voice_verbal_tics: row.get(24)?,
+                    voice_evasion_mechanism: row.get(25)?,
+                    physical_tells: row.get(26)?,
                 })
             })
             .map_err(AppError::from)?;
@@ -150,7 +189,10 @@ impl CharacterRepository for SqliteDatabase {
                 id, project_id, book_id, name, age, occupation, physical_description, 
                 goal, motivation, internal_conflict, voice, mannerisms,
                 ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
+                ocean_agreeableness, ocean_neuroticism,
+                hauge_wound, hauge_belief, hauge_fear, hauge_identity, hauge_essence,
+                voice_sentence_length, voice_formality, voice_verbal_tics, voice_evasion_mechanism,
+                physical_tells
             FROM characters WHERE book_id = ?",
             )
             .map_err(AppError::from)?;
@@ -177,6 +219,16 @@ impl CharacterRepository for SqliteDatabase {
                         agreeableness: row.get(15)?,
                         neuroticism: row.get(16)?,
                     },
+                    hauge_wound: row.get(17)?,
+                    hauge_belief: row.get(18)?,
+                    hauge_fear: row.get(19)?,
+                    hauge_identity: row.get(20)?,
+                    hauge_essence: row.get(21)?,
+                    voice_sentence_length: row.get(22)?,
+                    voice_formality: row.get(23)?,
+                    voice_verbal_tics: row.get(24)?,
+                    voice_evasion_mechanism: row.get(25)?,
+                    physical_tells: row.get(26)?,
                 })
             })
             .map_err(AppError::from)?;
@@ -199,7 +251,10 @@ impl CharacterRepository for SqliteDatabase {
                 id, project_id, book_id, name, age, occupation, physical_description, 
                 goal, motivation, internal_conflict, voice, mannerisms,
                 ocean_openness, ocean_conscientiousness, ocean_extraversion,
-                ocean_agreeableness, ocean_neuroticism
+                ocean_agreeableness, ocean_neuroticism,
+                hauge_wound, hauge_belief, hauge_fear, hauge_identity, hauge_essence,
+                voice_sentence_length, voice_formality, voice_verbal_tics, voice_evasion_mechanism,
+                physical_tells
             FROM characters WHERE project_id = ? AND book_id IS NULL",
             )
             .map_err(AppError::from)?;
@@ -226,6 +281,16 @@ impl CharacterRepository for SqliteDatabase {
                         agreeableness: row.get(15)?,
                         neuroticism: row.get(16)?,
                     },
+                    hauge_wound: row.get(17)?,
+                    hauge_belief: row.get(18)?,
+                    hauge_fear: row.get(19)?,
+                    hauge_identity: row.get(20)?,
+                    hauge_essence: row.get(21)?,
+                    voice_sentence_length: row.get(22)?,
+                    voice_formality: row.get(23)?,
+                    voice_verbal_tics: row.get(24)?,
+                    voice_evasion_mechanism: row.get(25)?,
+                    physical_tells: row.get(26)?,
                 })
             })
             .map_err(AppError::from)?;
@@ -274,7 +339,10 @@ impl CharacterRepository for SqliteDatabase {
                 name = ?, age = ?, occupation = ?, physical_description = ?, 
                 goal = ?, motivation = ?, internal_conflict = ?, voice = ?, mannerisms = ?,
                 ocean_openness = ?, ocean_conscientiousness = ?, ocean_extraversion = ?,
-                ocean_agreeableness = ?, ocean_neuroticism = ?
+                ocean_agreeableness = ?, ocean_neuroticism = ?,
+                hauge_wound = ?, hauge_belief = ?, hauge_fear = ?, hauge_identity = ?, hauge_essence = ?,
+                voice_sentence_length = ?, voice_formality = ?, voice_verbal_tics = ?, 
+                voice_evasion_mechanism = ?, physical_tells = ?
             WHERE id = ?",
                 params![
                     character.name,
@@ -291,6 +359,16 @@ impl CharacterRepository for SqliteDatabase {
                     character.ocean_scores.extraversion,
                     character.ocean_scores.agreeableness,
                     character.ocean_scores.neuroticism,
+                    character.hauge_wound,
+                    character.hauge_belief,
+                    character.hauge_fear,
+                    character.hauge_identity,
+                    character.hauge_essence,
+                    character.voice_sentence_length,
+                    character.voice_formality,
+                    character.voice_verbal_tics,
+                    character.voice_evasion_mechanism,
+                    character.physical_tells,
                     character.id.0,
                 ],
             )
@@ -353,6 +431,7 @@ mod tests {
             Character::new(project_id.clone(), None, "John Doe".to_string()).unwrap();
         character.age = 30;
         character.occupation = "Writer".to_string();
+        character.hauge_wound = "Past trauma".to_string();
 
         let repo: &dyn CharacterRepository = &db;
 
@@ -366,6 +445,7 @@ mod tests {
             .expect("Failed to fetch character");
         assert_eq!(fetched.name, "John Doe");
         assert_eq!(fetched.age, 30);
+        assert_eq!(fetched.hauge_wound, "Past trauma");
 
         // List
         let list = repo

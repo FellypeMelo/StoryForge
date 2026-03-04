@@ -39,6 +39,16 @@ pub struct Character {
     pub ocean_scores: OceanScores,
     pub voice: String,
     pub mannerisms: String,
+    pub hauge_wound: String,
+    pub hauge_belief: String,
+    pub hauge_fear: String,
+    pub hauge_identity: String,
+    pub hauge_essence: String,
+    pub voice_sentence_length: String,
+    pub voice_formality: String,
+    pub voice_verbal_tics: String,
+    pub voice_evasion_mechanism: String,
+    pub physical_tells: String,
 }
 
 impl Character {
@@ -61,6 +71,16 @@ impl Character {
             ocean_scores: OceanScores::default(),
             voice: String::new(),
             mannerisms: String::new(),
+            hauge_wound: String::new(),
+            hauge_belief: String::new(),
+            hauge_fear: String::new(),
+            hauge_identity: String::new(),
+            hauge_essence: String::new(),
+            voice_sentence_length: String::new(),
+            voice_formality: String::new(),
+            voice_verbal_tics: "[]".to_string(),
+            voice_evasion_mechanism: String::new(),
+            physical_tells: "[]".to_string(),
         })
     }
 

@@ -4,9 +4,16 @@ import { CharacterSheet } from "../character-sheet";
 import { OceanProfile, OceanTraitScore } from "../ocean-profile";
 import { HaugeArc } from "../hauge-arc";
 import { VoiceProfile, PhysicalTells } from "../voice-profile";
+import { CharacterId } from "../value-objects/character-id";
+import { ProjectId } from "../value-objects/project-id";
 
 describe("CharacterValidator", () => {
+  const id = CharacterId.generate();
+  const projectId = ProjectId.generate();
+  const name = "Test";
+
   const validOcean = OceanProfile.create({
+// ... rest of file (I will use replace more surgically)
     openness: OceanTraitScore.Medium,
     conscientiousness: OceanTraitScore.Medium,
     extraversion: OceanTraitScore.Medium,
@@ -29,6 +36,9 @@ describe("CharacterValidator", () => {
 
   it("should validate a balanced character", () => {
     const sheet = CharacterSheet.create({
+      id,
+      projectId,
+      name,
       ocean: validOcean,
       hauge: validHauge,
       voice: validVoice,
@@ -50,6 +60,9 @@ describe("CharacterValidator", () => {
     });
 
     const sheet = CharacterSheet.create({
+      id,
+      projectId,
+      name,
       ocean: tooPerfectOcean,
       hauge: validHauge,
       voice: validVoice,
@@ -69,6 +82,9 @@ describe("CharacterValidator", () => {
     });
 
     const sheet = CharacterSheet.create({
+      id,
+      projectId,
+      name,
       ocean: validOcean,
       hauge: validHauge,
       voice: genericVoice,

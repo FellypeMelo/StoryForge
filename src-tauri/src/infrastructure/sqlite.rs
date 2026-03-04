@@ -304,6 +304,26 @@ impl SqliteDatabase {
             )?;
         }
 
+        let current_version: i32 =
+            conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;
+        if current_version < 8 {
+            conn.execute_batch(
+                "BEGIN;
+                 ALTER TABLE characters ADD COLUMN hauge_wound TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN hauge_belief TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN hauge_fear TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN hauge_identity TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN hauge_essence TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN voice_sentence_length TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN voice_formality TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN voice_verbal_tics TEXT DEFAULT '[]';
+                 ALTER TABLE characters ADD COLUMN voice_evasion_mechanism TEXT DEFAULT '';
+                 ALTER TABLE characters ADD COLUMN physical_tells TEXT DEFAULT '[]';
+                 PRAGMA user_version = 8;
+                 COMMIT;",
+            )?;
+        }
+
         Ok(())
     }
 }

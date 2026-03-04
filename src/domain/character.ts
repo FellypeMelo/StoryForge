@@ -33,6 +33,16 @@ export const CharacterSchema = z.object({
   })),
   voice: z.string().default(""),
   mannerisms: z.string().default(""),
+  hauge_wound: z.string().default(""),
+  hauge_belief: z.string().default(""),
+  hauge_fear: z.string().default(""),
+  hauge_identity: z.string().default(""),
+  hauge_essence: z.string().default(""),
+  voice_sentence_length: z.string().default(""),
+  voice_formality: z.string().default(""),
+  voice_verbal_tics: z.string().default("[]"),
+  voice_evasion_mechanism: z.string().default(""),
+  physical_tells: z.string().default("[]"),
 });
 
 export interface CharacterProps {
@@ -49,6 +59,16 @@ export interface CharacterProps {
   ocean_scores: OceanScores;
   voice: string;
   mannerisms: string;
+  hauge_wound: string;
+  hauge_belief: string;
+  hauge_fear: string;
+  hauge_identity: string;
+  hauge_essence: string;
+  voice_sentence_length: string;
+  voice_formality: string;
+  voice_verbal_tics: string;
+  voice_evasion_mechanism: string;
+  physical_tells: string;
 }
 
 export class Character {
@@ -77,6 +97,16 @@ export class Character {
     ocean_scores?: OceanScores;
     voice?: string;
     mannerisms?: string;
+    hauge_wound?: string;
+    hauge_belief?: string;
+    hauge_fear?: string;
+    hauge_identity?: string;
+    hauge_essence?: string;
+    voice_sentence_length?: string;
+    voice_formality?: string;
+    voice_verbal_tics?: string;
+    voice_evasion_mechanism?: string;
+    physical_tells?: string;
   }): Character {
     const validated = CharacterSchema.parse({
       id: props.id.value,
@@ -92,6 +122,16 @@ export class Character {
       ocean_scores: props.ocean_scores,
       voice: props.voice,
       mannerisms: props.mannerisms,
+      hauge_wound: props.hauge_wound,
+      hauge_belief: props.hauge_belief,
+      hauge_fear: props.hauge_fear,
+      hauge_identity: props.hauge_identity,
+      hauge_essence: props.hauge_essence,
+      voice_sentence_length: props.voice_sentence_length,
+      voice_formality: props.voice_formality,
+      voice_verbal_tics: props.voice_verbal_tics,
+      voice_evasion_mechanism: props.voice_evasion_mechanism,
+      physical_tells: props.physical_tells,
     });
 
     return new Character({
@@ -134,9 +174,11 @@ export class Character {
     return this.props.ocean_scores;
   }
 
+  public get hauge_wound(): string {
+    return this.props.hauge_wound;
+  }
+
   public toSnapshot(): string {
     return `${this.name}, ${this.age} anos. ${this.props.occupation}. Objetivos: ${this.props.goal}. Conflito: ${this.props.internal_conflict}.`;
   }
 }
-
-
