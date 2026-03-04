@@ -3,7 +3,7 @@
 **Track ID:** ideation-worldbuilding_20260302
 **Spec:** [spec.md](./spec.md)
 **Created:** 2026-03-02
-**Status:** [ ] Not Started
+**Status:** [x] Completed
 
 ## Phase 1: Domain & Ports [checkpoint: e97bb11]
 
@@ -16,7 +16,7 @@ Create the core domain models and ports for Ideation.
 - [x] Task 1.4: Refactor domain with Value Objects (`Genre`, `AcademicDiscipline`). (953ef45)
 
 ### Verification
-- [ ] Domain tests passing and no infrastructure dependencies in domain layer.
+- [x] Domain tests passing and no infrastructure dependencies in domain layer.
 
 ## Phase 2: CHI Pipeline Use Cases [checkpoint: 32d8061]
 
@@ -29,7 +29,7 @@ Implement the CHI method use cases.
 - [x] Task 2.4: Implement `IdeationPipeline` composing the three phases. (b4e9845)
 
 ### Verification
-- [ ] Pipeline tests passing with mocked `LlmPort`.
+- [x] Pipeline tests passing with mocked `LlmPort`.
 
 ## Phase 3: Worldbuilding CAD [checkpoint: b5440b8]
 
@@ -46,20 +46,20 @@ Implement Context-Aware Decomposition for worldbuilding.
 - [x] Pipeline isolates steps and persists `WorldRules`.
 - [x] Domain and Application layers achieved >99% test coverage.
 
-## Phase 4: Ideation UI
+## Phase 4: Ideation UI [checkpoint: 18f3d67]
 
 Implement the UI wizard for the CHI method.
 
 ### Tasks
-- [ ] Task 4.1: Create `/ideation` route.
-- [ ] Task 4.2: Build 3-step wizard component.
-- [ ] Task 4.3: Build Phase 1 UI (Cliche list).
-- [ ] Task 4.4: Build Phase 2 UI (Premises cards).
-- [ ] Task 4.5: Build Phase 3 UI (Validation form).
+- [x] Task 4.1: Create `/ideation` route. (fef56eb)
+- [x] Task 4.2: Build 3-step wizard component. (18f3d67)
+- [x] Task 4.3: Build Phase 1 UI (Cliche list). (18f3d67)
+- [x] Task 4.4: Build Phase 2 UI (Premises cards). (18f3d67)
+- [x] Task 4.5: Build Phase 3 UI (Validation form). (18f3d67)
 
 ### Verification
-- [ ] UI correctly persists state across wizard steps.
+- [x] UI correctly persists state across wizard steps.
 
 ## Final Verification
-- [ ] All tests passing.
-- [ ] App builds successfully.
+- [x] All tests passing.
+- [x] App builds successfully.
