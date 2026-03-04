@@ -41,7 +41,7 @@
 
 ---
 
-## 🧠 Fase 2: Casos de Uso - Gerador de Personagens (Etapa 3.4)
+## 🧠 Fase 2: Casos de Uso - Gerador de Personagens (Etapa 3.4) [checkpoint: 0ef78db]
 
 **Objetivo:** Orquestrar a geração inteligente via LLM com guardrails de qualidade literária.
 
