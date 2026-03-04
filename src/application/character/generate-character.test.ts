@@ -4,7 +4,6 @@ import { LlmPort } from "../../domain/ideation/ports/llm-port";
 import { Premise } from "../../domain/ideation/premise";
 import { CharacterRepository } from "../../domain/ports/character-repository";
 import { ProjectId } from "../../domain/value-objects/project-id";
-import { Result } from "../../domain/result";
 
 describe("GenerateCharacterUseCase", () => {
   const mockLlmPort: LlmPort = {

@@ -4,7 +4,6 @@ import { CharacterSheet } from "../../domain/character-sheet";
 import { CharacterId } from "../../domain/value-objects/character-id";
 import { ProjectId } from "../../domain/value-objects/project-id";
 import { OceanProfile, OceanTraitScore } from "../../domain/ocean-profile";
-import { HaugeArc } from "../../domain/hauge-arc";
 import { VoiceProfile, PhysicalTells } from "../../domain/voice-profile";
 
 vi.mock("@tauri-apps/api/core", () => ({

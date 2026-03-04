@@ -1,11 +1,13 @@
-import { Genre } from '../../domain/value-objects/genre';
-import { AcademicDiscipline } from '../../domain/value-objects/academic-discipline';
-import { ExtractClichesUseCase } from './extract-cliches';
-import { GeneratePremisesUseCase } from './generate-premises';
-import { ValidatePremiseUseCase, ValidationResult } from './validate-premise';
-import { Premise } from '../../domain/ideation/premise';
-import { ClicheBlacklist } from '../../domain/ideation/cliche-blacklist';
-import { CrossPollinationSeed } from '../../domain/ideation/cross-pollination-seed';
+import { Genre } from "../../domain/value-objects/genre";
+import { AcademicDiscipline } from "../../domain/value-objects/academic-discipline";
+import { ExtractClichesUseCase } from "./extract-cliches";
+import { GeneratePremisesUseCase } from "./generate-premises";
+import { ValidatePremiseUseCase, ValidationResult } from "./validate-premise";
+import { Premise } from "../../domain/ideation/premise";
+import { ClicheBlacklist } from "../../domain/ideation/cliche-blacklist";
+import { CrossPollinationSeed } from "../../domain/ideation/cross-pollination-seed";
+
+import { ProjectId } from "../../domain/value-objects/project-id";
 
 export interface PipelineResult {
   blacklist: ClicheBlacklist;
@@ -17,16 +19,16 @@ export class IdeationPipeline {
   constructor(
     private readonly extractUseCase: ExtractClichesUseCase,
     private readonly generateUseCase: GeneratePremisesUseCase,
-    private readonly validateUseCase: ValidatePremiseUseCase
+    private readonly validateUseCase: ValidatePremiseUseCase,
   ) {}
 
-  async run(genre: Genre, discipline: AcademicDiscipline): Promise<PipelineResult> {
-    const blacklist = await this.extractUseCase.execute(genre);
+  async run(projectId: ProjectId, genre: Genre, discipline: AcademicDiscipline): Promise<PipelineResult> {
+    const blacklist = await this.extractUseCase.execute(genre, projectId);
     const seed = new CrossPollinationSeed(genre, discipline);
     const premises = await this.generateUseCase.execute(seed, blacklist);
 
     const validations = await Promise.all(
-      premises.map((premise) => this.validateUseCase.execute(premise))
+      premises.map((premise) => this.validateUseCase.execute(premise)),
     );
 
     return {

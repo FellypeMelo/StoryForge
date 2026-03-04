@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Character, CharacterProps, OceanScores } from "../../../domain/character";
-import { ChevronLeft, ChevronRight, Save, X, User, Brain, ScrollText, Info, Target, Zap, Volume2, Plus, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Save, X, User, Brain, Info, Target, Volume2, Plus, Trash2 } from "lucide-react";
 import { OceanRadarChart } from "./OceanRadarChart";
 
 interface CharacterWizardProps {

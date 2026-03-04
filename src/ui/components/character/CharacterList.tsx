@@ -1,10 +1,11 @@
 import { Character } from "../../../domain/character";
-import { User, ShieldQuestion } from "lucide-react";
+import { User, ShieldQuestion, Sparkles } from "lucide-react";
 
 interface CharacterListProps {
   characters: Character[];
   onSelect?: (character: Character) => void;
   onCreateNew?: () => void;
+  onGenerateAI?: () => void;
   injectedIds?: string[];
 }
 
@@ -12,6 +13,7 @@ export function CharacterList({
   characters,
   onSelect,
   onCreateNew,
+  onGenerateAI,
   injectedIds = [],
 }: CharacterListProps) {
   if (characters.length === 0) {
@@ -26,12 +28,20 @@ export function CharacterList({
             Sua história aguarda seu elenco. Crie seu primeiro personagem para começar.
           </p>
         </div>
-        <button
-          onClick={onCreateNew}
-          className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Criar Personagem
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={onGenerateAI}
+            className="bg-purple-600 text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer flex items-center gap-2"
+          >
+            <Sparkles size={16} /> Gerar com IA
+          </button>
+          <button
+            onClick={onCreateNew}
+            className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            Criar Manualmente
+          </button>
+        </div>
       </div>
     );
   }
@@ -42,12 +52,20 @@ export function CharacterList({
         <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
           Elenco de Personagens ({characters.length})
         </h2>
-        <button
-          onClick={onCreateNew}
-          className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"
-        >
-          + Adicionar Novo
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={onGenerateAI}
+            className="text-xs font-bold tracking-widest uppercase text-purple-500 hover:underline cursor-pointer flex items-center gap-1"
+          >
+            <Sparkles size={12} /> Gerar com IA
+          </button>
+          <button
+            onClick={onCreateNew}
+            className="text-xs font-bold tracking-widest uppercase text-text-main hover:underline cursor-pointer"
+          >
+            + Adicionar Novo
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
