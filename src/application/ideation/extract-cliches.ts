@@ -2,6 +2,9 @@ import { Genre } from '../../domain/value-objects/genre';
 import { LlmPort } from '../../domain/ideation/ports/llm-port';
 import { BlacklistRepository } from '../../domain/ports/blacklist-repository';
 import { ClicheBlacklist } from '../../domain/ideation/cliche-blacklist';
+import { BlacklistEntry } from '../../domain/blacklist-entry';
+import { ProjectId } from '../../domain/value-objects/project-id';
+import { BlacklistEntryId } from '../../domain/value-objects/codex-ids';
 
 export class ExtractClichesUseCase {
   constructor(
@@ -9,7 +12,7 @@ export class ExtractClichesUseCase {
     private readonly blacklistRepository: BlacklistRepository
   ) {}
 
-  async execute(genre: Genre): Promise<ClicheBlacklist> {
+  async execute(genre: Genre, projectId: ProjectId): Promise<ClicheBlacklist> {
     const prompt = `List 10 common cliches, tropes, and overused elements in the ${genre.value} genre. 
     Return them as a comma-separated list. No preamble, no explanation.`;
 
@@ -25,7 +28,18 @@ export class ExtractClichesUseCase {
       .filter((term) => term.length > 0);
 
     const blacklist = new ClicheBlacklist(genre, terms);
-    await this.blacklistRepository.save(blacklist);
+    
+    // Save each as a BlacklistEntry
+    for (const term of terms) {
+      const entry = BlacklistEntry.create({
+        id: BlacklistEntryId.generate(),
+        projectId: projectId,
+        term: term,
+        category: `Cliche: ${genre.value}`,
+        reason: 'Extracted via CHI method'
+      });
+      await this.blacklistRepository.save(entry);
+    }
 
     return blacklist;
   }

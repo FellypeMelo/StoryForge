@@ -4,6 +4,7 @@ import { AppShell } from "./ui/components/layout/AppShell";
 import { CodexDashboard } from "./ui/components/dashboard/CodexDashboard";
 import { ProjectSelector } from "./ui/components/project/ProjectSelector";
 import { BookSelector } from "./ui/components/book/BookSelector";
+import { IdeationWizard } from "./ui/components/ideation/IdeationWizard";
 
 interface AppInfo {
   name: string;
@@ -76,6 +77,8 @@ export function App() {
     switch (currentPath) {
       case "codex":
         return <CodexDashboard projectId={selectedProjectId} bookId={selectedBookId} onBack={() => setCurrentPath("dashboard")} />;
+      case "ideation":
+        return <IdeationWizard projectId={selectedProjectId} bookId={selectedBookId} onBack={() => setCurrentPath("dashboard")} />;
       case "dashboard":
       default:
         return (
@@ -140,6 +143,15 @@ export function App() {
                   >
                     Detalhes do Livro
                     <span className="text-text-muted group-hover:text-text-main transition-colors font-serif">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentPath("ideation")}
+                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
+                  >
+                    Gerador de Ideias (CHI)
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                       →
                     </span>
                   </button>
