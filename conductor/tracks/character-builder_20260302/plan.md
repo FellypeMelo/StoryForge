@@ -33,12 +33,12 @@
     - 🔴 RED: Testar `VoiceProfile` (sentenceLength, formality, verbalTics, evasionMechanism).
     - 🔴 RED: Testar `PhysicalTells` (lista obrigatória de 3 comportamentos).
     - 🟢 GREEN: Implementar entidades.
-- [ ] **Task 1.4: CharacterSheet Aggregate Root (TDD)**
+- [x] **Task 1.4: CharacterSheet Aggregate Root (TDD)** [5c458f8]
+    - 🔴 RED: Testar agregação dos 4 componentes.
+    - 🔴 RED: Validar método `isComplete()` (CharacterSheet sem Hauge é sinalizada como rascunho).
+    - 🟢 GREEN: Implementar Aggregate Root.
+    - 🔵 REFACTOR: Garantir que cada trait OCEAN impacte métodos de decisão do domínio.
 
-  - 🔴 RED: Testar agregação dos 4 componentes.
-  - 🔴 RED: Validar método `isComplete()` (CharacterSheet sem Hauge é sinalizada como rascunho).
-  - 🟢 GREEN: Implementar Aggregate Root.
-  - 🔵 REFACTOR: Garantir que cada trait OCEAN impacte métodos de decisão do domínio.
 
 ---
 
