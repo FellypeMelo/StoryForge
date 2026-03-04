@@ -34,7 +34,7 @@ export const SlideOver: React.FC<SlideOverProps> = ({ isOpen, onClose, title, ch
   useEffect(() => {
     if (isOpen && panelRef.current) {
       const focusableElements = panelRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (focusableElements.length > 0) {
         (focusableElements[0] as HTMLElement).focus();
@@ -75,13 +75,9 @@ export const SlideOver: React.FC<SlideOverProps> = ({ isOpen, onClose, title, ch
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-8">
-            {children}
-          </div>
+          <div className="flex-1 p-8">{children}</div>
         </div>
       </div>
     </div>
   );
 };
-
-

@@ -38,7 +38,7 @@ export class TimelineEvent {
       bookId: props.bookId?.value,
       date: props.date,
       description: props.description,
-      causalDependencies: props.causalDependencies?.map(id => id.value),
+      causalDependencies: props.causalDependencies?.map((id) => id.value),
     });
 
     return new TimelineEvent({
@@ -46,7 +46,7 @@ export class TimelineEvent {
       id: TimelineEventId.create(validated.id),
       projectId: ProjectId.create(validated.projectId),
       bookId: validated.bookId ? BookId.create(validated.bookId) : undefined,
-      causalDependencies: validated.causalDependencies.map(id => TimelineEventId.create(id)),
+      causalDependencies: validated.causalDependencies.map((id) => TimelineEventId.create(id)),
     });
   }
 
@@ -70,5 +70,3 @@ export class TimelineEvent {
     return this.props.description;
   }
 }
-
-

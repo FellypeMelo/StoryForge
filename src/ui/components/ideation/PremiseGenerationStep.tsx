@@ -15,46 +15,48 @@ interface PremiseGenerationStepProps {
 }
 
 const DISCIPLINES = [
-  "Biologia Marinha", 
-  "Física Quântica", 
-  "Sociologia Urbana", 
-  "Botânica", 
-  "Arqueologia", 
+  "Biologia Marinha",
+  "Física Quântica",
+  "Sociologia Urbana",
+  "Botânica",
+  "Arqueologia",
   "Economia Comportamental",
   "Teoria dos Jogos",
-  "Entomologia"
+  "Entomologia",
 ];
 
-export function PremiseGenerationStep({ state, updateState, onNext, onBack }: PremiseGenerationStepProps) {
+export function PremiseGenerationStep({
+  state,
+  updateState,
+  onNext,
+  onBack,
+}: PremiseGenerationStepProps) {
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     if (!state.discipline) return;
     setLoading(true);
-    
+
     try {
       const llmPort = new DummyLlmPort();
       const useCase = new GeneratePremisesUseCase(llmPort);
-      
+
       const seed = new CrossPollinationSeed(
         Genre.create(state.genre),
-        AcademicDiscipline.create(state.discipline)
-      );
-      
-      const blacklist = new ClicheBlacklist(
-        Genre.create(state.genre),
-        state.cliches
+        AcademicDiscipline.create(state.discipline),
       );
 
+      const blacklist = new ClicheBlacklist(Genre.create(state.genre), state.cliches);
+
       const premises = await useCase.execute(seed, blacklist);
-      
+
       updateState({
-        premises: premises.map(p => ({
+        premises: premises.map((p) => ({
           protagonist: p.protagonist,
           incitingIncident: p.incitingIncident,
           antagonist: p.antagonist,
-          stakes: p.stakes
-        }))
+          stakes: p.stakes,
+        })),
       });
     } catch (error) {
       console.error("Erro ao gerar premissas:", error);
@@ -67,7 +69,9 @@ export function PremiseGenerationStep({ state, updateState, onNext, onBack }: Pr
     <div className="space-y-8 w-full animate-in slide-in-from-right-4 duration-500">
       <div className="space-y-2 text-center">
         <h2 className="text-3xl font-serif text-text-main">Hibridização</h2>
-        <p className="text-text-muted">Combine {state.genre} com uma disciplina acadêmica para criar algo novo.</p>
+        <p className="text-text-muted">
+          Combine {state.genre} com uma disciplina acadêmica para criar algo novo.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -76,8 +80,8 @@ export function PremiseGenerationStep({ state, updateState, onNext, onBack }: Pr
             key={d}
             onClick={() => updateState({ discipline: d })}
             className={`px-3 py-2 rounded border text-sm transition-all ${
-              state.discipline === d 
-                ? "border-text-main bg-text-main text-bg-main shadow-md" 
+              state.discipline === d
+                ? "border-text-main bg-text-main text-bg-main shadow-md"
                 : "border-border-subtle hover:border-text-muted text-text-muted"
             }`}
           >
@@ -117,10 +121,16 @@ export function PremiseGenerationStep({ state, updateState, onNext, onBack }: Pr
               <h4 className="text-xs font-bold uppercase tracking-widest text-text-muted mb-4 group-hover:text-text-main">
                 Premissa {i + 1}
               </h4>
-              <p className="text-sm text-text-main line-clamp-4 italic mb-4">"{p.incitingIncident}"</p>
+              <p className="text-sm text-text-main line-clamp-4 italic mb-4">
+                "{p.incitingIncident}"
+              </p>
               <div className="space-y-2">
-                <p className="text-xs text-text-muted"><strong>Protagonista:</strong> {p.protagonist}</p>
-                <p className="text-xs text-text-muted"><strong>Stakes:</strong> {p.stakes}</p>
+                <p className="text-xs text-text-muted">
+                  <strong>Protagonista:</strong> {p.protagonist}
+                </p>
+                <p className="text-xs text-text-muted">
+                  <strong>Stakes:</strong> {p.stakes}
+                </p>
               </div>
             </button>
           ))}
@@ -128,7 +138,10 @@ export function PremiseGenerationStep({ state, updateState, onNext, onBack }: Pr
       )}
 
       <div className="pt-8 flex justify-start">
-        <button onClick={onBack} className="text-text-muted hover:text-text-main text-sm transition-colors">
+        <button
+          onClick={onBack}
+          className="text-text-muted hover:text-text-main text-sm transition-colors"
+        >
           ← Voltar para Clichês
         </button>
       </div>

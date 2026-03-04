@@ -25,16 +25,14 @@ describe("WorldRuleForm", () => {
   it("should call onSave with new data", () => {
     const onSave = vi.fn();
     render(<WorldRuleForm rule={mockRule} onSave={onSave} onCancel={() => {}} />);
-    
+
     const contentInput = screen.getByLabelText(/Conteúdo da Regra/i);
     fireEvent.change(contentInput, { target: { value: "Water douses fire" } });
-    
+
     fireEvent.click(screen.getByText(/Salvar Regra/i));
-    
+
     expect(onSave).toHaveBeenCalled();
     const saved = onSave.mock.calls[0][0] as WorldRule;
     expect(saved.content).toBe("Water douses fire");
   });
 });
-
-

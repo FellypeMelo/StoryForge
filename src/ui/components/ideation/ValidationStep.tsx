@@ -17,24 +17,32 @@ interface ValidationStepProps {
   bookId: string;
 }
 
-export function ValidationStep({ state, updateState, onBack, onFinish, projectId, bookId }: ValidationStepProps) {
+export function ValidationStep({
+  state,
+  updateState,
+  onBack,
+  onFinish,
+  projectId,
+  bookId,
+}: ValidationStepProps) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const selectedPremiseData = state.selectedPremiseIndex !== null ? state.premises[state.selectedPremiseIndex] : null;
+  const selectedPremiseData =
+    state.selectedPremiseIndex !== null ? state.premises[state.selectedPremiseIndex] : null;
 
   const handleValidate = async () => {
     if (!selectedPremiseData) return;
     setLoading(true);
-    
+
     try {
       const llmPort = new DummyLlmPort();
       const useCase = new ValidatePremiseUseCase(llmPort);
-      
+
       const premise = new PremiseEntity(
         selectedPremiseData.protagonist,
         selectedPremiseData.incitingIncident,
         selectedPremiseData.antagonist,
-        selectedPremiseData.stakes
+        selectedPremiseData.stakes,
       );
 
       const result = await useCase.execute(premise);
@@ -49,17 +57,17 @@ export function ValidationStep({ state, updateState, onBack, onFinish, projectId
   const handleSaveAndForgeWorld = async () => {
     if (!selectedPremiseData) return;
     setSaving(true);
-    
+
     try {
       const llmPort = new DummyLlmPort();
       const worldRuleRepo = new TauriWorldRuleRepository(bookId) as WorldRuleRepository;
       const pipeline = new WorldbuildingPipeline(llmPort, worldRuleRepo);
-      
+
       const premise = new PremiseEntity(
         selectedPremiseData.protagonist,
         selectedPremiseData.incitingIncident,
         selectedPremiseData.antagonist,
-        selectedPremiseData.stakes
+        selectedPremiseData.stakes,
       );
 
       await pipeline.run(ProjectId.create(projectId), premise);
@@ -77,12 +85,18 @@ export function ValidationStep({ state, updateState, onBack, onFinish, projectId
     <div className="space-y-8 w-full max-w-2xl mx-auto animate-in slide-in-from-right-4 duration-500">
       <div className="space-y-2 text-center">
         <h2 className="text-3xl font-serif text-text-main">Inversão e Validação</h2>
-        <p className="text-text-muted">Vamos garantir que sua ideia tenha pernas para uma história épica.</p>
+        <p className="text-text-muted">
+          Vamos garantir que sua ideia tenha pernas para uma história épica.
+        </p>
       </div>
 
       <div className="p-6 bg-bg-hover border border-border-subtle rounded-lg space-y-4">
-        <h3 className="text-sm font-bold uppercase tracking-widest text-text-muted">Premissa Selecionada</h3>
-        <p className="text-xl font-serif text-text-main italic">"{selectedPremiseData.incitingIncident}"</p>
+        <h3 className="text-sm font-bold uppercase tracking-widest text-text-muted">
+          Premissa Selecionada
+        </h3>
+        <p className="text-xl font-serif text-text-main italic">
+          "{selectedPremiseData.incitingIncident}"
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-border-subtle">
           <div>
             <span className="text-xs font-bold text-text-muted block uppercase">Protagonista</span>
@@ -118,9 +132,13 @@ export function ValidationStep({ state, updateState, onBack, onFinish, projectId
         </div>
       ) : (
         <div className="space-y-6 animate-in fade-in zoom-in duration-500">
-          <div className={`p-6 rounded-lg border ${state.validationResult.isValid ? "border-text-main bg-bg-main" : "border-red-500/50 bg-red-500/5"}`}>
+          <div
+            className={`p-6 rounded-lg border ${state.validationResult.isValid ? "border-text-main bg-bg-main" : "border-red-500/50 bg-red-500/5"}`}
+          >
             <div className="flex items-center gap-3 mb-4">
-              <div className={`w-2 h-2 rounded-full ${state.validationResult.isValid ? "bg-text-main" : "bg-red-500"}`} />
+              <div
+                className={`w-2 h-2 rounded-full ${state.validationResult.isValid ? "bg-text-main" : "bg-red-500"}`}
+              />
               <h4 className="font-bold uppercase tracking-tighter">Análise da Forja</h4>
             </div>
             <p className="text-sm leading-relaxed">{state.validationResult.reason}</p>
@@ -147,14 +165,19 @@ export function ValidationStep({ state, updateState, onBack, onFinish, projectId
               )}
             </button>
             <p className="text-xs text-text-muted text-center max-w-xs">
-              Ao aceitar, esta premissa será salva e o pipeline CAD será iniciado para detalhar seu mundo.
+              Ao aceitar, esta premissa será salva e o pipeline CAD será iniciado para detalhar seu
+              mundo.
             </p>
           </div>
         </div>
       )}
 
       <div className="pt-8 flex justify-start">
-        <button onClick={onBack} disabled={saving} className="text-text-muted hover:text-text-main text-sm transition-colors">
+        <button
+          onClick={onBack}
+          disabled={saving}
+          className="text-text-muted hover:text-text-main text-sm transition-colors"
+        >
           ← Trocar Premissa
         </button>
       </div>

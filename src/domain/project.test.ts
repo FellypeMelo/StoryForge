@@ -34,7 +34,7 @@ describe("Project Entity", () => {
   it("should export props", () => {
     const project = Project.create({
       id: ProjectId.generate(),
-      name: "Test"
+      name: "Test",
     });
     const props = project.toProps();
     expect(props.name).toBe("Test");

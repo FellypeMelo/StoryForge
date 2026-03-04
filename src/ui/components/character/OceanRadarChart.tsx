@@ -8,7 +8,7 @@ interface OceanRadarChartProps {
 export function OceanRadarChart({ scores, size = 300 }: OceanRadarChartProps) {
   const center = size / 2;
   const radius = (size / 2) * 0.8;
-  
+
   const traits: { key: keyof OceanScores; label: string }[] = [
     { key: "openness", label: "O" },
     { key: "conscientiousness", label: "C" },
@@ -84,7 +84,7 @@ export function OceanRadarChart({ scores, size = 300 }: OceanRadarChartProps) {
           points={points}
           className="fill-text-main/10 stroke-text-main stroke-2 transition-all duration-500 ease-in-out"
         />
-        
+
         {/* Data Points */}
         {traits.map((trait, i) => {
           const p = getPoint(i, scores[trait.key], radius);
@@ -102,5 +102,3 @@ export function OceanRadarChart({ scores, size = 300 }: OceanRadarChartProps) {
     </div>
   );
 }
-
-

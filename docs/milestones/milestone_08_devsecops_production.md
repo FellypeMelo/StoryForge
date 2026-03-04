@@ -229,5 +229,3 @@ Novo autor consegue criar primeiro projeto seguindo o guia.
 - [ ] Zero secrets hardcoded?
 - [ ] Zero SQL injection vectors?
 - [ ] Zero XSS vectors?
-
-

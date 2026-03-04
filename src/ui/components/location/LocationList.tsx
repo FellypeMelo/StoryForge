@@ -8,11 +8,11 @@ interface LocationListProps {
   injectedIds?: string[];
 }
 
-export function LocationList({ 
-  locations, 
+export function LocationList({
+  locations,
   onSelect,
   onCreateNew,
-  injectedIds = []
+  injectedIds = [],
 }: LocationListProps) {
   if (locations.length === 0) {
     return (
@@ -60,7 +60,9 @@ export function LocationList({
               className={`group bg-bg-base border ${isInjected ? "border-text-main shadow-lg shadow-text-main/5" : "border-border-subtle"} p-6 rounded-lg space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full`}
             >
               <div className="flex items-start justify-between">
-                <div className={`p-3 rounded group-hover:bg-text-main group-hover:text-bg-base transition-colors duration-300 ${isInjected ? "bg-text-main text-bg-base" : "bg-bg-hover"}`}>
+                <div
+                  className={`p-3 rounded group-hover:bg-text-main group-hover:text-bg-base transition-colors duration-300 ${isInjected ? "bg-text-main text-bg-base" : "bg-bg-hover"}`}
+                >
                   <MapPin size={24} strokeWidth={1.5} />
                 </div>
                 <div className="text-right flex flex-col items-end gap-1">
@@ -103,6 +105,4 @@ export function LocationList({
       </div>
     </div>
   );
-};
-
-
+}

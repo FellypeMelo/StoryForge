@@ -35,5 +35,3 @@ describe("WorldRuleList", () => {
     expect(screen.getByText(/Nenhuma regra encontrada/i)).toBeInTheDocument();
   });
 });
-
-

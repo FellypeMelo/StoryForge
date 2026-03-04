@@ -32,10 +32,10 @@ describe("CodexDashboard", () => {
 
   it("should show characters tab by default after loading", async () => {
     render(<CodexDashboard {...mockProps} />);
-    
+
     // Should show loading initially
     expect(screen.getByText(/Consultando os arquivos/i)).toBeInTheDocument();
-    
+
     // Should eventually show empty state
     await waitFor(() => {
       expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
@@ -44,13 +44,15 @@ describe("CodexDashboard", () => {
 
   it("should show search results panel when searching", async () => {
     // Mock search results
-    const mockResults = [{
-      entity_id: "res-1",
-      entity_type: "character",
-      snippet: "Search result snippet",
-      score: 0.5
-    }];
-    
+    const mockResults = [
+      {
+        entity_id: "res-1",
+        entity_type: "character",
+        snippet: "Search result snippet",
+        score: 0.5,
+      },
+    ];
+
     const { invoke } = await import("@tauri-apps/api/core");
     vi.mocked(invoke).mockImplementation(async (cmd) => {
       if (cmd === "search_lore") return mockResults;
@@ -61,15 +63,13 @@ describe("CodexDashboard", () => {
     });
 
     render(<CodexDashboard {...mockProps} />);
-    
+
     const searchInput = screen.getByPlaceholderText(/Pesquisar sabedoria.../i);
     fireEvent.change(searchInput, { target: { value: "test query" } });
-    
+
     await waitFor(() => {
       expect(screen.getByText(/Resultados da Busca/i)).toBeInTheDocument();
       expect(screen.getByText(/Search result snippet/i)).toBeInTheDocument();
     });
   });
 });
-
-

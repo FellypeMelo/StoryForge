@@ -35,5 +35,3 @@ describe("LocationList", () => {
     expect(screen.getByText(/Nenhum local encontrado/i)).toBeInTheDocument();
   });
 });
-
-

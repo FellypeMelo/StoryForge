@@ -27,5 +27,3 @@ test("renders Bem-vindo à Forja title", async () => {
     expect(linkElement).toBeInTheDocument();
   });
 });
-
-

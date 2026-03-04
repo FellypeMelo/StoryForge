@@ -7,5 +7,3 @@ This layer contains the core business logic, domain entities, and port definitio
 - **NO DEPENDENCIES** on any other layer (Infrastructure, Application, or Commands).
 - Pure Rust logic only.
 - Defines traits that the Infrastructure layer must implement (Dependency Inversion).
-
-

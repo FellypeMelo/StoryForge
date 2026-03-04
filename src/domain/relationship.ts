@@ -68,5 +68,3 @@ export class Relationship {
     return this.props.type;
   }
 }
-
-

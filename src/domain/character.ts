@@ -42,7 +42,14 @@ export const CharacterSchema = z.object({
   voice_formality: z.string().default(""),
   voice_verbal_tics: z.string().default("[]"),
   voice_evasion_mechanism: z.string().default(""),
-  physical_tells: z.string().default("[]"),
+  physical_tells: z.string().default("[\"\", \"\", \"\"]").refine((val) => {
+    try {
+      const parsed = JSON.parse(val);
+      return Array.isArray(parsed) && parsed.length >= 3;
+    } catch {
+      return false;
+    }
+  }, { message: "At least 3 physical tells are required" }),
 });
 
 export interface CharacterProps {

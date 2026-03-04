@@ -126,4 +126,3 @@ O agente monitora contradições entre o texto gerado e o Codex:
 - **Armazenamento:** SQLite via Tauri + FTS5/sqlite-vec
 - **Exportação:** JSON para portabilidade
 - **Alimenta:** Todos os outros módulos (`05_writing_assistant.md`, `07_bad_cop_editor.md`)
-

@@ -65,14 +65,14 @@ describe("CodexDashboard Modal Integration", () => {
       expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
     });
 
-    const addCharacterButton = screen.getByRole("button", { name: /Criar Personagem/i });
+    const addCharacterButton = screen.getByRole("button", { name: /Criar Manualmente/i });
     fireEvent.click(addCharacterButton);
 
     // Should NOT replace the whole screen (dashboard should still be visible in background)
     // and should show the SlideOver with Wizard
     expect(screen.getByText(/Novo Personagem/i)).toBeInTheDocument();
     expect(screen.getByText(/Passo 1/i)).toBeInTheDocument();
-    
+
     // Header from Dashboard should still be there (unlike before where it replaced the view)
     expect(screen.getByText(/Codex da História/i)).toBeInTheDocument();
   });
@@ -83,7 +83,9 @@ describe("CodexDashboard Modal Integration", () => {
     // Open Location modal
     const locationsTab = screen.getByRole("button", { name: /Locais/i });
     fireEvent.click(locationsTab);
-    await waitFor(() => expect(screen.getByRole("button", { name: /Criar Local/i })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /Criar Local/i })).toBeInTheDocument(),
+    );
     fireEvent.click(screen.getByRole("button", { name: /Criar Local/i }));
 
     // Type something
@@ -108,5 +110,3 @@ describe("CodexDashboard Modal Integration", () => {
     expect(newNameInput.value).toBe("Novo Local");
   });
 });
-
-

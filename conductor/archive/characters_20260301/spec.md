@@ -45,5 +45,3 @@ This track implements the core Character management system for StoryForge, follo
 
 - Inter-character relationship mapping.
 - Semantic search / Vector search (RAG integration).
-
-

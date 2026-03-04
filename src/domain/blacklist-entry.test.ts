@@ -8,7 +8,7 @@ describe("BlacklistEntry Entity", () => {
   it("should create a valid BlacklistEntry", () => {
     const id = BlacklistEntryId.generate();
     const projectId = ProjectId.generate();
-    
+
     const entry = BlacklistEntry.create({
       id,
       projectId,
@@ -30,7 +30,7 @@ describe("BlacklistEntry Entity", () => {
       id: BlacklistEntryId.generate(),
       projectId,
       bookId,
-      term: "Another cliché"
+      term: "Another cliché",
     });
     expect(entry.bookId?.equals(bookId)).toBe(true);
   });
@@ -51,7 +51,7 @@ describe("BlacklistEntry Entity", () => {
     const entry = BlacklistEntry.create({
       id: BlacklistEntryId.generate(),
       projectId: ProjectId.generate(),
-      term: "Test"
+      term: "Test",
     });
     const props = entry.toProps();
     expect(props.term).toBe("Test");

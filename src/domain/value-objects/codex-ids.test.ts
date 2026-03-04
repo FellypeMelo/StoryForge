@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { 
-  LocationId, 
-  WorldRuleId, 
-  TimelineEventId, 
-  RelationshipId, 
-  BlacklistEntryId 
+import {
+  LocationId,
+  WorldRuleId,
+  TimelineEventId,
+  RelationshipId,
+  BlacklistEntryId,
 } from "./codex-ids";
 
 const VALID_UUID = "550e8400-e29b-41d4-a716-446655440000";

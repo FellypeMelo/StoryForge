@@ -20,8 +20,12 @@ export function App() {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState<string>("dashboard");
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() => localStorage.getItem("storyforge_last_project"));
-  const [selectedBookId, setSelectedBookId] = useState<string | null>(() => localStorage.getItem("storyforge_last_book"));
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() =>
+    localStorage.getItem("storyforge_last_project"),
+  );
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(() =>
+    localStorage.getItem("storyforge_last_book"),
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,9 +80,21 @@ export function App() {
 
     switch (currentPath) {
       case "codex":
-        return <CodexDashboard projectId={selectedProjectId} bookId={selectedBookId} onBack={() => setCurrentPath("dashboard")} />;
+        return (
+          <CodexDashboard
+            projectId={selectedProjectId}
+            bookId={selectedBookId}
+            onBack={() => setCurrentPath("dashboard")}
+          />
+        );
       case "ideation":
-        return <IdeationWizard projectId={selectedProjectId} bookId={selectedBookId} onBack={() => setCurrentPath("dashboard")} />;
+        return (
+          <IdeationWizard
+            projectId={selectedProjectId}
+            bookId={selectedBookId}
+            onBack={() => setCurrentPath("dashboard")}
+          />
+        );
       case "dashboard":
       default:
         return (
@@ -88,7 +104,7 @@ export function App() {
                 <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
                   Bem-vindo à Forja
                 </h1>
-                <button 
+                <button
                   onClick={handleBackToProjects}
                   className="px-4 py-2 text-sm border border-border-default rounded text-text-muted hover:text-text-main hover:border-text-main transition-colors"
                 >
@@ -96,8 +112,8 @@ export function App() {
                 </button>
               </div>
               <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
-                Este é o seu espaço de trabalho. Aqui, você forjará mundos, dará vida a personagens e
-                tecerá narrativas intrincadas.
+                Este é o seu espaço de trabalho. Aqui, você forjará mundos, dará vida a personagens
+                e tecerá narrativas intrincadas.
               </p>
             </header>
 
@@ -120,7 +136,11 @@ export function App() {
                     <span
                       className={`text-sm font-medium ${health?.database ? "text-text-main" : "text-text-muted opacity-50"}`}
                     >
-                      {health ? (health.database ? "Sincronizado" : "Desconectado") : "Verificando..."}
+                      {health
+                        ? health.database
+                          ? "Sincronizado"
+                          : "Desconectado"
+                        : "Verificando..."}
                     </span>
                   </div>
                   <div className="flex justify-between items-end border-b border-border-subtle pb-2">
@@ -137,7 +157,7 @@ export function App() {
                   Ações Rápidas
                 </h3>
                 <div className="flex flex-col gap-3">
-                  <button 
+                  <button
                     onClick={() => {}}
                     className="text-left bg-bg-hover hover:bg-border-subtle px-5 py-4 rounded transition-colors text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
                   >
@@ -185,5 +205,3 @@ export function App() {
 }
 
 export default App;
-
-

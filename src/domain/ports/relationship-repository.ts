@@ -9,5 +9,3 @@ export interface RelationshipRepository {
   findByProject(projectId: ProjectId): Promise<Result<Relationship[], DomainError>>;
   delete(id: RelationshipId): Promise<Result<void, DomainError>>;
 }
-
-

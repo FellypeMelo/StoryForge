@@ -9,5 +9,3 @@ export interface TimelineRepository {
   findByProject(projectId: ProjectId): Promise<Result<TimelineEvent[], DomainError>>;
   delete(id: TimelineEventId): Promise<Result<void, DomainError>>;
 }
-
-

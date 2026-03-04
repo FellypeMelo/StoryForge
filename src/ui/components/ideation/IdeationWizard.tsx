@@ -48,8 +48,10 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
     <div className="space-y-8 py-8 animate-in fade-in duration-500">
       <header className="space-y-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-serif text-text-main tracking-tight">Forja de Ideias (CHI)</h1>
-          <button 
+          <h1 className="text-4xl font-serif text-text-main tracking-tight">
+            Forja de Ideias (CHI)
+          </h1>
+          <button
             onClick={onBack}
             className="px-4 py-2 text-sm border border-border-default rounded text-text-muted hover:text-text-main transition-colors"
           >
@@ -58,7 +60,7 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
         </div>
         <div className="flex gap-4">
           {[1, 2, 3].map((s) => (
-            <div 
+            <div
               key={s}
               className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-text-main" : "bg-border-subtle"}`}
             />
@@ -68,33 +70,32 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
 
       <div className="min-h-[500px] border border-border-subtle rounded-lg p-8">
         {step === 1 && (
-          <ClicheExtractionStep 
-            state={state} 
-            updateState={updateState} 
-            onNext={nextStep} 
+          <ClicheExtractionStep
+            state={state}
+            updateState={updateState}
+            onNext={nextStep}
             projectId={projectId}
           />
         )}
-        
         {step === 2 && (
-          <PremiseGenerationStep 
-            state={state} 
-            updateState={updateState} 
+          <PremiseGenerationStep
+            state={state}
+            updateState={updateState}
             onNext={nextStep}
             onBack={prevStep}
           />
         )}
-
         {step === 3 && (
-          <ValidationStep 
-            state={state} 
-            updateState={updateState} 
-            onBack={prevStep} 
+          <ValidationStep
+            state={state}
+            updateState={updateState}
+            onBack={prevStep}
             onFinish={onBack}
             projectId={projectId}
             bookId={bookId}
           />
-        )}      </div>
+        )}{" "}
+      </div>
     </div>
   );
 }

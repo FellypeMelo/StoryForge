@@ -9,5 +9,3 @@ export interface BlacklistRepository {
   findByProject(projectId: ProjectId): Promise<Result<BlacklistEntry[], DomainError>>;
   delete(id: BlacklistEntryId): Promise<Result<void, DomainError>>;
 }
-
-

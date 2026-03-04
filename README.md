@@ -27,7 +27,7 @@ O **StoryForge** não é apenas um editor de texto; é um laboratório de engenh
 | **Offline-First Absoluto**  | Dados nunca saem da máquina sem consentimento explícito. SQLite local como única fonte de verdade.                                    |
 | **Anti-Averaging Effect**   | Cada agente possui guardrails negativos que bloqueiam a saída estatisticamente mais provável (clichês, purple prose, diálogos de RH). |
 | **Causalidade Inquebrável** | Eventos conectados por "portanto" ou "mas" — nunca por "e então". Toda cena deve inverter polaridade de valor (Story Grid).           |
-| **Economia de Contexto**    | Injeção RAG cirúrgica: apenas trechos relevantes do Codex da História entram no prompt. Zero inundação de tokens.                    |
+| **Economia de Contexto**    | Injeção RAG cirúrgica: apenas trechos relevantes do Codex da História entram no prompt. Zero inundação de tokens.                     |
 | **Regra 70/30**             | 30% IA + 70% humano. A Fase 6 (Polimento Literário) é **100% humana** — intransferível.                                               |
 
 ---
@@ -234,4 +234,3 @@ Antes de submeter qualquer contribuição, consulte as especificações de engen
 Este projeto está licensed sob a **GNU Affero General Public License v3.0** — veja o arquivo [`LICENSE`](LICENSE) para detalhes completos.
 
 Copyright © 2026 Fellype Melo.
-

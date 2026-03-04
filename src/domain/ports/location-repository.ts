@@ -9,5 +9,3 @@ export interface LocationRepository {
   findByProject(projectId: ProjectId): Promise<Result<Location[], DomainError>>;
   delete(id: LocationId): Promise<Result<void, DomainError>>;
 }
-
-

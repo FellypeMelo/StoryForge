@@ -14,6 +14,11 @@ import { SearchBar } from "../shared/SearchBar";
 import { SlideOver } from "../shared/SlideOver";
 import { Character } from "../../../domain/character";
 import { ProjectId } from "../../../domain/value-objects/project-id";
+import { CharacterId } from "../../../domain/value-objects/character-id";
+import { OceanProfile, OceanTraitScore } from "../../../domain/ocean-profile";
+import { HaugeArc } from "../../../domain/hauge-arc";
+import { VoiceProfile, PhysicalTells } from "../../../domain/voice-profile";
+import { CharacterSheet } from "../../../domain/character-sheet";
 import { Location } from "../../../domain/location";
 import { WorldRule } from "../../../domain/world-rule";
 import { TimelineEvent } from "../../../domain/timeline-event";
@@ -23,6 +28,21 @@ import { Users, MapPin, Scroll, Clock, GitBranch, Ban } from "lucide-react";
 
 type Tab = "characters" | "locations" | "rules" | "timeline" | "relationships" | "blacklist";
 type Scope = "book" | "global";
+
+function mapScoreToNumber(score: OceanTraitScore): number {
+  switch (score) {
+    case OceanTraitScore.High: return 80;
+    case OceanTraitScore.Medium: return 50;
+    case OceanTraitScore.Low: return 20;
+    default: return 50;
+  }
+}
+
+function mapNumberToScore(score: number): OceanTraitScore {
+  if (score >= 70) return OceanTraitScore.High;
+  if (score <= 30) return OceanTraitScore.Low;
+  return OceanTraitScore.Medium;
+}
 
 function extractErrorMessage(error: unknown): string {
   if (typeof error === "string") return error;
@@ -96,20 +116,32 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     setLoading(true);
     try {
       if (activeTab === "characters") {
-        const command = scope === "book" ? "list_characters_by_book" : "list_global_characters";
-        const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
-        const data = await invoke<any[]>(command, params);
-        setCharacters(
-          data.map((d) =>
-            Character.create({
-              ...d,
-              id: { value: d.id },
-              projectId: { value: d.project_id },
-              bookId: d.book_id ? { value: d.book_id } : undefined,
-              name: d.name || "Sem nome",
-            } as any),
-          ),
-        );
+        const result = await characterRepo.findByProject(ProjectId.create(currentProjectId));
+        if (result.success) {
+          // Map CharacterSheet to Character for the UI
+          setCharacters(result.data.map(sheet => Character.create({
+            id: sheet.id,
+            projectId: sheet.projectId,
+            name: sheet.name,
+            ocean_scores: {
+              openness: mapScoreToNumber(sheet.ocean.openness),
+              conscientiousness: mapScoreToNumber(sheet.ocean.conscientiousness),
+              extraversion: mapScoreToNumber(sheet.extraversion),
+              agreeableness: mapScoreToNumber(sheet.agreeableness),
+              neuroticism: mapScoreToNumber(sheet.neuroticism),
+            },
+            hauge_wound: sheet.hauge?.wound || "",
+            hauge_belief: sheet.hauge?.belief || "",
+            hauge_fear: sheet.hauge?.fear || "",
+            hauge_identity: sheet.hauge?.identity || "",
+            hauge_essence: sheet.hauge?.essence || "",
+            voice_sentence_length: sheet.voice.sentenceLength,
+            voice_formality: sheet.voice.formality,
+            voice_verbal_tics: JSON.stringify(sheet.voice.verbalTics),
+            voice_evasion_mechanism: sheet.voice.evasionMechanism,
+            physical_tells: JSON.stringify(sheet.tells.list),
+          } as any)));
+        }
       } else if (activeTab === "locations") {
         const command = scope === "book" ? "list_locations_by_book" : "list_global_locations";
         const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
@@ -269,18 +301,38 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
 
   const handleSaveCharacter = async (char: Character) => {
     try {
-      const charData = char.toProps();
-      const payload = {
-        ...charData,
-        project_id: currentProjectId,
-        book_id: scope === "book" ? bookId : null,
-      };
+      const props = char.toProps();
+      
+      const sheet = CharacterSheet.create({
+        id: char.id,
+        projectId: char.projectId,
+        name: char.name,
+        ocean: OceanProfile.create({
+          openness: mapNumberToScore(props.ocean_scores.openness),
+          conscientiousness: mapNumberToScore(props.ocean_scores.conscientiousness),
+          extraversion: mapNumberToScore(props.ocean_scores.extraversion),
+          agreeableness: mapNumberToScore(props.ocean_scores.agreeableness),
+          neuroticism: mapNumberToScore(props.ocean_scores.neuroticism),
+        }),
+        hauge: props.hauge_identity ? HaugeArc.create({
+          wound: props.hauge_wound,
+          belief: props.hauge_belief,
+          fear: props.hauge_fear,
+          identity: props.hauge_identity,
+          essence: props.hauge_essence,
+        }) : undefined,
+        voice: VoiceProfile.create({
+          sentenceLength: props.voice_sentence_length,
+          formality: props.voice_formality,
+          verbalTics: JSON.parse(props.voice_verbal_tics || "[]"),
+          evasionMechanism: props.voice_evasion_mechanism,
+        }),
+        tells: PhysicalTells.create(JSON.parse(props.physical_tells || "[]")),
+      });
 
-      // Try update first, if it fails (not found), create
-      try {
-        await invoke("update_character", { character: payload });
-      } catch (err) {
-        await invoke("create_character", { character: payload });
+      const result = await characterRepo.save(sheet);
+      if (!result.success) {
+        throw new Error(result.error.message);
       }
 
       setIsWizardOpen(false);

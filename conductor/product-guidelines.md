@@ -26,5 +26,3 @@
 - **Logical Causality Enforcement:** Every scene connection must follow the "Therefore / But" rule to maintain narrative tension.
 - **Iterative Audit Cycle:** The "Bad Cop" editor runs continuously in the background, signaling structural weaknesses and AI-isms for immediate human refinement.
 - **Human-Centric 70/30 Rule:** AI provides the 30% structural tração; humans provide the 70% unique soul and fine modeling.
-
-

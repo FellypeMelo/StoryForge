@@ -38,5 +38,3 @@ graph TD
 2. **Agente Arquiteto (Architect):** Responsável único pelo domínio e modelo mental de Clean Architecture (Não lida com dependências web, cria pseudocódigos).
 3. **Agente TDD Coder:** Implementador isolado focado no ciclo Red-Green; recebe o menor e mais puro bloco de input.
 4. **Agente Revisor (DevSecOps):** Varre a esteira SAST (SonarQube) mitigando SQL Injection, chaves hardcoded e Acoplamento implícito e re-chama o Coder se violado.
-
-

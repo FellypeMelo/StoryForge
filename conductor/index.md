@@ -21,5 +21,3 @@
 - [~] [Backend Modularity Refactor](./tracks/backend_modularity_20260301/)
 - [ ] [Ideation & Worldbuilding](./tracks/ideation-worldbuilding_20260302/)
 - [ ] [Character Builder](./tracks/character-builder_20260302/)
-
-

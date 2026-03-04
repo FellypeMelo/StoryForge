@@ -10,12 +10,14 @@
 Create the core domain models and ports for Ideation.
 
 ### Tasks
+
 - [x] Task 1.1: TDD for `Premise` entity with validation rules. (c236942)
 - [x] Task 1.2: TDD for `ClicheBlacklist` and `CrossPollinationSeed` entities. (4a15f65)
 - [x] Task 1.3: Define `LlmPort` interface in `src/domain/ideation/ports/`. (11a2817)
 - [x] Task 1.4: Refactor domain with Value Objects (`Genre`, `AcademicDiscipline`). (953ef45)
 
 ### Verification
+
 - [x] Domain tests passing and no infrastructure dependencies in domain layer.
 
 ## Phase 2: CHI Pipeline Use Cases [checkpoint: 32d8061]
@@ -23,12 +25,14 @@ Create the core domain models and ports for Ideation.
 Implement the CHI method use cases.
 
 ### Tasks
+
 - [x] Task 2.1: TDD for `ExtractClichesUseCase`. (e4cc149)
 - [x] Task 2.2: TDD for `GeneratePremisesUseCase`. (dc6e25a)
 - [x] Task 2.3: TDD for `ValidatePremiseUseCase`. (39247ed)
 - [x] Task 2.4: Implement `IdeationPipeline` composing the three phases. (b4e9845)
 
 ### Verification
+
 - [x] Pipeline tests passing with mocked `LlmPort`.
 
 ## Phase 3: Worldbuilding CAD [checkpoint: b5440b8]
@@ -36,6 +40,7 @@ Implement the CHI method use cases.
 Implement Context-Aware Decomposition for worldbuilding.
 
 ### Tasks
+
 - [x] Task 3.1: TDD for `WorldbuildingPipeline`. (bad80e7)
 - [x] Task 3.2: Implement step 1 (Physics/Magic). (bad80e7)
 - [x] Task 3.3: Implement step 2 (Economy). (bad80e7)
@@ -43,6 +48,7 @@ Implement Context-Aware Decomposition for worldbuilding.
 - [x] Task 3.5: Implement step 4 (Conflicts). (bad80e7)
 
 ### Verification
+
 - [x] Pipeline isolates steps and persists `WorldRules`.
 - [x] Domain and Application layers achieved >99% test coverage.
 
@@ -51,6 +57,7 @@ Implement Context-Aware Decomposition for worldbuilding.
 Implement the UI wizard for the CHI method.
 
 ### Tasks
+
 - [x] Task 4.1: Create `/ideation` route. (fef56eb)
 - [x] Task 4.2: Build 3-step wizard component. (18f3d67)
 - [x] Task 4.3: Build Phase 1 UI (Cliche list). (18f3d67)
@@ -58,11 +65,14 @@ Implement the UI wizard for the CHI method.
 - [x] Task 4.5: Build Phase 3 UI (Validation form). (18f3d67)
 
 ### Verification
+
 - [x] UI correctly persists state across wizard steps.
 
 ## Phase: Review Fixes
+
 - [x] Task: Apply review suggestions (e8368b2)
 
 ## Final Verification
+
 - [x] All tests passing.
 - [x] App builds successfully.

@@ -65,5 +65,3 @@ export class BlacklistEntry {
     return this.props.term;
   }
 }
-
-

@@ -11,7 +11,7 @@ describe("Relationship Entity", () => {
     const projectId = ProjectId.generate();
     const charA = CharId.generate();
     const charB = CharId.generate();
-    
+
     const rel = Relationship.create({
       id,
       projectId,
@@ -35,7 +35,7 @@ describe("Relationship Entity", () => {
       bookId,
       characterAId: CharId.generate(),
       characterBId: CharId.generate(),
-      type: "Friends"
+      type: "Friends",
     });
     expect(rel.bookId?.equals(bookId)).toBe(true);
   });
@@ -58,7 +58,7 @@ describe("Relationship Entity", () => {
       projectId: ProjectId.generate(),
       characterAId: CharId.generate(),
       characterBId: CharId.generate(),
-      type: "Test"
+      type: "Test",
     });
     const props = rel.toProps();
     expect(props.type).toBe("Test");

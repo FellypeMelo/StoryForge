@@ -150,6 +150,13 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
       setStep(1);
       return;
     }
+
+    if (physicalTells.filter(t => t.trim()).length < 3) {
+      alert("É necessário fornecer pelo menos 3 traços físicos (Physical Tells).");
+      setStep(4);
+      return;
+    }
+
     localStorage.removeItem(DRAFT_KEY);
     onSave(Character.create(formData));
   };

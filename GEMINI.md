@@ -507,5 +507,3 @@ Ao iniciar qualquer sessão, o Gemini CLI deve:
 **Assinado:** AI-XP Governance Framework v1.0  
 **Validade:** Indeterminada (atualizações via PR com aprovação humana)  
 **Compliance:** AI Act EU, SOC 2 Type II, ISO 27001
-
-

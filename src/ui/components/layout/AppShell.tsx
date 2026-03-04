@@ -17,25 +17,25 @@ interface AppShellProps {
   currentPath?: string;
 }
 
-function NavItem({ 
-  icon: Icon, 
-  label, 
-  active = false, 
+function NavItem({
+  icon: Icon,
+  label,
+  active = false,
   collapsed = false,
-  onClick
-}: { 
-  icon: any; 
-  label: string; 
-  active?: boolean; 
+  onClick,
+}: {
+  icon: any;
+  label: string;
+  active?: boolean;
   collapsed?: boolean;
   onClick?: () => void;
 }) {
   return (
-    <button 
+    <button
       onClick={onClick}
       className={`w-full flex items-center justify-start gap-4 p-3 rounded-md transition-all duration-300 font-sans cursor-pointer ${
-        active 
-          ? "text-text-main font-bold tracking-wide" 
+        active
+          ? "text-text-main font-bold tracking-wide"
           : "text-text-muted hover:bg-bg-hover hover:text-text-main"
       }`}
     >
@@ -45,12 +45,12 @@ function NavItem({
   );
 }
 
-export function AppShell({ 
-  children, 
-  appVersion, 
+export function AppShell({
+  children,
+  appVersion,
   dbHealthy,
   onNavigate,
-  currentPath = 'dashboard'
+  currentPath = "dashboard",
 }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -169,6 +169,4 @@ export function AppShell({
       </main>
     </div>
   );
-};
-
-
+}

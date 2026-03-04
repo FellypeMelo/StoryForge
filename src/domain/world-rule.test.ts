@@ -38,7 +38,7 @@ describe("WorldRule Entity", () => {
   it("should generate a default WorldRule", () => {
     const projectId = ProjectId.generate();
     const rule = WorldRule.generate(projectId, "Custom Category");
-    
+
     expect(rule.projectId.equals(projectId)).toBe(true);
     expect(rule.category).toBe("Custom Category");
     expect(rule.content).toBe("Nova regra do mundo");
@@ -58,7 +58,7 @@ describe("WorldRule Entity", () => {
       projectId,
       category: "Test",
       content: "Test content",
-      hierarchy: 5
+      hierarchy: 5,
     });
 
     const props = rule.toProps();

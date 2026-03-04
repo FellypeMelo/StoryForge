@@ -16,7 +16,9 @@ export interface SearchResult {
 }
 
 export interface SearchPort {
-  search(projectId: ProjectId, query: string, types?: EntityType[]): Promise<Result<SearchResult[], DomainError>>;
+  search(
+    projectId: ProjectId,
+    query: string,
+    types?: EntityType[],
+  ): Promise<Result<SearchResult[], DomainError>>;
 }
-
-

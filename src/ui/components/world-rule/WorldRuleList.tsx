@@ -8,11 +8,11 @@ interface WorldRuleListProps {
   injectedIds?: string[];
 }
 
-export function WorldRuleList({ 
-  rules, 
+export function WorldRuleList({
+  rules,
   onSelect,
   onCreateNew,
-  injectedIds = []
+  injectedIds = [],
 }: WorldRuleListProps) {
   if (rules.length === 0) {
     return (
@@ -61,7 +61,9 @@ export function WorldRuleList({
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded transition-colors ${isInjected ? "bg-text-main text-bg-base" : "bg-bg-hover text-text-muted group-hover:text-text-main"}`}>
+                  <div
+                    className={`p-2 rounded transition-colors ${isInjected ? "bg-text-main text-bg-base" : "bg-bg-hover text-text-muted group-hover:text-text-main"}`}
+                  >
                     <Scroll size={18} />
                   </div>
                   <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted px-2 py-1 bg-bg-hover rounded">
@@ -83,15 +85,11 @@ export function WorldRuleList({
                 </span>
               </div>
 
-              <p className="text-sm font-serif text-text-main leading-relaxed">
-                {rule.content}
-              </p>
+              <p className="text-sm font-serif text-text-main leading-relaxed">{rule.content}</p>
             </div>
           );
         })}
       </div>
     </div>
   );
-};
-
-
+}

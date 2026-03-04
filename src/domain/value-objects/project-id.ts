@@ -19,5 +19,3 @@ export class ProjectId extends Id {
     return new ProjectId(crypto.randomUUID());
   }
 }
-
-

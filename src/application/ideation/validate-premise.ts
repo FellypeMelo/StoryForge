@@ -1,5 +1,5 @@
-import { Premise } from '../../domain/ideation/premise';
-import { LlmPort } from '../../domain/ideation/ports/llm-port';
+import { Premise } from "../../domain/ideation/premise";
+import { LlmPort } from "../../domain/ideation/ports/llm-port";
 
 export interface ValidationResult {
   isValid: boolean;
@@ -32,10 +32,10 @@ export class ValidatePremiseUseCase {
       const data = JSON.parse(response.text);
       return {
         isValid: !!data.isValid,
-        reason: data.reason || 'No reason provided by LLM.'
+        reason: data.reason || "No reason provided by LLM.",
       };
     } catch (error) {
-      throw new Error('Failed to parse validation result from LLM');
+      throw new Error("Failed to parse validation result from LLM");
     }
   }
 }

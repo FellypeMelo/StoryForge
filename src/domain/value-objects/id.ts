@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createIdSchema = (name: string) => 
+export const createIdSchema = (name: string) =>
   z.string().uuid(`Invalid ${name}: must be a valid UUID`);
 
 export abstract class Id {
@@ -14,5 +14,3 @@ export abstract class Id {
     return this._value === other.value;
   }
 }
-
-

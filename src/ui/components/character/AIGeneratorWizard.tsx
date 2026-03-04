@@ -6,6 +6,8 @@ import { GenerateCharacterUseCase } from "../../../application/character/generat
 import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 import { Character } from "../../../domain/character";
 
+const llmPort = new DummyLlmPort();
+
 interface AIGeneratorWizardProps {
   projectId: string;
   onGenerated: (character: Character) => void;
@@ -28,7 +30,6 @@ export function AIGeneratorWizard({
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const llmPort = new DummyLlmPort();
       const useCase = new GenerateCharacterUseCase(llmPort, repository);
 
       const dummyPremise = new Premise(

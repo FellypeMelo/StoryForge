@@ -27,5 +27,3 @@
 - **Architecture:** Clean Architecture with Vertical Slicing.
 - **Methodology:** AI-XP (AI eXtreme Programming).
 - **Quality Control:** LangGraph + SonarQube (SAST) for self-healing CI/CD.
-
-

@@ -13,27 +13,37 @@ interface ClicheExtractionStepProps {
   projectId: string;
 }
 
-const GENRES = ["Fantasia", "Ficção Científica", "Cyberpunk", "Terror", "Romance", "Policial", "Épico"];
+const GENRES = [
+  "Fantasia",
+  "Ficção Científica",
+  "Cyberpunk",
+  "Terror",
+  "Romance",
+  "Policial",
+  "Épico",
+];
 
-export function ClicheExtractionStep({ state, updateState, onNext, projectId }: ClicheExtractionStepProps) {
+export function ClicheExtractionStep({
+  state,
+  updateState,
+  onNext,
+  projectId,
+}: ClicheExtractionStepProps) {
   const [loading, setLoading] = useState(false);
 
   const handleExtract = async () => {
     if (!state.genre) return;
     setLoading(true);
-    
+
     try {
       const llmPort = new DummyLlmPort();
       const blacklistRepo = new TauriBlacklistRepository();
       const useCase = new ExtractClichesUseCase(llmPort, blacklistRepo);
-      
-      const result = await useCase.execute(
-        Genre.create(state.genre),
-        ProjectId.create(projectId)
-      );
-      
-      updateState({ 
-        cliches: result.bannedTerms 
+
+      const result = await useCase.execute(Genre.create(state.genre), ProjectId.create(projectId));
+
+      updateState({
+        cliches: result.bannedTerms,
       });
     } catch (error) {
       console.error("Erro ao extrair clichês:", error);
@@ -55,8 +65,8 @@ export function ClicheExtractionStep({ state, updateState, onNext, projectId }: 
             key={g}
             onClick={() => updateState({ genre: g })}
             className={`px-4 py-3 rounded border transition-all ${
-              state.genre === g 
-                ? "border-text-main bg-text-main text-bg-main shadow-lg" 
+              state.genre === g
+                ? "border-text-main bg-text-main text-bg-main shadow-lg"
                 : "border-border-subtle hover:border-text-muted text-text-muted"
             }`}
           >
@@ -89,7 +99,10 @@ export function ClicheExtractionStep({ state, updateState, onNext, projectId }: 
               </h3>
               <div className="flex flex-wrap justify-center gap-2">
                 {state.cliches.map((c, i) => (
-                  <span key={i} className="px-3 py-1 bg-bg-hover border border-border-subtle rounded text-sm text-text-main">
+                  <span
+                    key={i}
+                    className="px-3 py-1 bg-bg-hover border border-border-subtle rounded text-sm text-text-main"
+                  >
                     {c}
                   </span>
                 ))}

@@ -11,7 +11,7 @@ Implement the Ideation Method (CHI) and Context-Aware Decomposition Worldbuildin
 
 ## Context
 
-From Milestone 3. Covers Etapas 3.1, 3.2, 3.5, and the Ideation UI from 3.6. 
+From Milestone 3. Covers Etapas 3.1, 3.2, 3.5, and the Ideation UI from 3.6.
 Implements the ideation via CHI method (anti-cliche) and worldbuilding.
 
 ## User Story

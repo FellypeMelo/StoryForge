@@ -21,8 +21,8 @@ describe("LoreLists", () => {
           projectId: projectId,
           date: "1200 AC",
           description: "O Início",
-          causalDependencies: []
-        })
+          causalDependencies: [],
+        }),
       ];
       render(<TimelineList events={events} />);
       expect(screen.getByText("1200 AC")).toBeInTheDocument();
@@ -43,8 +43,8 @@ describe("LoreLists", () => {
           projectId: projectId,
           characterAId: CharacterId.generate(),
           characterBId: CharacterId.generate(),
-          type: "Inimigos"
-        })
+          type: "Inimigos",
+        }),
       ];
       render(<RelationshipList relationships={rels} />);
       expect(screen.getByText("Inimigos")).toBeInTheDocument();
@@ -59,13 +59,11 @@ describe("LoreLists", () => {
           projectId: projectId,
           term: "clichê",
           category: "estilo",
-          reason: "evitar"
-        })
+          reason: "evitar",
+        }),
       ];
       render(<BlacklistList entries={entries} />);
       expect(screen.getByText("clichê")).toBeInTheDocument();
     });
   });
 });
-
-

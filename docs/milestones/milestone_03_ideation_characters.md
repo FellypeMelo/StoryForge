@@ -18,12 +18,12 @@
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para entidade `Premise` (protagonist, incitingIncident, antagonist, stakes)
-- [ ] 🔴 RED: Teste para validação: premissa rejeitada se `stakes` for vago
-- [ ] 🔴 RED: Teste para entidade `ClicheBlacklist` (genre, banned terms list)
-- [ ] 🔴 RED: Teste para entidade `CrossPollinationSeed` (genre + academicDiscipline)
-- [ ] 🟢 GREEN: Implementar entidades com validações rígidas
-- [ ] 🔵 REFACTOR: Extrair Value Objects — `Genre`, `AcademicDiscipline`
+- [x] 🔴 RED: Teste para entidade `Premise` (protagonist, incitingIncident, antagonist, stakes)
+- [x] 🔴 RED: Teste para validação: premissa rejeitada se `stakes` for vago
+- [x] 🔴 RED: Teste para entidade `ClicheBlacklist` (genre, banned terms list)
+- [x] 🔴 RED: Teste para entidade `CrossPollinationSeed` (genre + academicDiscipline)
+- [x] 🟢 GREEN: Implementar entidades com validações rígidas
+- [x] 🔵 REFACTOR: Extrair Value Objects — `Genre`, `AcademicDiscipline`
 
 ### Critério de Aceite
 
@@ -39,13 +39,13 @@ Entidades puras no domain/.
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para `ExtractClichesUseCase` — dado gênero, retorna lista de clichês
-- [ ] 🟢 GREEN: Implementar use case que instrui LLM a listar clichês (via `LlmPort`)
-- [ ] 🔴 RED: Teste para `GeneratePremisesUseCase` — dado gênero + disciplina + blacklist, retorna 3 premissas
-- [ ] 🟢 GREEN: Implementar Fase 2 (Polinização Cruzada) com blacklist injetada
-- [ ] 🔴 RED: Teste para `ValidatePremiseUseCase` — valida motor de conflito (quer/impede/falha)
-- [ ] 🟢 GREEN: Implementar Fase 3 (Validação Reversa)
-- [ ] 🔵 REFACTOR: Compor pipeline `IdeationPipeline` que encadeia as 3 fases
+- [x] 🔴 RED: Teste para `ExtractClichesUseCase` — dado gênero, retorna lista de clichês
+- [x] 🟢 GREEN: Implementar use case que instrui LLM a listar clichês (via `LlmPort`)
+- [x] 🔴 RED: Teste para `GeneratePremisesUseCase` — dado gênero + disciplina + blacklist, retorna 3 premissas
+- [x] 🟢 GREEN: Implementar Fase 2 (Polinização Cruzada) com blacklist injetada
+- [x] 🔴 RED: Teste para `ValidatePremiseUseCase` — valida motor de conflito (quer/impede/falha)
+- [x] 🟢 GREEN: Implementar Fase 3 (Validação Reversa)
+- [x] 🔵 REFACTOR: Compor pipeline `IdeationPipeline` que encadeia as 3 fases
 
 ### Interface LlmPort (Domain)
 
@@ -112,13 +112,13 @@ Ficha salva no Codex da História via CharacterRepository.
 
 ### Tarefas (TDD)
 
-- [ ] 🔴 RED: Teste para `WorldbuildingPipeline` — executa 4 passos em sequência
-- [ ] 🟢 GREEN: Implementar pipeline:
+- [x] 🔴 RED: Teste para `WorldbuildingPipeline` — executa 4 passos em sequência
+- [x] 🟢 GREEN: Implementar pipeline:
   1. Definir Física/Sistema de Magia
   2. Derivar Economia a partir da Física
   3. Derivar Sociologia e Religião a partir da Economia
   4. Cruzar dados para zonas de conflito cultural
-- [ ] 🔵 REFACTOR: Cada passo é um use case isolado, composto pelo pipeline
+- [x] 🔵 REFACTOR: Cada passo é um use case isolado, composto pelo pipeline
 
 ### Critério de Aceite
 
@@ -134,11 +134,11 @@ Resultado persistido como WorldRules no Codex.
 
 ### Tarefas
 
-- [ ] Criar página `/ideation` com wizard de 3 etapas (CHI)
-- [ ] Mostrar clichês extraídos (Fase 1) como lista visual marcada em vermelho
-- [ ] Exibir 3 premissas geradas (Fase 2) com cards comparativos
-- [ ] Formulário de validação da premissa (Fase 3) com checklist interativa
-- [ ] Criar página `/characters` com listagem de fichas
+- [x] Criar página `/ideation` com wizard de 3 etapas (CHI)
+- [x] Mostrar clichês extraídos (Fase 1) como lista visual marcada em vermelho
+- [x] Exibir 3 premissas geradas (Fase 2) com cards comparativos
+- [x] Formulário de validação da premissa (Fase 3) com checklist interativa
+- [x] Criar página `/characters` com listagem de fichas
 - [ ] Formulário de criação com seções: OCEAN, Hauge, Voz, Tells
 - [ ] Visualização da ficha completa com indicador de completude
 
@@ -154,11 +154,11 @@ Design consistente com AppShell.
 
 ## Entregáveis do Milestone 3
 
-| Artefato          | Descrição                                             |
-| ----------------- | ----------------------------------------------------- |
-| Método CHI        | Pipeline de 3 fases (clichês → premissas → validação) |
-| Worldbuilding CAD | Pipeline de 4 passos decompostos                      |
-| CharacterSheet    | Aggregate root com OCEAN + Hauge + Voz + Tells        |
-| LlmPort           | Interface de domínio para comunicação com LLM         |
-| UI Ideação        | Wizard de 3 etapas para geração de premissas          |
-| UI Personagens    | CRUD de fichas com indicador de completude            |
+| Artefato          | Status       | Descrição                                             |
+| ----------------- | ------------ | ----------------------------------------------------- |
+| Método CHI        | ✅ Concluído | Pipeline de 3 fases (clichês → premissas → validação) |
+| Worldbuilding CAD | ✅ Concluído | Pipeline de 4 passos decompostos                      |
+| CharacterSheet    | ❌ Pendente  | Aggregate root com OCEAN + Hauge + Voz + Tells        |
+| LlmPort           | ✅ Concluído | Interface de domínio para comunicação com LLM         |
+| UI Ideação        | ✅ Concluído | Wizard de 3 etapas para geração de premissas          |
+| UI Personagens    | ⚠️ Parcial   | CRUD de fichas com indicador de completude            |

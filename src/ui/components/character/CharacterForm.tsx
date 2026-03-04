@@ -8,11 +8,7 @@ interface CharacterFormProps {
   onCancel: () => void;
 }
 
-export function CharacterForm({ 
-  character, 
-  onSave, 
-  onCancel 
-}: CharacterFormProps) {
+export function CharacterForm({ character, onSave, onCancel }: CharacterFormProps) {
   const [formData, setFormData] = useState<CharacterProps>(character.toProps());
   const [errors, setErrors] = useState<{ name?: string }>({});
 
@@ -46,11 +42,13 @@ export function CharacterForm({
       setErrors({ name: "Nome é obrigatório" });
       return;
     }
-    onSave(Character.create({
-      ...formData,
-      id: formData.id,
-      projectId: formData.projectId
-    }));
+    onSave(
+      Character.create({
+        ...formData,
+        id: formData.id,
+        projectId: formData.projectId,
+      }),
+    );
   };
 
   const oceanTraits: { key: keyof OceanScores; label: string }[] = [
@@ -269,6 +267,4 @@ export function CharacterForm({
       </section>
     </form>
   );
-};
-
-
+}

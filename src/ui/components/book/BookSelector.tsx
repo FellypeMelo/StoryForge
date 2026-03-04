@@ -29,7 +29,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
       // Fetch both the project details and its books
       const [bookData, projectData] = await Promise.all([
         invoke<Book[]>("list_books", { projectId }),
-        invoke<Project>("get_project", { id: projectId }) // Assuming this command exists, if not we'll just handle undefined
+        invoke<Project>("get_project", { id: projectId }), // Assuming this command exists, if not we'll just handle undefined
       ]);
       setBooks(bookData);
       setProject(projectData);
@@ -65,7 +65,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
   return (
     <div className="max-w-4xl mx-auto p-8 space-y-8 animate-fade-in">
       <div className="mb-4">
-        <button 
+        <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm font-medium text-text-muted hover:text-text-main transition-colors"
         >
@@ -80,7 +80,9 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
             {project ? project.name : "Universo Selecionado"}
           </div>
           <h1 className="text-4xl font-serif text-text-main tracking-tight">Livros desta Saga</h1>
-          <p className="text-text-muted mt-2">Escolha com qual história você deseja trabalhar hoje.</p>
+          <p className="text-text-muted mt-2">
+            Escolha com qual história você deseja trabalhar hoje.
+          </p>
         </div>
         <button
           onClick={() => setIsCreating(true)}
@@ -96,7 +98,9 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
           <h2 className="text-xl font-serif text-text-main">Criar Novo Livro</h2>
           <form onSubmit={handleCreateBook} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-main mb-1">Título do Livro</label>
+              <label className="block text-sm font-medium text-text-main mb-1">
+                Título do Livro
+              </label>
               <input
                 type="text"
                 value={newBookTitle}
@@ -131,7 +135,8 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
           <BookOpen className="mx-auto h-12 w-12 text-text-muted opacity-50 mb-4" />
           <h3 className="text-xl font-serif text-text-main mb-2">Nenhum Livro Registrado</h3>
           <p className="text-text-muted max-w-md mx-auto">
-            Este universo ainda não possui histórias catalogadas. Crie o primeiro livro para começar sua jornada.
+            Este universo ainda não possui histórias catalogadas. Crie o primeiro livro para começar
+            sua jornada.
           </p>
         </div>
       ) : (
@@ -154,7 +159,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
               <p className="text-sm text-text-muted mb-4 capitalize grow">
                 Status: {book.status.replace("_", " ")}
               </p>
-              
+
               <div className="flex justify-between items-center text-xs text-text-muted font-mono mt-auto pt-4 border-t border-border-subtle/50">
                 <span>Ordem: #{book.orderInSeries}</span>
                 <span>{new Date(book.createdAt).toLocaleDateString()}</span>

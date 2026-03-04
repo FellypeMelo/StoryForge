@@ -21,5 +21,3 @@ This track establishes the architectural skeleton for StoryForge using Tauri v2,
 - Working `get_app_info` and `health_check` Tauri commands.
 - Pipeline `pnpm test:all` executing all tests with zero warnings.
 - Dark UI layout responsive and error-free.
-
-

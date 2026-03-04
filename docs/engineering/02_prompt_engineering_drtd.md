@@ -59,5 +59,3 @@ Não se submete a tarefa ao codificador; submete-se ao **Planejador Orquestral**
 - **de Planejamento:** Pseudo-código antes de escrita da sintaxe.
 - **de Auto-revisão:** Inverte o vetor de atenção. Obriga o LLM a atuar como adversário que procura falhas do arquivo recém gerado (_Reflexion Pattern_).
 - **de Refatoração Arquitetural:** Agrupa AST Nodes pela correlação heurística.
-
-

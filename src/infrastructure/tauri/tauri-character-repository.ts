@@ -8,10 +8,40 @@ import { OceanProfile, OceanTraitScore } from "../../domain/ocean-profile";
 import { HaugeArc } from "../../domain/hauge-arc";
 import { VoiceProfile, PhysicalTells } from "../../domain/voice-profile";
 
+interface TauriCharacterData {
+  id: string;
+  project_id: string;
+  book_id?: string;
+  name: string;
+  age: number;
+  occupation: string;
+  physical_description: string;
+  goal: string;
+  motivation: string;
+  internal_conflict: string;
+  ocean_scores: {
+    openness: number;
+    conscientiousness: number;
+    extraversion: number;
+    agreeableness: number;
+    neuroticism: number;
+  };
+  hauge_wound: string;
+  hauge_belief: string;
+  hauge_fear: string;
+  hauge_identity: string;
+  hauge_essence: string;
+  voice_sentence_length: string;
+  voice_formality: string;
+  voice_verbal_tics: string;
+  voice_evasion_mechanism: string;
+  physical_tells: string;
+}
+
 export class TauriCharacterRepository implements CharacterRepository {
   async save(character: CharacterSheet): Promise<Result<void, DomainError>> {
     try {
-      const data = {
+      const data: TauriCharacterData = {
         id: character.id.value,
         project_id: character.projectId.value,
         name: character.name,
@@ -39,8 +69,6 @@ export class TauriCharacterRepository implements CharacterRepository {
         goal: "",
         motivation: "",
         internal_conflict: "",
-        voice: "",
-        mannerisms: "",
       };
 
       await invoke("create_character", { character: data });
@@ -52,7 +80,7 @@ export class TauriCharacterRepository implements CharacterRepository {
 
   async findById(id: CharacterId): Promise<Result<CharacterSheet, DomainError>> {
     try {
-      const data: any = await invoke("get_character", { id: id.value });
+      const data = await invoke<TauriCharacterData>("get_character", { id: id.value });
       return { success: true, data: this.mapToSheet(data) };
     } catch (error) {
       return { success: false, error: new DomainError(String(error)) };
@@ -61,7 +89,7 @@ export class TauriCharacterRepository implements CharacterRepository {
 
   async findByProject(projectId: ProjectId): Promise<Result<CharacterSheet[], DomainError>> {
     try {
-      const data: any[] = await invoke("list_characters", { projectId: projectId.value });
+      const data = await invoke<TauriCharacterData[]>("list_characters", { projectId: projectId.value });
       return { success: true, data: data.map(d => this.mapToSheet(d)) };
     } catch (error) {
       return { success: false, error: new DomainError(String(error)) };
@@ -92,7 +120,7 @@ export class TauriCharacterRepository implements CharacterRepository {
     return OceanTraitScore.Medium;
   }
 
-  private mapToSheet(data: any): CharacterSheet {
+  private mapToSheet(data: TauriCharacterData): CharacterSheet {
     const ocean = OceanProfile.create({
       openness: this.mapNumberToScore(data.ocean_scores.openness),
       conscientiousness: this.mapNumberToScore(data.ocean_scores.conscientiousness),

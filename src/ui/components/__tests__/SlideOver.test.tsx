@@ -6,7 +6,7 @@ test("SlideOver renders children when isOpen is true", () => {
   render(
     <SlideOver isOpen={true} onClose={() => {}}>
       <div data-testid="content">Modal Content</div>
-    </SlideOver>
+    </SlideOver>,
   );
 
   expect(screen.getByTestId("content")).toBeInTheDocument();
@@ -17,7 +17,7 @@ test("SlideOver does not render children when isOpen is false", () => {
   render(
     <SlideOver isOpen={false} onClose={() => {}}>
       <div data-testid="content">Modal Content</div>
-    </SlideOver>
+    </SlideOver>,
   );
 
   expect(screen.queryByTestId("content")).not.toBeInTheDocument();
@@ -28,7 +28,7 @@ test("SlideOver calls onClose when backdrop is clicked", () => {
   render(
     <SlideOver isOpen={true} onClose={onClose}>
       <div>Content</div>
-    </SlideOver>
+    </SlideOver>,
   );
 
   const backdrop = screen.getByTestId("slideover-backdrop");
@@ -42,7 +42,7 @@ test("SlideOver calls onClose when Escape key is pressed", () => {
   render(
     <SlideOver isOpen={true} onClose={onClose}>
       <div>Content</div>
-    </SlideOver>
+    </SlideOver>,
   );
 
   fireEvent.keyDown(window, { key: "Escape" });
@@ -58,12 +58,10 @@ test("SlideOver renders full width on mobile screens", () => {
   render(
     <SlideOver isOpen={true} onClose={() => {}}>
       <div data-testid="content">Content</div>
-    </SlideOver>
+    </SlideOver>,
   );
-  
+
   // Panel should have w-full class
   const panel = screen.getByTestId("slideover-panel");
   expect(panel).toHaveClass("w-full");
 });
-
-

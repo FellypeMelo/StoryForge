@@ -1,9 +1,11 @@
 # Specification: Story Codex Domain & UI (Mocks)
 
 ## Overview
+
 This track implements the foundational domain entities and repository interfaces (ports) for the StoryForge Lorebook (Story Codex), along with a primary UI dashboard to manage these entries using mocked data. This establishes the "Clean Architecture" boundaries before moving to SQLite persistence.
 
 ## Functional Requirements
+
 - **Domain Entities:**
   - `Project`: Core metadata for a story project (id, title, genre, createdAt).
   - `Character`: Psychological profile (OCEAN) and biographical data.
@@ -24,11 +26,13 @@ This track implements the foundational domain entities and repository interfaces
   - Search bar interface (visual only).
 
 ## Non-Functional Requirements
+
 - **TDD:** All domain logic and UI components must have unit tests.
 - **Clean Architecture:** Domain layer must be pure (no Tauri/SQLite imports).
 - **Type Safety:** Use TypeScript/Zod for domain integrity.
 
 ## Acceptance Criteria
+
 - [ ] Each entity has rigid validation in the constructor.
 - [ ] IDs are implemented as Value Objects.
 - [ ] UI displays mocked entities correctly in their respective tabs.
@@ -36,8 +40,7 @@ This track implements the foundational domain entities and repository interfaces
 - [ ] Tests verify domain rules and UI component rendering.
 
 ## Out of Scope
+
 - SQLite implementation (migrations, actual DB persistence).
 - Real vector embeddings (llama.cpp integration).
 - RAG Pipeline logic.
-
-

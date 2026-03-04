@@ -45,5 +45,3 @@ Estas regras compõem o modelo metalógico obrigatório injetado nas rotinas da 
 2. **Repúdio à Prematuridade:** Não antecipe a necessidade de abstração. **Adoção Integral da Regra das 3 Repetições** antes de criar a primeira interface/classe base genérica.
 3. **Proibição de Magia Negra:** Monkey-patching ou Reflection são proibidos. A clareza explícita e trivial supera a elegância de one-liners ilegíveis. _(Se a IA gerar 3 linhas de comentário para explicar o que fez, ela excedeu a complexidade limite)_.
 4. **Acoplamento Físico:** Lógicas que mudam juntas moram juntas na mesma árvore de arquivos. Alta coesão espacial, baixo acoplamento temporal.
-
-

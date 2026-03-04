@@ -9,5 +9,3 @@ export interface WorldRuleRepository {
   findByProject(projectId: ProjectId): Promise<Result<WorldRule[], DomainError>>;
   delete(id: WorldRuleId): Promise<Result<void, DomainError>>;
 }
-
-

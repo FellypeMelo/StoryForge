@@ -3,7 +3,7 @@ export class AcademicDiscipline {
 
   static create(value: string): AcademicDiscipline {
     if (!value || value.trim().length === 0) {
-      throw new Error('Academic discipline cannot be empty');
+      throw new Error("Academic discipline cannot be empty");
     }
     return new AcademicDiscipline(value.trim());
   }

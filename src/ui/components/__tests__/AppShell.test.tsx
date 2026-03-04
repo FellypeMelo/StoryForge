@@ -20,5 +20,3 @@ test("sidebar collapses and expands on Ctrl+B / Cmd+B", () => {
   // Sidebar should expand back
   expect(screen.queryByText(/Painel/i)).toBeInTheDocument();
 });
-
-

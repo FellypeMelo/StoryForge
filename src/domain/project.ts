@@ -59,5 +59,3 @@ export class Project {
     return this.props.createdAt;
   }
 }
-
-

@@ -17,4 +17,3 @@ describe("AppShell Navigation", () => {
     expect(onNavigate).toHaveBeenCalledWith("codex");
   });
 });
-

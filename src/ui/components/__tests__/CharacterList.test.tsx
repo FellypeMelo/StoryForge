@@ -38,7 +38,7 @@ describe("CharacterList", () => {
   it("should highlight injected characters", () => {
     const injectedIds = [mockCharacters[0].id.value];
     render(<CharacterList characters={mockCharacters} injectedIds={injectedIds} />);
-    
+
     expect(screen.getByText(/Injetado/i)).toBeInTheDocument();
   });
 
@@ -47,5 +47,3 @@ describe("CharacterList", () => {
     expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
   });
 });
-
-

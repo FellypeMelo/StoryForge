@@ -49,7 +49,11 @@ export class WorldRule {
     });
   }
 
-  public static generate(projectId: ProjectId, category: string = "Geral", bookId?: BookId): WorldRule {
+  public static generate(
+    projectId: ProjectId,
+    category: string = "Geral",
+    bookId?: BookId,
+  ): WorldRule {
     return WorldRule.create({
       id: WorldRuleId.generate(),
       projectId,
@@ -84,5 +88,3 @@ export class WorldRule {
     return this.props.content;
   }
 }
-
-

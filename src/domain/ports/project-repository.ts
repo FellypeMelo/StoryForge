@@ -8,5 +8,3 @@ export interface ProjectRepository {
   findAll(): Promise<Result<Project[], DomainError>>;
   delete(id: ProjectId): Promise<Result<void, DomainError>>;
 }
-
-

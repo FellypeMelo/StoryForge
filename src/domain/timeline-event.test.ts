@@ -14,7 +14,7 @@ describe("TimelineEvent Entity", () => {
       projectId,
       date: "Year 100",
       description: "The Great War started",
-      causalDependencies: [depId]
+      causalDependencies: [depId],
     });
 
     expect(event.id.equals(id)).toBe(true);
@@ -30,7 +30,7 @@ describe("TimelineEvent Entity", () => {
       id: TimelineEventId.generate(),
       projectId,
       bookId,
-      description: "Event in book"
+      description: "Event in book",
     });
     expect(event.bookId?.equals(bookId)).toBe(true);
   });
@@ -50,7 +50,7 @@ describe("TimelineEvent Entity", () => {
     const event = TimelineEvent.create({
       id: TimelineEventId.generate(),
       projectId: ProjectId.generate(),
-      description: "Test"
+      description: "Test",
     });
     const props = event.toProps();
     expect(props.description).toBe("Test");

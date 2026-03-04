@@ -64,7 +64,7 @@ export class Book {
       description: validated.description,
       status: validated.status,
       orderInSeries: validated.orderInSeries,
-      createdAt: validated.createdAt as Date || new Date(),
+      createdAt: (validated.createdAt as Date) || new Date(),
     });
   }
 

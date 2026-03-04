@@ -8,5 +8,3 @@ describe("SearchBar", () => {
     expect(screen.getByPlaceholderText(/Pesquisar sabedoria.../i)).toBeInTheDocument();
   });
 });
-
-

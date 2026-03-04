@@ -39,5 +39,3 @@ O Sistema Mestre de Checklists de Interação contínua. Para cada requisição 
 - [ ] **Rigor de Resposta OBRIGATÓRIO:** Logit maskings exigindo saída JSON-schemas/strict-diff.
 - [ ] **Reflexão Prévoca Estrita:** LLMs executaram <thinking> de ponderação visualizando side-effects previamente.
 - [ ] **Integração do Ambiente Autônomo:** dependency-cruiser validando liminarmente.
-
-

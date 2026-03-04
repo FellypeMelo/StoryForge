@@ -40,5 +40,3 @@ As fases macro-gerenciais do AI-XP exigem a subordinação algorítmica iterativ
 ### Fase 3: LEAP (Self-healing & Continuidade)
 
 - Implantação e observabilidade de loop reverso (A IA refatora autonomamente via DAST e Linters que falhem).
-
-

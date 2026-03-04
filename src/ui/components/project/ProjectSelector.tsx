@@ -58,7 +58,9 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
       <header className="flex justify-between items-end border-b border-border-subtle pb-6">
         <div>
           <h1 className="text-4xl font-serif text-text-main tracking-tight">Seus Universos</h1>
-          <p className="text-text-muted mt-2">Selecione um projeto para continuar ou crie um novo império narrativo.</p>
+          <p className="text-text-muted mt-2">
+            Selecione um projeto para continuar ou crie um novo império narrativo.
+          </p>
         </div>
         <button
           onClick={() => setIsCreating(true)}
@@ -74,7 +76,9 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
           <h2 className="text-xl font-serif text-text-main">Criar Novo Universo</h2>
           <form onSubmit={handleCreateProject} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-main mb-1">Nome do Universo</label>
+              <label className="block text-sm font-medium text-text-main mb-1">
+                Nome do Universo
+              </label>
               <input
                 type="text"
                 value={newProjectName}
@@ -85,7 +89,9 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-main mb-1">Descrição Curta (Opcional)</label>
+              <label className="block text-sm font-medium text-text-main mb-1">
+                Descrição Curta (Opcional)
+              </label>
               <input
                 type="text"
                 value={newProjectDescription}
@@ -119,7 +125,8 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
           <BookIcon className="mx-auto h-12 w-12 text-text-muted opacity-50 mb-4" />
           <h3 className="text-xl font-serif text-text-main mb-2">Nenhum Universo Encontrado</h3>
           <p className="text-text-muted max-w-md mx-auto">
-            O começo de toda grande história é uma página em branco. Crie seu primeiro universo para começar a forjar suas crônicas.
+            O começo de toda grande história é uma página em branco. Crie seu primeiro universo para
+            começar a forjar suas crônicas.
           </p>
         </div>
       ) : (
@@ -133,7 +140,9 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
               <div className="mb-4 text-text-muted group-hover:text-text-main transition-colors">
                 <BookIcon size={24} />
               </div>
-              <h3 className="text-xl font-serif text-text-main mb-2 line-clamp-1">{project.name}</h3>
+              <h3 className="text-xl font-serif text-text-main mb-2 line-clamp-1">
+                {project.name}
+              </h3>
               <p className="text-sm text-text-muted line-clamp-2 mb-4 grow">
                 {project.description || "Nenhuma descrição fornecida."}
               </p>

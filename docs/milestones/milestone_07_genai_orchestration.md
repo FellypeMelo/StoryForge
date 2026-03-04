@@ -181,5 +181,3 @@ API keys mascaradas na UI (******).
 | ProviderConfig   | Persistência cifrada de API keys                |
 | AgentPipeline    | Supervisor → Specialists reutilizando use cases |
 | UI Settings      | Configuração de provedores com teste de conexão |
-
-
