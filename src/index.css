@@ -6,9 +6,11 @@
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
   --color-bg-base: var(--sf-bg);
+  --color-bg-main: var(--sf-bg);
   --color-text-main: var(--sf-text-main);
   --color-text-muted: var(--sf-text-muted);
   --color-border-subtle: var(--sf-border);
+  --color-border-default: var(--sf-text-muted);
   --color-bg-hover: var(--sf-hover);
 }
 

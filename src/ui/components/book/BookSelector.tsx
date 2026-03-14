@@ -52,7 +52,8 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
       setBooks([...books, book]);
       setIsCreating(false);
       setNewBookTitle("");
-      onSelectBook(book.id.value);
+      // @ts-ignore - Tauri returns raw ID string
+      onSelectBook(book.id);
     } catch (err) {
       console.error("Failed to create book", err);
     }
@@ -86,7 +87,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
         </div>
         <button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-2 bg-text-main text-bg-main px-4 py-2 rounded font-medium hover:bg-text-muted transition-colors"
+          className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded font-medium hover:opacity-90 transition-all"
         >
           <Plus size={18} />
           <span>Novo Livro</span>
@@ -121,7 +122,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
               <button
                 type="submit"
                 disabled={!newBookTitle.trim()}
-                className="bg-text-main text-bg-main px-4 py-2 rounded font-medium text-sm hover:bg-text-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-text-main text-bg-base px-4 py-2 rounded font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Criar
               </button>
@@ -143,8 +144,8 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => (
             <button
-              key={book.id.value}
-              onClick={() => onSelectBook(book.id.value)}
+              key={book.id as any}
+              onClick={() => onSelectBook(book.id as any)}
               className="text-left group flex flex-col h-full bg-bg-main border border-border-subtle rounded-lg p-6 hover:border-text-muted hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-text-muted"
             >
               <div className="flex justify-between items-start mb-4">

@@ -43,7 +43,8 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
       setIsCreating(false);
       setNewProjectName("");
       setNewProjectDescription("");
-      onSelectProject(project.id.value);
+      // @ts-ignore - Tauri returns raw ID string
+      onSelectProject(project.id);
     } catch (err) {
       console.error("Failed to create project", err);
     }
@@ -64,7 +65,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
         </div>
         <button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-2 bg-text-main text-bg-main px-4 py-2 rounded font-medium hover:bg-text-muted transition-colors"
+          className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded font-medium hover:opacity-90 transition-all"
         >
           <Plus size={18} />
           <span>Novo Universo</span>
@@ -111,7 +112,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
               <button
                 type="submit"
                 disabled={!newProjectName.trim()}
-                className="bg-text-main text-bg-main px-4 py-2 rounded font-medium text-sm hover:bg-text-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-text-main text-bg-base px-4 py-2 rounded font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Criar
               </button>
@@ -133,8 +134,8 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
             <button
-              key={project.id.value}
-              onClick={() => onSelectProject(project.id.value)}
+              key={project.id as any}
+              onClick={() => onSelectProject(project.id as any)}
               className="text-left group flex flex-col h-full bg-bg-main border border-border-subtle rounded-lg p-6 hover:border-text-muted hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-text-muted"
             >
               <div className="mb-4 text-text-muted group-hover:text-text-main transition-colors">
