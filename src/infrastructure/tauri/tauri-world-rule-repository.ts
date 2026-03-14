@@ -26,15 +26,48 @@ export class TauriWorldRuleRepository implements WorldRuleRepository {
     }
   }
 
-  async findById(_id: WorldRuleId): Promise<Result<WorldRule, Error>> {
-    throw new Error("Method not implemented.");
+  async findById(id: WorldRuleId): Promise<Result<WorldRule, Error>> {
+    try {
+      const data = await invoke<any>("get_world_rule", { id: id.value });
+      if (!data) return { success: false, error: new Error("Rule not found") };
+      
+      return {
+        success: true,
+        data: WorldRule.create({
+          ...data,
+          id: { value: data.id },
+          projectId: { value: data.project_id },
+          bookId: data.book_id ? { value: data.book_id } : undefined,
+        } as any)
+      };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
+    }
   }
 
-  async findByProject(_projectId: ProjectId): Promise<Result<WorldRule[], Error>> {
-    throw new Error("Method not implemented.");
+  async findByProject(projectId: ProjectId): Promise<Result<WorldRule[], Error>> {
+    try {
+      const data = await invoke<any[]>("list_global_world_rules", { projectId: projectId.value });
+      return {
+        success: true,
+        data: data.map(d => WorldRule.create({
+          ...d,
+          id: { value: d.id },
+          projectId: { value: d.project_id },
+          bookId: d.book_id ? { value: d.book_id } : undefined,
+        } as any))
+      };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
+    }
   }
 
-  async delete(_id: WorldRuleId): Promise<Result<void, Error>> {
-    throw new Error("Method not implemented.");
+  async delete(id: WorldRuleId): Promise<Result<void, Error>> {
+    try {
+      await invoke("delete_world_rule", { id: id.value });
+      return { success: true, data: undefined };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
+    }
   }
 }

@@ -24,15 +24,48 @@ export class TauriBlacklistRepository implements BlacklistRepository {
     }
   }
 
-  async findById(_id: BlacklistEntryId): Promise<Result<BlacklistEntry, Error>> {
-    throw new Error("Method not implemented.");
+  async findById(id: BlacklistEntryId): Promise<Result<BlacklistEntry, Error>> {
+    try {
+      const data = await invoke<any>("get_blacklist_entry", { id: id.value });
+      if (!data) return { success: false, error: new Error("Entry not found") };
+      
+      return {
+        success: true,
+        data: BlacklistEntry.create({
+          ...data,
+          id: { value: data.id },
+          projectId: { value: data.project_id },
+          bookId: data.book_id ? { value: data.book_id } : undefined,
+        } as any)
+      };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
+    }
   }
 
-  async findByProject(_projectId: ProjectId): Promise<Result<BlacklistEntry[], Error>> {
-    throw new Error("Method not implemented.");
+  async findByProject(projectId: ProjectId): Promise<Result<BlacklistEntry[], Error>> {
+    try {
+      const data = await invoke<any[]>("list_global_blacklist_entries", { projectId: projectId.value });
+      return {
+        success: true,
+        data: data.map(d => BlacklistEntry.create({
+          ...d,
+          id: { value: d.id },
+          projectId: { value: d.project_id },
+          bookId: d.book_id ? { value: d.book_id } : undefined,
+        } as any))
+      };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
+    }
   }
 
-  async delete(_id: BlacklistEntryId): Promise<Result<void, Error>> {
-    throw new Error("Method not implemented.");
+  async delete(id: BlacklistEntryId): Promise<Result<void, Error>> {
+    try {
+      await invoke("delete_blacklist_entry", { id: id.value });
+      return { success: true, data: undefined };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error : new Error(String(error)) };
+    }
   }
 }
