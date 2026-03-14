@@ -4,6 +4,7 @@ pub use crate::domain::value_objects::{BookId, ProjectId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Book {
     pub id: BookId,
     pub project_id: ProjectId,

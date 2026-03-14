@@ -4,6 +4,7 @@ pub use crate::domain::value_objects::{BookId, CharacterId, ProjectId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OceanScores {
     pub openness: u8,
     pub conscientiousness: u8,
@@ -25,6 +26,7 @@ impl Default for OceanScores {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Character {
     pub id: CharacterId,
     pub project_id: ProjectId,
