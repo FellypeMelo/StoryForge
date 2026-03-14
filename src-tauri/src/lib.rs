@@ -18,7 +18,12 @@ pub fn run() {
             if !app_data_dir.exists() {
                 std::fs::create_dir_all(&app_data_dir).expect("Failed to create app data dir");
             }
-            let db_path = app_data_dir.join("storyforge.db");
+            let db_name = if std::env::var("STORYFORGE_ENV").unwrap_or_default() == "test" {
+                "storyforge_test.db"
+            } else {
+                "storyforge.db"
+            };
+            let db_path = app_data_dir.join(db_name);
             let db = SqliteDatabase::new(&db_path).expect("Failed to initialize database");
             db.run_migrations()
                 .expect("Failed to run database migrations");
