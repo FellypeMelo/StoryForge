@@ -10,6 +10,7 @@ import { LocationForm } from "../location/LocationForm";
 import { WorldRuleList } from "../world-rule/WorldRuleList";
 import { WorldRuleForm } from "../world-rule/WorldRuleForm";
 import { TimelineList, RelationshipList, BlacklistList } from "./LoreLists";
+import { TimelineEventForm, RelationshipForm, BlacklistEntryForm } from "./LoreForms";
 import { SearchBar } from "../shared/SearchBar";
 import { SlideOver } from "../shared/SlideOver";
 import { Character } from "../../../domain/character";
@@ -90,6 +91,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
 
   const [isRuleModalOpen, setIsRuleModalOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<WorldRule | null>(null);
+
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<TimelineEvent | null>(null);
+
+  const [isRelationshipModalOpen, setIsRelationshipModalOpen] = useState(false);
+  const [editingRelationship, setEditingRelationship] = useState<Relationship | null>(null);
+
+  const [isBlacklistModalOpen, setIsBlacklistModalOpen] = useState(false);
+  const [editingBlacklistEntry, setEditingBlacklistEntry] = useState<BlacklistEntry | null>(null);
 
   const currentProjectId = projectId;
 
@@ -350,22 +360,45 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     setIsLocationModalOpen(true);
   };
 
+  const handleEditLocation = (loc: Location) => {
+    setEditingLocation(loc);
+    setIsLocationModalOpen(true);
+  };
+
   const handleSaveLocation = async (loc: Location) => {
     try {
       const locData = loc.toProps();
-      const created = await invoke<{ id: string }>("create_location", {
-        projectId: currentProjectId,
-        bookId: scope === "book" ? bookId : null,
-        name: locData.name,
-      });
-      await invoke("update_location", {
-        location: {
-          ...locData,
-          id: created.id,
-          project_id: currentProjectId,
-          book_id: scope === "book" ? bookId : null,
-        },
-      });
+      
+      // Check if location exists in our current list to decide between create or update
+      const exists = locations.some(l => l.id.value === loc.id.value);
+
+      if (!exists) {
+        // Create first
+        const created = await invoke<{ id: string }>("create_location", {
+          projectId: currentProjectId,
+          bookId: scope === "book" ? bookId : null,
+          name: locData.name,
+        });
+        // Update with full data (since create only takes name)
+        await invoke("update_location", {
+          location: {
+            ...locData,
+            id: created.id,
+            project_id: currentProjectId,
+            book_id: scope === "book" ? bookId : null,
+          },
+        });
+      } else {
+        // Update existing
+        await invoke("update_location", {
+          location: {
+            ...locData,
+            id: loc.id.value,
+            project_id: currentProjectId,
+            book_id: loc.bookId?.value || null,
+          },
+        });
+      }
       setIsLocationModalOpen(false);
       setEditingLocation(null);
       loadData();
@@ -381,29 +414,222 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     setIsRuleModalOpen(true);
   };
 
+  const handleEditRule = (rule: WorldRule) => {
+    setEditingRule(rule);
+    setIsRuleModalOpen(true);
+  };
+
   const handleSaveRule = async (rule: WorldRule) => {
     try {
       const ruleData = rule.toProps();
-      const created = await invoke<{ id: string }>("create_world_rule", {
-        projectId: currentProjectId,
-        bookId: scope === "book" ? bookId : null,
-        category: ruleData.category,
-        content: ruleData.content,
-      });
-      await invoke("update_world_rule", {
-        rule: {
-          ...ruleData,
-          id: created.id,
-          project_id: currentProjectId,
-          book_id: scope === "book" ? bookId : null,
-        },
-      });
+      const exists = rules.some(r => r.id.value === rule.id.value);
+
+      if (!exists) {
+        const created = await invoke<{ id: string }>("create_world_rule", {
+          projectId: currentProjectId,
+          bookId: scope === "book" ? bookId : null,
+          category: ruleData.category,
+          content: ruleData.content,
+        });
+        await invoke("update_world_rule", {
+          rule: {
+            ...ruleData,
+            id: created.id,
+            project_id: currentProjectId,
+            book_id: scope === "book" ? bookId : null,
+          },
+        });
+      } else {
+        await invoke("update_world_rule", {
+          rule: {
+            ...ruleData,
+            id: rule.id.value,
+            project_id: currentProjectId,
+            book_id: rule.bookId?.value || null,
+          },
+        });
+      }
       setIsRuleModalOpen(false);
       setEditingRule(null);
       loadData();
     } catch (error: unknown) {
       const msg = extractErrorMessage(error);
       console.error("Failed to save world rule:", msg);
+    }
+  };
+
+  const handleCreateEvent = () => {
+    // We need a TimelineEvent.generate or create a blank one
+    // Assuming TimelineEvent.create works with just projectId and description
+    const newEvent = TimelineEvent.create({
+      id: CharacterId.generate() as any, // TimelineEventId.generate()
+      projectId: ProjectId.create(currentProjectId),
+      bookId: scope === "book" ? { value: bookId } : undefined,
+      description: "Novo Evento",
+    });
+    setEditingEvent(newEvent);
+    setIsEventModalOpen(true);
+  };
+
+  const handleEditEvent = (event: TimelineEvent) => {
+    setEditingEvent(event);
+    setIsEventModalOpen(true);
+  };
+
+  const handleSaveEvent = async (event: TimelineEvent) => {
+    try {
+      const data = event.toProps();
+      const exists = events.some(e => e.id.value === event.id.value);
+
+      if (!exists) {
+        const created = await invoke<any>("create_timeline_event", {
+          projectId: currentProjectId,
+          bookId: scope === "book" ? bookId : null,
+          description: data.description,
+        });
+        await invoke("update_timeline_event", {
+          event: {
+            ...data,
+            id: created.id,
+            project_id: currentProjectId,
+            book_id: scope === "book" ? bookId : null,
+            causal_dependencies: [], // Backend expects snake_case and array
+          },
+        });
+      } else {
+        await invoke("update_timeline_event", {
+          event: {
+            ...data,
+            id: event.id.value,
+            project_id: currentProjectId,
+            book_id: event.bookId?.value || null,
+            causal_dependencies: data.causalDependencies.map(d => d.value),
+          },
+        });
+      }
+      setIsEventModalOpen(false);
+      setEditingEvent(null);
+      loadData();
+    } catch (error) {
+      console.error("Failed to save event:", error);
+    }
+  };
+
+  const handleCreateRelationship = () => {
+    if (characters.length < 2) {
+      alert("Você precisa de pelo menos 2 personagens para criar um relacionamento.");
+      return;
+    }
+    const newRel = Relationship.create({
+      id: CharacterId.generate() as any,
+      projectId: ProjectId.create(currentProjectId),
+      bookId: scope === "book" ? { value: bookId } : undefined,
+      characterAId: characters[0].id,
+      characterBId: characters[1].id,
+      type: "Conhecidos",
+    });
+    setEditingRelationship(newRel);
+    setIsRelationshipModalOpen(true);
+  };
+
+  const handleEditRelationship = (rel: Relationship) => {
+    setEditingRelationship(rel);
+    setIsRelationshipModalOpen(true);
+  };
+
+  const handleSaveRelationship = async (rel: Relationship) => {
+    try {
+      const data = rel.toProps();
+      const exists = relationships.some(r => r.id.value === rel.id.value);
+
+      if (!exists) {
+        const created = await invoke<any>("create_relationship", {
+          projectId: currentProjectId,
+          bookId: scope === "book" ? bookId : null,
+          characterA: data.characterAId.value,
+          characterB: data.characterBId.value,
+          type: data.type,
+        });
+        await invoke("update_relationship", {
+          relationship: {
+            ...data,
+            id: created.id,
+            project_id: currentProjectId,
+            book_id: scope === "book" ? bookId : null,
+            character_a: data.characterAId.value,
+            character_b: data.characterBId.value,
+          },
+        });
+      } else {
+        await invoke("update_relationship", {
+          relationship: {
+            ...data,
+            id: rel.id.value,
+            project_id: currentProjectId,
+            book_id: rel.bookId?.value || null,
+            character_a: data.characterAId.value,
+            character_b: data.characterBId.value,
+          },
+        });
+      }
+      setIsRelationshipModalOpen(false);
+      setEditingRelationship(null);
+      loadData();
+    } catch (error) {
+      console.error("Failed to save relationship:", error);
+    }
+  };
+
+  const handleCreateBlacklist = () => {
+    const newEntry = BlacklistEntry.create({
+      id: CharacterId.generate() as any,
+      projectId: ProjectId.create(currentProjectId),
+      bookId: scope === "book" ? { value: bookId } : undefined,
+      term: "Novo Termo",
+    });
+    setEditingBlacklistEntry(newEntry);
+    setIsBlacklistModalOpen(true);
+  };
+
+  const handleEditBlacklist = (entry: BlacklistEntry) => {
+    setEditingBlacklistEntry(entry);
+    setIsBlacklistModalOpen(true);
+  };
+
+  const handleSaveBlacklistEntry = async (entry: BlacklistEntry) => {
+    try {
+      const data = entry.toProps();
+      const exists = entries.some(e => e.id.value === entry.id.value);
+
+      if (!exists) {
+        const created = await invoke<any>("create_blacklist_entry", {
+          projectId: currentProjectId,
+          bookId: scope === "book" ? bookId : null,
+          term: data.term,
+        });
+        await invoke("update_blacklist_entry", {
+          entry: {
+            ...data,
+            id: created.id,
+            project_id: currentProjectId,
+            book_id: scope === "book" ? bookId : null,
+          },
+        });
+      } else {
+        await invoke("update_blacklist_entry", {
+          entry: {
+            ...data,
+            id: entry.id.value,
+            project_id: currentProjectId,
+            book_id: entry.bookId?.value || null,
+          },
+        });
+      }
+      setIsBlacklistModalOpen(false);
+      setEditingBlacklistEntry(null);
+      loadData();
+    } catch (error) {
+      console.error("Failed to save blacklist entry:", error);
     }
   };
 
@@ -575,6 +801,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               <LocationList
                 locations={locations}
                 onCreateNew={handleCreateLocation}
+                onSelect={handleEditLocation}
                 injectedIds={injectedIds}
               />
             )}
@@ -582,15 +809,30 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               <WorldRuleList
                 rules={rules}
                 onCreateNew={handleCreateRule}
+                onSelect={handleEditRule}
                 injectedIds={injectedIds}
               />
             )}
-            {activeTab === "timeline" && <TimelineList events={events} onCreateNew={() => {}} />}
+            {activeTab === "timeline" && (
+              <TimelineList
+                events={events}
+                onCreateNew={handleCreateEvent}
+                onSelect={handleEditEvent}
+              />
+            )}
             {activeTab === "relationships" && (
-              <RelationshipList relationships={relationships} onCreateNew={() => {}} />
+              <RelationshipList
+                relationships={relationships}
+                onCreateNew={handleCreateRelationship}
+                onSelect={handleEditRelationship}
+              />
             )}
             {activeTab === "blacklist" && (
-              <BlacklistList entries={entries} onCreateNew={() => {}} />
+              <BlacklistList
+                entries={entries}
+                onCreateNew={handleCreateBlacklist}
+                onSelect={handleEditBlacklist}
+              />
             )}
           </>
         )}
@@ -725,6 +967,133 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
                 onCancel={() => {
                   setIsRuleModalOpen(false);
                   setEditingRule(null);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </SlideOver>
+
+      <SlideOver
+        isOpen={isEventModalOpen}
+        onClose={() => {
+          setIsEventModalOpen(false);
+          setEditingEvent(null);
+        }}
+      >
+        <div className="h-full flex flex-col">
+          {editingEvent && (
+            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+              {editingEvent.bookId ? (
+                <button
+                  onClick={() => handleMoveToProject(editingEvent.id.value)}
+                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                >
+                  Mover para Universo
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleMoveToBook(editingEvent.id.value)}
+                  className="text-[10px] font-bold tracking-widest uppercase text-text-main hover:underline"
+                >
+                  Mover para Este Livro
+                </button>
+              )}
+            </div>
+          )}
+          <div className="flex-1 overflow-hidden">
+            {editingEvent && (
+              <TimelineEventForm
+                event={editingEvent}
+                onSave={handleSaveEvent}
+                onCancel={() => {
+                  setIsEventModalOpen(false);
+                  setEditingEvent(null);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </SlideOver>
+
+      <SlideOver
+        isOpen={isRelationshipModalOpen}
+        onClose={() => {
+          setIsRelationshipModalOpen(false);
+          setEditingRelationship(null);
+        }}
+      >
+        <div className="h-full flex flex-col">
+          {editingRelationship && (
+            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+              {editingRelationship.bookId ? (
+                <button
+                  onClick={() => handleMoveToProject(editingRelationship.id.value)}
+                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                >
+                  Mover para Universo
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleMoveToBook(editingRelationship.id.value)}
+                  className="text-[10px] font-bold tracking-widest uppercase text-text-main hover:underline"
+                >
+                  Mover para Este Livro
+                </button>
+              )}
+            </div>
+          )}
+          <div className="flex-1 overflow-hidden">
+            {editingRelationship && (
+              <RelationshipForm
+                relationship={editingRelationship}
+                characters={characters}
+                onSave={handleSaveRelationship}
+                onCancel={() => {
+                  setIsRelationshipModalOpen(false);
+                  setEditingRelationship(null);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </SlideOver>
+
+      <SlideOver
+        isOpen={isBlacklistModalOpen}
+        onClose={() => {
+          setIsBlacklistModalOpen(false);
+          setEditingBlacklistEntry(null);
+        }}
+      >
+        <div className="h-full flex flex-col">
+          {editingBlacklistEntry && (
+            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+              {editingBlacklistEntry.bookId ? (
+                <button
+                  onClick={() => handleMoveToProject(editingBlacklistEntry.id.value)}
+                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                >
+                  Mover para Universo
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleMoveToBook(editingBlacklistEntry.id.value)}
+                  className="text-[10px] font-bold tracking-widest uppercase text-text-main hover:underline"
+                >
+                  Mover para Este Livro
+                </button>
+              )}
+            </div>
+          )}
+          <div className="flex-1 overflow-hidden">
+            {editingBlacklistEntry && (
+              <BlacklistEntryForm
+                entry={editingBlacklistEntry}
+                onSave={handleSaveBlacklistEntry}
+                onCancel={() => {
+                  setIsBlacklistModalOpen(false);
+                  setEditingBlacklistEntry(null);
                 }}
               />
             )}
