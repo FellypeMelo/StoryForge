@@ -22,6 +22,12 @@ pub async fn list_projects(state: State<'_, SqliteDatabase>) -> AppResult<Vec<Pr
 }
 
 #[tauri::command]
+pub async fn get_project(state: State<'_, SqliteDatabase>, id: String) -> AppResult<Project> {
+    let service = ProjectService::new(state.inner());
+    service.get_project(ProjectId(id))
+}
+
+#[tauri::command]
 pub async fn delete_project(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
     let service = ProjectService::new(state.inner());
     service.delete_project(ProjectId(id))

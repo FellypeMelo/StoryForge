@@ -10,7 +10,7 @@ pub async fn create_character(
     character: Character,
 ) -> AppResult<()> {
     let service = CharacterService::new(state.inner());
-    service.repository.create_character(&character)
+    service.save_character(&character)
 }
 
 #[tauri::command]

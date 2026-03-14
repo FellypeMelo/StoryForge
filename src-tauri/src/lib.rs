@@ -30,6 +30,7 @@ pub fn run() {
             commands::get_app_info,
             commands::health_check,
             features::projects::commands::create_project,
+            features::projects::commands::get_project,
             features::projects::commands::list_projects,
             features::projects::commands::delete_project,
             features::characters::commands::create_character,

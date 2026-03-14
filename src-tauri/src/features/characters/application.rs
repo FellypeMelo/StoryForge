@@ -16,6 +16,10 @@ impl<'a> CharacterService<'a> {
         Ok(character)
     }
 
+    pub fn save_character(&self, character: &Character) -> AppResult<()> {
+        self.repository.create_character(character)
+    }
+
     pub fn get_character(&self, id: CharacterId) -> AppResult<Character> {
         self.repository.get_character_by_id(&id)
     }
@@ -75,8 +79,10 @@ mod tests {
         let pid = ProjectId("p".to_string());
         let bid = BookId::new();
         let cid = CharacterId::new();
+        let character = Character::new(pid.clone(), None, "N".to_string()).unwrap();
 
         assert!(service.create_character(pid.clone(), None, "N".to_string()).is_ok());
+        assert!(service.save_character(&character).is_ok());
         assert!(service.get_character(cid.clone()).is_ok());
         assert!(service.list_characters_by_project(pid.clone()).is_ok());
         assert!(service.list_characters_by_book(bid.clone()).is_ok());
