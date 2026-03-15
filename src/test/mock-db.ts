@@ -51,7 +51,11 @@ export class MockDatabase {
       case "list_projects":
         return this.projects;
       case "create_project": {
-        const newProject = { id: crypto.randomUUID(), ...args };
+        const newProject = { 
+          id: crypto.randomUUID(), 
+          createdAt: new Date().toISOString(),
+          ...args 
+        };
         this.projects.push(newProject);
         return newProject;
       }
@@ -62,7 +66,14 @@ export class MockDatabase {
       case "list_books":
         return this.books.filter(b => b.project_id === args.projectId);
       case "create_book": {
-        const newBook = { id: crypto.randomUUID(), ...args };
+        const newBook = { 
+          id: crypto.randomUUID(), 
+          status: "draft",
+          orderInSeries: 1,
+          createdAt: new Date().toISOString(),
+          project_id: args.projectId,
+          ...args 
+        };
         this.books.push(newBook);
         return newBook;
       }
@@ -85,6 +96,20 @@ export class MockDatabase {
         const charData = args.character || args;
         const idx = this.characters.findIndex(c => c.id === charData.id);
         if (idx !== -1) this.characters[idx] = { ...this.characters[idx], ...charData };
+        return {};
+      }
+      case "delete_character": {
+        this.characters = this.characters.filter(c => c.id !== args.id);
+        return {};
+      }
+      case "move_character_to_book": {
+        const char = this.characters.find(c => c.id === args.id);
+        if (char) char.book_id = args.bookId;
+        return {};
+      }
+      case "move_character_to_project": {
+        const char = this.characters.find(c => c.id === args.id);
+        if (char) char.book_id = null;
         return {};
       }
 
@@ -111,6 +136,20 @@ export class MockDatabase {
         if (idx !== -1) this.locations[idx] = { ...this.locations[idx], ...locData };
         return {};
       }
+      case "delete_location": {
+        this.locations = this.locations.filter(l => l.id !== args.id);
+        return {};
+      }
+      case "move_location_to_book": {
+        const loc = this.locations.find(l => l.id === args.id);
+        if (loc) loc.book_id = args.bookId;
+        return {};
+      }
+      case "move_location_to_project": {
+        const loc = this.locations.find(l => l.id === args.id);
+        if (loc) loc.book_id = null;
+        return {};
+      }
 
       // World Rules
       case "list_global_world_rules":
@@ -132,6 +171,20 @@ export class MockDatabase {
         const ruleData = args.rule || args;
         const idx = this.worldRules.findIndex(r => r.id === ruleData.id);
         if (idx !== -1) this.worldRules[idx] = { ...this.worldRules[idx], ...ruleData };
+        return {};
+      }
+      case "delete_world_rule": {
+        this.worldRules = this.worldRules.filter(r => r.id !== args.id);
+        return {};
+      }
+      case "move_world_rule_to_book": {
+        const rule = this.worldRules.find(r => r.id === args.id);
+        if (rule) rule.book_id = args.bookId;
+        return {};
+      }
+      case "move_world_rule_to_project": {
+        const rule = this.worldRules.find(r => r.id === args.id);
+        if (rule) rule.book_id = null;
         return {};
       }
 
@@ -156,6 +209,20 @@ export class MockDatabase {
         const eventData = args.event || args;
         const idx = this.timelineEvents.findIndex(e => e.id === eventData.id);
         if (idx !== -1) this.timelineEvents[idx] = { ...this.timelineEvents[idx], ...eventData };
+        return {};
+      }
+      case "delete_timeline_event": {
+        this.timelineEvents = this.timelineEvents.filter(e => e.id !== args.id);
+        return {};
+      }
+      case "move_timeline_event_to_book": {
+        const ev = this.timelineEvents.find(e => e.id === args.id);
+        if (ev) ev.book_id = args.bookId;
+        return {};
+      }
+      case "move_timeline_event_to_project": {
+        const ev = this.timelineEvents.find(e => e.id === args.id);
+        if (ev) ev.book_id = null;
         return {};
       }
 
@@ -183,6 +250,20 @@ export class MockDatabase {
         if (idx !== -1) this.relationships[idx] = { ...this.relationships[idx], ...relData };
         return {};
       }
+      case "delete_relationship": {
+        this.relationships = this.relationships.filter(r => r.id !== args.id);
+        return {};
+      }
+      case "move_relationship_to_book": {
+        const rel = this.relationships.find(r => r.id === args.id);
+        if (rel) rel.book_id = args.bookId;
+        return {};
+      }
+      case "move_relationship_to_project": {
+        const rel = this.relationships.find(r => r.id === args.id);
+        if (rel) rel.book_id = null;
+        return {};
+      }
 
       // Blacklist
       case "list_global_blacklist_entries":
@@ -205,6 +286,32 @@ export class MockDatabase {
         const idx = this.blacklistEntries.findIndex(e => e.id === entryData.id);
         if (idx !== -1) this.blacklistEntries[idx] = { ...this.blacklistEntries[idx], ...entryData };
         return {};
+      }
+      case "delete_blacklist_entry": {
+        this.blacklistEntries = this.blacklistEntries.filter(e => e.id !== args.id);
+        return {};
+      }
+      case "move_blacklist_entry_to_book": {
+        const entry = this.blacklistEntries.find(e => e.id === args.id);
+        if (entry) entry.book_id = args.bookId;
+        return {};
+      }
+      case "move_blacklist_entry_to_project": {
+        const entry = this.blacklistEntries.find(e => e.id === args.id);
+        if (entry) entry.book_id = null;
+        return {};
+      }
+
+      case "search_lore":
+      case "search_codex": {
+        const q = args.query.toLowerCase();
+        const results = [];
+        this.characters.forEach(c => {
+          if (c.name.toLowerCase().includes(q)) {
+            results.push({ entity_id: c.id, entity_type: "character", snippet: c.name });
+          }
+        });
+        return results;
       }
 
       case "health_check":

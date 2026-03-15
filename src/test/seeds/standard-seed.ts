@@ -7,10 +7,23 @@ export const getStandardSeed = () => {
 
   return {
     projects: [
-      { id: STANDARD_PROJECT_ID, title: "A Forja das Sombras", description: "Uma fantasia épica." }
+      { 
+        id: STANDARD_PROJECT_ID, 
+        name: "A Forja das Sombras", 
+        description: "Uma fantasia épica.",
+        createdAt: new Date().toISOString()
+      }
     ],
     books: [
-      { id: STANDARD_BOOK_ID, project_id: STANDARD_PROJECT_ID, title: "Livro 1: O Despertar", summary: "O início da jornada." }
+      { 
+        id: STANDARD_BOOK_ID, 
+        project_id: STANDARD_PROJECT_ID, 
+        title: "Livro 1: O Despertar", 
+        summary: "O início da jornada.",
+        status: "draft",
+        orderInSeries: 1,
+        createdAt: new Date().toISOString()
+      }
     ],
     characters: [
       {
