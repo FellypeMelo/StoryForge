@@ -99,10 +99,11 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
           <h2 className="text-xl font-serif text-text-main">Criar Novo Livro</h2>
           <form onSubmit={handleCreateBook} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-main mb-1">
+              <label htmlFor="book-title" className="block text-sm font-medium text-text-main mb-1">
                 Título do Livro
               </label>
               <input
+                id="book-title"
                 type="text"
                 value={newBookTitle}
                 onChange={(e) => setNewBookTitle(e.target.value)}

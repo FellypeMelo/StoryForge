@@ -14,8 +14,9 @@ import { TimelineEventForm, RelationshipForm, BlacklistEntryForm } from "./LoreF
 import { SearchBar } from "../shared/SearchBar";
 import { SlideOver } from "../shared/SlideOver";
 import { Character } from "../../../domain/character";
-import { ProjectId } from "../../../domain/value-objects/project-id";
-import { CharacterId } from "../../../domain/value-objects/character-id";
+import { ProjectId as ProjectIdVO } from "../../../domain/value-objects/project-id";
+import { BookId as BookIdVO } from "../../../domain/value-objects/book-id";
+import { CharacterId as CharacterIdVO } from "../../../domain/value-objects/character-id";
 import { OceanProfile, OceanTraitScore } from "../../../domain/ocean-profile";
 import { HaugeArc } from "../../../domain/hauge-arc";
 import { VoiceProfile, PhysicalTells } from "../../../domain/voice-profile";
@@ -25,7 +26,21 @@ import { WorldRule } from "../../../domain/world-rule";
 import { TimelineEvent } from "../../../domain/timeline-event";
 import { Relationship } from "../../../domain/relationship";
 import { BlacklistEntry } from "../../../domain/blacklist-entry";
-import { Users, MapPin, Scroll, Clock, GitBranch, Ban } from "lucide-react";
+import {
+  Users,
+  MapPin,
+  Scroll,
+  Clock,
+  GitBranch,
+  Ban,
+  Search,
+  Plus,
+  ChevronLeft,
+  ArrowRight,
+  Loader2,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 
 type Tab = "characters" | "locations" | "rules" | "timeline" | "relationships" | "blacklist";
 type Scope = "book" | "global";
@@ -126,19 +141,23 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     setLoading(true);
     try {
       if (activeTab === "characters") {
-        const result = await characterRepo.findByProject(ProjectId.create(currentProjectId));
+        const result = scope === "book" 
+          ? await characterRepo.findByBook(BookIdVO.create(bookId))
+          : await characterRepo.findByProject(ProjectIdVO.create(projectId));
+          
         if (result.success) {
           // Map CharacterSheet to Character for the UI
           setCharacters(result.data.map(sheet => Character.create({
             id: sheet.id,
             projectId: sheet.projectId,
+            bookId: sheet.bookId,
             name: sheet.name,
             ocean_scores: {
               openness: mapScoreToNumber(sheet.ocean.openness),
               conscientiousness: mapScoreToNumber(sheet.ocean.conscientiousness),
-              extraversion: mapScoreToNumber(sheet.extraversion),
-              agreeableness: mapScoreToNumber(sheet.agreeableness),
-              neuroticism: mapScoreToNumber(sheet.neuroticism),
+              extraversion: mapScoreToNumber(sheet.ocean.extraversion),
+              agreeableness: mapScoreToNumber(sheet.ocean.agreeableness),
+              neuroticism: mapScoreToNumber(sheet.ocean.neuroticism),
             },
             hauge_wound: sheet.hauge?.wound || "",
             hauge_belief: sheet.hauge?.belief || "",
@@ -154,7 +173,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
         }
       } else if (activeTab === "locations") {
         const command = scope === "book" ? "list_locations_by_book" : "list_global_locations";
-        const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
+        const params = scope === "book" ? { bookId } : { projectId };
         const data = await invoke<any[]>(command, params);
         setLocations(
           data.map((d) =>
@@ -169,7 +188,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
         );
       } else if (activeTab === "rules") {
         const command = scope === "book" ? "list_world_rules_by_book" : "list_global_world_rules";
-        const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
+        const params = scope === "book" ? { bookId } : { projectId };
         const data = await invoke<any[]>(command, params);
         setRules(
           data.map((d) =>
@@ -186,7 +205,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       } else if (activeTab === "timeline") {
         const command =
           scope === "book" ? "list_timeline_events_by_book" : "list_global_timeline_events";
-        const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
+        const params = scope === "book" ? { bookId } : { projectId };
         const data = await invoke<any[]>(command, params);
         setEvents(
           data.map((d) =>
@@ -202,7 +221,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       } else if (activeTab === "relationships") {
         const command =
           scope === "book" ? "list_relationships_by_book" : "list_global_relationships";
-        const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
+        const params = scope === "book" ? { bookId } : { projectId };
         const data = await invoke<any[]>(command, params);
         setRelationships(
           data.map((d) =>
@@ -220,7 +239,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       } else if (activeTab === "blacklist") {
         const command =
           scope === "book" ? "list_blacklist_entries_by_book" : "list_global_blacklist_entries";
-        const params = scope === "book" ? { bookId } : { projectId: currentProjectId };
+        const params = scope === "book" ? { bookId } : { projectId };
         const data = await invoke<any[]>(command, params);
         setEntries(
           data.map((d) =>
@@ -254,24 +273,64 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     }
   };
 
-  // const handleDelete = async (id: string) => {
-  //   try {
-  //     if (activeTab === "characters") {
-  //       await invoke("delete_character", { id });
-  //     } else if (activeTab === "locations") {
-  //       await invoke("delete_location", { id });
-  //     } else if (activeTab === "rules") {
-  //       await invoke("delete_world_rule", { id });
-  //     }
-  //     loadData();
-  //   } catch (err) {
-  //     console.error("Failed to delete entity:", err);
-  //   }
-  // };
+  const handleDeleteLocation = async (id: string) => {
+    try {
+      await invoke("delete_location", { id });
+      setIsLocationModalOpen(false);
+      setEditingLocation(null);
+      loadData();
+    } catch (err) {
+      console.error("Failed to delete location:", err);
+    }
+  };
+
+  const handleDeleteRule = async (id: string) => {
+    try {
+      await invoke("delete_world_rule", { id });
+      setIsRuleModalOpen(false);
+      setEditingRule(null);
+      loadData();
+    } catch (err) {
+      console.error("Failed to delete world rule:", err);
+    }
+  };
+
+  const handleDeleteEvent = async (id: string) => {
+    try {
+      await invoke("delete_timeline_event", { id });
+      setIsEventModalOpen(false);
+      setEditingEvent(null);
+      loadData();
+    } catch (err) {
+      console.error("Failed to delete event:", err);
+    }
+  };
+
+  const handleDeleteRelationship = async (id: string) => {
+    try {
+      await invoke("delete_relationship", { id });
+      setIsRelationshipModalOpen(false);
+      setEditingRelationship(null);
+      loadData();
+    } catch (err) {
+      console.error("Failed to delete relationship:", err);
+    }
+  };
+
+  const handleDeleteBlacklist = async (id: string) => {
+    try {
+      await invoke("delete_blacklist_entry", { id });
+      setIsBlacklistModalOpen(false);
+      setEditingBlacklistEntry(null);
+      loadData();
+    } catch (err) {
+      console.error("Failed to delete blacklist entry:", err);
+    }
+  };
 
   const handleCreateCharacter = () => {
     setViewingCharacter(null);
-    const newChar = Character.generate(ProjectId.create(currentProjectId), "");
+    const newChar = Character.generate(ProjectIdVO.create(currentProjectId), "");
     setEditingCharacter(newChar);
     setIsWizardOpen(true);
   };
@@ -355,7 +414,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
   };
 
   const handleCreateLocation = () => {
-    const newLoc = Location.generate(ProjectId.create(currentProjectId), "Novo Local");
+    const newLoc = Location.generate(ProjectIdVO.create(currentProjectId), "Novo Local");
     setEditingLocation(newLoc);
     setIsLocationModalOpen(true);
   };
@@ -409,7 +468,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
   };
 
   const handleCreateRule = () => {
-    const newRule = WorldRule.generate(ProjectId.create(currentProjectId));
+    const newRule = WorldRule.generate(ProjectIdVO.create(currentProjectId));
     setEditingRule(newRule);
     setIsRuleModalOpen(true);
   };
@@ -462,8 +521,8 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     // We need a TimelineEvent.generate or create a blank one
     // Assuming TimelineEvent.create works with just projectId and description
     const newEvent = TimelineEvent.create({
-      id: CharacterId.generate() as any, // TimelineEventId.generate()
-      projectId: ProjectId.create(currentProjectId),
+      id: CharacterIdVO.generate() as any, // TimelineEventId.generate()
+      projectId: ProjectIdVO.create(currentProjectId),
       bookId: scope === "book" ? { value: bookId } : undefined,
       description: "Novo Evento",
     });
@@ -521,8 +580,8 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       return;
     }
     const newRel = Relationship.create({
-      id: CharacterId.generate() as any,
-      projectId: ProjectId.create(currentProjectId),
+      id: CharacterIdVO.generate() as any,
+      projectId: ProjectIdVO.create(currentProjectId),
       bookId: scope === "book" ? { value: bookId } : undefined,
       characterAId: characters[0].id,
       characterBId: characters[1].id,
@@ -582,8 +641,8 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
 
   const handleCreateBlacklist = () => {
     const newEntry = BlacklistEntry.create({
-      id: CharacterId.generate() as any,
-      projectId: ProjectId.create(currentProjectId),
+      id: CharacterIdVO.generate() as any,
+      projectId: ProjectIdVO.create(currentProjectId),
       bookId: scope === "book" ? { value: bookId } : undefined,
       term: "Novo Termo",
     });
@@ -899,7 +958,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       >
         <div className="h-full flex flex-col">
           {editingLocation && (
-            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+            <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
+              <button
+                onClick={() => handleDeleteLocation(editingLocation.id.value)}
+                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                title="Excluir Local"
+              >
+                <Trash2 size={14} />
+              </button>
+              <div className="h-4 w-[1px] bg-border-subtle" />
               {editingLocation.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingLocation.id.value)}
@@ -941,7 +1008,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       >
         <div className="h-full flex flex-col">
           {editingRule && (
-            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+            <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
+              <button
+                onClick={() => handleDeleteRule(editingRule.id.value)}
+                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                title="Excluir Regra"
+              >
+                <Trash2 size={14} />
+              </button>
+              <div className="h-4 w-[1px] bg-border-subtle" />
               {editingRule.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingRule.id.value)}
@@ -983,7 +1058,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       >
         <div className="h-full flex flex-col">
           {editingEvent && (
-            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+            <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
+              <button
+                onClick={() => handleDeleteEvent(editingEvent.id.value)}
+                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                title="Excluir Evento"
+              >
+                <Trash2 size={14} />
+              </button>
+              <div className="h-4 w-[1px] bg-border-subtle" />
               {editingEvent.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingEvent.id.value)}
@@ -1025,7 +1108,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       >
         <div className="h-full flex flex-col">
           {editingRelationship && (
-            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+            <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
+              <button
+                onClick={() => handleDeleteRelationship(editingRelationship.id.value)}
+                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                title="Excluir Relacionamento"
+              >
+                <Trash2 size={14} />
+              </button>
+              <div className="h-4 w-[1px] bg-border-subtle" />
               {editingRelationship.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingRelationship.id.value)}
@@ -1068,7 +1159,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       >
         <div className="h-full flex flex-col">
           {editingBlacklistEntry && (
-            <div className="p-4 border-b border-border-subtle flex justify-end gap-2 bg-bg-hover/50">
+            <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
+              <button
+                onClick={() => handleDeleteBlacklist(editingBlacklistEntry.id.value)}
+                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                title="Excluir Entrada"
+              >
+                <Trash2 size={14} />
+              </button>
+              <div className="h-4 w-[1px] bg-border-subtle" />
               {editingBlacklistEntry.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingBlacklistEntry.id.value)}

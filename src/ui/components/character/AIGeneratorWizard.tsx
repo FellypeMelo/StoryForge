@@ -35,8 +35,8 @@ export function AIGeneratorWizard({
       const dummyPremise = new Premise(
         "Character focus",
         context || "Uma história em desenvolvimento",
-        "Obstáculos",
-        "Stakes",
+        "Obstáculos significativos no caminho",
+        "O destino do mundo e de todos que nele habitam",
       );
 
       const sheet = await useCase.execute(

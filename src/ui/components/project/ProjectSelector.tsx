@@ -77,10 +77,11 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
           <h2 className="text-xl font-serif text-text-main">Criar Novo Universo</h2>
           <form onSubmit={handleCreateProject} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-main mb-1">
+              <label htmlFor="project-name" className="block text-sm font-medium text-text-main mb-1">
                 Nome do Universo
               </label>
               <input
+                id="project-name"
                 type="text"
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
@@ -90,10 +91,11 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-main mb-1">
+              <label htmlFor="project-description" className="block text-sm font-medium text-text-main mb-1">
                 Descrição Curta (Opcional)
               </label>
               <input
+                id="project-description"
                 type="text"
                 value={newProjectDescription}
                 onChange={(e) => setNewProjectDescription(e.target.value)}
