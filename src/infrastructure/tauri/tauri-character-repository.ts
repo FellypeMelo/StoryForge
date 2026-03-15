@@ -2,8 +2,9 @@ import { invoke } from "@tauri-apps/api/core";
 import { CharacterRepository } from "../../domain/ports/character-repository";
 import { CharacterSheet } from "../../domain/character-sheet";
 import { Result, DomainError } from "../../domain/result";
-import { CharacterId } from "../../domain/value-objects/character-id";
-import { ProjectId } from "../../domain/value-objects/project-id";
+import { CharacterId as CharacterIdVO } from "../../domain/value-objects/character-id";
+import { ProjectId as ProjectIdVO } from "../../domain/value-objects/project-id";
+import { BookId as BookIdVO } from "../../domain/value-objects/book-id";
 import { OceanProfile, OceanTraitScore } from "../../domain/ocean-profile";
 import { HaugeArc } from "../../domain/hauge-arc";
 import { VoiceProfile, PhysicalTells } from "../../domain/voice-profile";
@@ -78,7 +79,7 @@ export class TauriCharacterRepository implements CharacterRepository {
     }
   }
 
-  async findById(id: CharacterId): Promise<Result<CharacterSheet, DomainError>> {
+  async findById(id: CharacterIdVO): Promise<Result<CharacterSheet, DomainError>> {
     try {
       const data = await invoke<TauriCharacterData>("get_character", { id: id.value });
       return { success: true, data: this.mapToSheet(data) };
@@ -87,7 +88,7 @@ export class TauriCharacterRepository implements CharacterRepository {
     }
   }
 
-  async findByProject(projectId: ProjectId): Promise<Result<CharacterSheet[], DomainError>> {
+  async findByProject(projectId: ProjectIdVO): Promise<Result<CharacterSheet[], DomainError>> {
     try {
       const data = await invoke<TauriCharacterData[]>("list_characters", { projectId: projectId.value });
       return { success: true, data: data.map(d => this.mapToSheet(d)) };
@@ -96,7 +97,16 @@ export class TauriCharacterRepository implements CharacterRepository {
     }
   }
 
-  async delete(id: CharacterId): Promise<Result<void, DomainError>> {
+  async findByBook(bookId: BookIdVO): Promise<Result<CharacterSheet[], DomainError>> {
+    try {
+      const data = await invoke<TauriCharacterData[]>("list_characters_by_book", { bookId: bookId.value });
+      return { success: true, data: data.map(d => this.mapToSheet(d)) };
+    } catch (error) {
+      return { success: false, error: new DomainError(String(error)) };
+    }
+  }
+
+  async delete(id: CharacterIdVO): Promise<Result<void, DomainError>> {
     try {
       await invoke("delete_character", { id: id.value });
       return { success: true, data: undefined };
@@ -147,8 +157,9 @@ export class TauriCharacterRepository implements CharacterRepository {
     const tells = PhysicalTells.create(JSON.parse(data.physical_tells || "[]"));
 
     return CharacterSheet.create({
-      id: CharacterId.create(data.id),
-      projectId: ProjectId.create(data.project_id),
+      id: CharacterIdVO.create(data.id),
+      projectId: ProjectIdVO.create(data.project_id),
+      bookId: data.book_id ? BookIdVO.create(data.book_id) : undefined,
       name: data.name,
       ocean,
       hauge,

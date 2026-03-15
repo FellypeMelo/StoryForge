@@ -3,10 +3,12 @@ import { HaugeArc } from "./hauge-arc";
 import { VoiceProfile, PhysicalTells } from "./voice-profile";
 import { CharacterId } from "./value-objects/character-id";
 import { ProjectId } from "./value-objects/project-id";
+import { BookId } from "./value-objects/book-id";
 
 export interface CharacterSheetProps {
   id: CharacterId;
   projectId: ProjectId;
+  bookId?: BookId;
   name: string;
   ocean: OceanProfile;
   hauge?: HaugeArc;
@@ -31,6 +33,10 @@ export class CharacterSheet {
 
   public get projectId(): ProjectId {
     return this.props.projectId;
+  }
+
+  public get bookId(): BookId | undefined {
+    return this.props.bookId;
   }
 
   public get name(): string {

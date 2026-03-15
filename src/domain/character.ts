@@ -185,6 +185,34 @@ export class Character {
     return this.props.hauge_wound;
   }
 
+  public get hauge_belief(): string {
+    return this.props.hauge_belief;
+  }
+
+  public get hauge_fear(): string {
+    return this.props.hauge_fear;
+  }
+
+  public get hauge_identity(): string {
+    return this.props.hauge_identity;
+  }
+
+  public get hauge_essence(): string {
+    return this.props.hauge_essence;
+  }
+
+  public get voice_sentence_length(): string {
+    return this.props.voice_sentence_length;
+  }
+
+  public get voice_formality(): string {
+    return this.props.voice_formality;
+  }
+
+  public get voice_evasion_mechanism(): string {
+    return this.props.voice_evasion_mechanism;
+  }
+
   public get verbal_tics(): string[] {
     try {
       return JSON.parse(this.props.voice_verbal_tics || "[]");
