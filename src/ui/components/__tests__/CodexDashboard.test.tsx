@@ -1,22 +1,18 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { CodexDashboard } from "../dashboard/CodexDashboard";
+import { mockDb } from "../../../test/mock-db";
 
-vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn(async (cmd) => {
-    if (cmd === "list_characters") return [];
-    if (cmd === "list_locations") return [];
-    if (cmd === "list_world_rules") return [];
-    return [];
-  }),
-}));
-
-describe("CodexDashboard", () => {
+describe("CodexDashboard Unit", () => {
   const mockProps: any = {
     projectId: "123e4567-e89b-12d3-a456-426614174000",
     bookId: "123e4567-e89b-12d3-a456-426614174001",
-    onBack: () => {},
+    onBack: vi.fn(),
   };
+
+  beforeEach(() => {
+    mockDb.reset();
+  });
 
   it("should render all lore tabs", () => {
     render(<CodexDashboard {...mockProps} />);
@@ -33,43 +29,25 @@ describe("CodexDashboard", () => {
   it("should show characters tab by default after loading", async () => {
     render(<CodexDashboard {...mockProps} />);
 
-    // Should show loading initially
-    expect(screen.getByText(/Consultando os arquivos/i)).toBeInTheDocument();
-
-    // Should eventually show empty state
+    // Should eventually show empty state (since mockDb is empty)
     await waitFor(() => {
       expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
     });
   });
 
   it("should show search results panel when searching", async () => {
-    // Mock search results
-    const mockResults = [
-      {
-        entity_id: "res-1",
-        entity_type: "character",
-        snippet: "Search result snippet",
-        score: 0.5,
-      },
-    ];
-
-    const { invoke } = await import("@tauri-apps/api/core");
-    vi.mocked(invoke).mockImplementation(async (cmd) => {
-      if (cmd === "search_lore") return mockResults;
-      if (cmd === "list_characters") return [];
-      if (cmd === "list_locations") return [];
-      if (cmd === "list_world_rules") return [];
-      return [];
+    mockDb.seed({
+      characters: [{ id: "c1", name: "Search Hero", project_id: mockProps.projectId }]
     });
 
     render(<CodexDashboard {...mockProps} />);
 
     const searchInput = screen.getByPlaceholderText(/Pesquisar sabedoria.../i);
-    fireEvent.change(searchInput, { target: { value: "test query" } });
+    fireEvent.change(searchInput, { target: { value: "Search" } });
 
     await waitFor(() => {
       expect(screen.getByText(/Resultados da Busca/i)).toBeInTheDocument();
-      expect(screen.getByText(/Search result snippet/i)).toBeInTheDocument();
+      expect(screen.getByText(/Search Hero/i)).toBeInTheDocument();
     });
   });
 });

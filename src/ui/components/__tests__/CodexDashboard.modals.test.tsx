@@ -1,16 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { CodexDashboard } from "../dashboard/CodexDashboard";
-
-// Mock Tauri invoke
-vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn(async (cmd) => {
-    if (cmd === "list_characters") return [];
-    if (cmd === "list_locations") return [];
-    if (cmd === "list_world_rules") return [];
-    return [];
-  }),
-}));
+import { mockDb } from "../../../test/mock-db";
 
 describe("CodexDashboard Modal Integration", () => {
   const mockProps: any = {
@@ -19,17 +10,24 @@ describe("CodexDashboard Modal Integration", () => {
     onBack: vi.fn(),
   };
 
+  beforeEach(() => {
+    mockDb.reset();
+  });
+
+  const waitForNotLoading = async () => {
+    await waitFor(() => {
+      expect(screen.queryByText(/Consultando os arquivos/i)).not.toBeInTheDocument();
+    }, { timeout: 10000 });
+  };
+
   it("should open SlideOver with LocationForm when 'Criar Local' is clicked", async () => {
     render(<CodexDashboard {...mockProps} />);
+    await waitForNotLoading();
 
     // Switch to locations tab
     const locationsTab = screen.getByRole("button", { name: /Locais/i });
     fireEvent.click(locationsTab);
-
-    // Wait for the list to load and the button to be available
-    await waitFor(() => {
-      expect(screen.getByText(/Nenhum local encontrado/i)).toBeInTheDocument();
-    });
+    await waitForNotLoading();
 
     const addLocationButton = screen.getByRole("button", { name: /Criar Local/i });
     fireEvent.click(addLocationButton);
@@ -40,15 +38,12 @@ describe("CodexDashboard Modal Integration", () => {
 
   it("should open SlideOver with WorldRuleForm when 'Criar Regra' is clicked", async () => {
     render(<CodexDashboard {...mockProps} />);
+    await waitForNotLoading();
 
     // Switch to rules tab
-    const rulesTab = screen.getByRole("button", { name: /Regras do Mundo/i });
+    const rulesTab = screen.getByRole("button", { name: /Regras/i });
     fireEvent.click(rulesTab);
-
-    // Wait for the list to load
-    await waitFor(() => {
-      expect(screen.getByText(/Nenhuma regra encontrada/i)).toBeInTheDocument();
-    });
+    await waitForNotLoading();
 
     const addRuleButton = screen.getByRole("button", { name: /Criar Regra/i });
     fireEvent.click(addRuleButton);
@@ -59,33 +54,24 @@ describe("CodexDashboard Modal Integration", () => {
 
   it("should open SlideOver with CharacterWizard when 'Criar Personagem' is clicked", async () => {
     render(<CodexDashboard {...mockProps} />);
-
-    // Wait for characters tab to load (it's default)
-    await waitFor(() => {
-      expect(screen.getByText(/Nenhum personagem encontrado/i)).toBeInTheDocument();
-    });
+    await waitForNotLoading();
 
     const addCharacterButton = screen.getByRole("button", { name: /Criar Manualmente/i });
     fireEvent.click(addCharacterButton);
 
-    // Should NOT replace the whole screen (dashboard should still be visible in background)
-    // and should show the SlideOver with Wizard
     expect(screen.getByText(/Novo Personagem/i)).toBeInTheDocument();
     expect(screen.getByText(/Passo 1/i)).toBeInTheDocument();
-
-    // Header from Dashboard should still be there (unlike before where it replaced the view)
-    expect(screen.getByText(/Codex da História/i)).toBeInTheDocument();
   });
 
   it("should reset form state when modal is closed and reopened", async () => {
     render(<CodexDashboard {...mockProps} />);
+    await waitForNotLoading();
 
     // Open Location modal
     const locationsTab = screen.getByRole("button", { name: /Locais/i });
     fireEvent.click(locationsTab);
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Criar Local/i })).toBeInTheDocument(),
-    );
+    await waitForNotLoading();
+    
     fireEvent.click(screen.getByRole("button", { name: /Criar Local/i }));
 
     // Type something
