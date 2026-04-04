@@ -5,6 +5,8 @@ import { CodexDashboard } from "./ui/components/dashboard/CodexDashboard";
 import { ProjectSelector } from "./ui/components/project/ProjectSelector";
 import { BookSelector } from "./ui/components/book/BookSelector";
 import { IdeationWizard } from "./ui/components/ideation/IdeationWizard";
+import StructurePage from "./ui/components/structure/StructurePage";
+import ChaptersPage from "./ui/components/chapters/ChaptersPage";
 
 interface AppInfo {
   name: string;
@@ -95,6 +97,14 @@ export function App() {
             onBack={() => setCurrentPath("dashboard")}
           />
         );
+      case "structure":
+        return (
+          <StructurePage onBack={() => setCurrentPath("dashboard")} />
+        );
+      case "chapters":
+        return (
+          <ChaptersPage onBack={() => setCurrentPath("dashboard")} />
+        );
       case "dashboard":
       default:
         return (
@@ -180,6 +190,24 @@ export function App() {
                     className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
                   >
                     Codex da História (Lore)
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentPath("structure")}
+                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
+                  >
+                    Estrutura Narrativa
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentPath("chapters")}
+                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
+                  >
+                    Capítulos
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                       →
                     </span>

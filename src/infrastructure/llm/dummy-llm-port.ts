@@ -113,6 +113,54 @@ export class DummyLlmPort implements LlmPort {
       return { text: JSON.stringify(character) };
     }
 
+    // Beat Sheet Generation (Dwight Swain Scene & Sequel)
+    if (prompt.includes("Dwight Swain") || prompt.includes("Cena e Sequela")) {
+      return {
+        text: JSON.stringify({
+          beats: [
+            {
+              type: "scene",
+              goal: "Find the hidden map in the old library",
+              conflict: "The library is on fire and guarded by a hostile librarian",
+              disaster: "no-and-worse",
+            },
+            {
+              type: "sequel",
+              reaction: "Panics thinking about losing the only connection to grandfather",
+              dilemma: [
+                "Run into the burning library and risk death",
+                "Abandon the quest and fail everything forever",
+                "Wait for firemen and lose the map to looters",
+              ],
+              decision: "Decides to run in with wet clothes",
+            },
+            {
+              type: "scene",
+              goal: "Search the burning shelves for the real map",
+              conflict: "Ceiling collapses blocking the exit",
+              disaster: "yes-but",
+            },
+            {
+              type: "sequel",
+              reaction: "Terrified but desperate for answers",
+              dilemma: [
+                "Stay trapped and lose all hope forever",
+                "Risk crushing injury to dig through rubble",
+                "Sacrifice the clothes as torch and risk fire spread",
+              ],
+              decision: "Decides to dig through the rubble with bare hands",
+            },
+          ],
+          cliffhanger: {
+            type: "climactic",
+            description: "Finds the map but realizes it is a fake — the real one was taken",
+          },
+          startPolarity: "positive",
+          endPolarity: "negative",
+        }),
+      };
+    }
+
     return { text: "Resposta simulada da Forja para: " + prompt.substring(0, 50) + "..." };
   }
 }
