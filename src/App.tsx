@@ -7,6 +7,8 @@ import { BookSelector } from "./ui/components/book/BookSelector";
 import { IdeationWizard } from "./ui/components/ideation/IdeationWizard";
 import StructurePage from "./ui/components/structure/StructurePage";
 import ChaptersPage from "./ui/components/chapters/ChaptersPage";
+import { WritingPage } from "./ui/components/writing/WritingPage";
+import { DummyLlmPort } from "./infrastructure/llm/dummy-llm-port";
 
 interface AppInfo {
   name: string;
@@ -104,6 +106,13 @@ export function App() {
       case "chapters":
         return (
           <ChaptersPage onBack={() => setCurrentPath("dashboard")} />
+        );
+      case "write":
+        return (
+          <WritingPage
+            llmPort={new DummyLlmPort()}
+            onBack={() => setCurrentPath("dashboard")}
+          />
         );
       case "dashboard":
       default:
@@ -208,6 +217,15 @@ export function App() {
                     className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
                   >
                     Capítulos
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
+                      →
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentPath("write")}
+                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
+                  >
+                    Assistente de Escrita
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
                       →
                     </span>

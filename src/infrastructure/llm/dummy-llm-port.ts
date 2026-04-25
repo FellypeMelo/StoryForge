@@ -161,6 +161,17 @@ export class DummyLlmPort implements LlmPort {
       };
     }
 
+    // EPRL Prose Generation (RSIP: Draft → Critique → Final)
+    if (prompt.includes("three-step RSIP") || prompt.includes("Passo 1")) {
+      return {
+        text: JSON.stringify({
+          draft: "The blade struck stone, sending sparks through the damp air. Aria pressed her back against the cold wall, counting her breaths. Three. Four. The corridor beyond remained silent. She traced the mark on her palm — the same mark her grandmother had carved into the cellar door. The sound of footsteps echoed. Too close.",
+          critique: "1. 'counting her breaths' is good show-don't-tell, but 'damp air' is generic sensory. 2. The grandmother reference feels like exposition dump — needs to be woven into physical action rather than stated directly.",
+          finalVersion: "Steel rang against granite. Sparks hissed against wet stone. Aria flattened herself against the wall, lungs burning, and pressed her branded palm flat — her grandmother's mark still raw, still glowing faint in the dark. Footsteps scraped the corridor. Close enough to taste.",
+        }),
+      };
+    }
+
     return { text: "Resposta simulada da Forja para: " + prompt.substring(0, 50) + "..." };
   }
 }
