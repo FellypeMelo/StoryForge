@@ -85,4 +85,70 @@ describe("SettingsPage", () => {
     if (!found.success) throw new Error("expected success");
     expect(found.data).toBeNull();
   });
+
+  it("lista todos os provedores reais", async () => {
+    renderPage();
+    expect(await screen.findByLabelText(/Ollama/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/OpenAI/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Anthropic/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Gemini/i)).toBeInTheDocument();
+  });
+
+  it("selecionar OpenAI exibe campo de chave de API e modelo", async () => {
+    renderPage();
+    fireEvent.click(await screen.findByLabelText(/OpenAI/i));
+    expect(screen.getByLabelText("Chave de API")).toBeInTheDocument();
+    expect(screen.getByLabelText("Modelo")).toBeInTheDocument();
+  });
+
+  it("chave de API vazia bloqueia salvar provedor de nuvem", async () => {
+    renderPage();
+    fireEvent.click(await screen.findByLabelText(/Anthropic/i));
+    fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
+
+    expect(await screen.findByText(/Informe a chave de API/i)).toBeInTheDocument();
+    const repo = new LocalStorageProviderConfigRepository();
+    const found = await repo.findByProvider("anthropic");
+    if (!found.success) throw new Error("expected success");
+    expect(found.data).toBeNull();
+  });
+
+  it("salva provedor OpenAI com chave e modelo", async () => {
+    const onProviderChange = vi.fn();
+    renderPage(vi.fn(), onProviderChange);
+
+    fireEvent.click(await screen.findByLabelText(/OpenAI/i));
+    fireEvent.change(screen.getByLabelText("Chave de API"), {
+      target: { value: "sk-live-123" },
+    });
+    fireEvent.change(screen.getByLabelText("Modelo"), {
+      target: { value: "gpt-4o" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
+
+    await waitFor(async () => {
+      const repo = new LocalStorageProviderConfigRepository();
+      const found = await repo.findByProvider("openai");
+      if (!found.success) throw new Error("expected success");
+      expect(found.data?.isActive).toBe(true);
+      expect(found.data?.apiKey).toBe("sk-live-123");
+      expect(found.data?.defaultModel).toBe("gpt-4o");
+    });
+    expect(onProviderChange).toHaveBeenCalled();
+  });
+
+  it("carrega provedor de nuvem ativo ao abrir", async () => {
+    const repo = new LocalStorageProviderConfigRepository();
+    await repo.save({
+      providerId: "gemini",
+      apiKey: "gk-existing",
+      defaultModel: "gemini-2.0-flash",
+      isActive: true,
+    });
+
+    renderPage();
+    const radio = await screen.findByLabelText(/Gemini/i);
+    await waitFor(() => expect(radio).toBeChecked());
+    expect(screen.getByLabelText("Chave de API")).toHaveValue("gk-existing");
+  });
 });

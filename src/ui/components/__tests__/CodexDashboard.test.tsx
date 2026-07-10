@@ -58,4 +58,24 @@ describe("CodexDashboard Unit", () => {
       expect(screen.getByText(/Search Hero/i)).toBeInTheDocument();
     });
   });
+
+  it("deve reindexar o índice semântico e mostrar um toast de sucesso com a contagem", async () => {
+    mockDb.seed({
+      characters: [
+        { id: "c1", name: "Hero", project_id: mockProps.projectId },
+        { id: "c2", name: "Villain", project_id: mockProps.projectId },
+      ],
+    });
+
+    renderDashboard();
+    await waitFor(() => {
+      expect(screen.queryByText(/Consultando os arquivos/i)).not.toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /Reindexar busca semântica/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/2 itens reindexados/i)).toBeInTheDocument();
+    });
+  });
 });

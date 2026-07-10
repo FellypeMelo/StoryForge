@@ -4,7 +4,7 @@ use crate::domain::ports::{
 };
 use crate::domain::result::AppResult;
 pub use crate::domain::value_objects::{BookId, ProjectId};
-use rusqlite::{Connection, Result, Row};
+use rusqlite::{params, Connection, Result, Row};
 use std::path::Path;
 use std::sync::{Mutex, Once};
 
@@ -325,7 +325,243 @@ impl SqliteDatabase {
             )?;
         }
 
+        let current_version: i32 =
+            conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;
+        if current_version < 9 {
+            conn.execute_batch(
+                "BEGIN;
+                 CREATE TABLE IF NOT EXISTS vector_meta (
+                    id INTEGER PRIMARY KEY CHECK(id = 1),
+                    dim INTEGER NOT NULL
+                 );
+                 INSERT OR IGNORE INTO vector_meta (id, dim) VALUES (1, 1536);
+                 PRAGMA user_version = 9;
+                 COMMIT;",
+            )?;
+        }
+
         Ok(())
+    }
+}
+
+impl SqliteDatabase {
+    /// Re-embeds every `lore_search` row in scope (project, optionally book) and
+    /// refreshes `lore_vectors`. Explicit and idempotent — never called from a
+    /// create/update path, keeping the app offline-first by default.
+    ///
+    /// Scope mirrors `VectorSearchPort::find_similar` exactly: `book_id = Some`
+    /// matches that book, `book_id = None` matches only global (book_id IS NULL)
+    /// rows, so anything reindexed here is guaranteed to be findable later.
+    pub fn reindex_lore_vectors(
+        &self,
+        project_id: &ProjectId,
+        book_id: Option<&BookId>,
+    ) -> AppResult<usize> {
+        let conn = self
+            .connection
+            .lock()
+            .map_err(|e| AppError::Internal(e.to_string()))?;
+
+        let mut sql =
+            "SELECT entity_id, title, content FROM lore_search WHERE project_id = ?".to_string();
+        if book_id.is_some() {
+            sql.push_str(" AND book_id = ?");
+        } else {
+            sql.push_str(" AND book_id IS NULL");
+        }
+
+        let rows: Vec<(String, String, String)> = {
+            let mut stmt = conn.prepare(&sql).map_err(AppError::from)?;
+
+            let mut query_params: Vec<Box<dyn rusqlite::ToSql>> =
+                vec![Box::new(project_id.0.clone())];
+            if let Some(bid) = book_id {
+                query_params.push(Box::new(bid.0.clone()));
+            }
+            let params_refs: Vec<&dyn rusqlite::ToSql> =
+                query_params.iter().map(|b| b.as_ref()).collect();
+
+            let row_iter = stmt
+                .query_map(rusqlite::params_from_iter(params_refs), |row: &Row| {
+                    Ok((
+                        row.get::<_, String>(0)?,
+                        row.get::<_, String>(1)?,
+                        row.get::<_, String>(2)?,
+                    ))
+                })
+                .map_err(AppError::from)?;
+
+            let mut collected = Vec::new();
+            for row in row_iter {
+                collected.push(row.map_err(AppError::from)?);
+            }
+            collected
+        };
+
+        let mut indexed = 0usize;
+        for (entity_id, title, content) in rows {
+            let text = format!("{} {}", title, content);
+            let embedding = self.embedding_port.generate_embedding(&text)?;
+            let bytes = zerocopy::AsBytes::as_bytes(embedding.as_slice()).to_vec();
+
+            // vec0's entity_id is a PRIMARY KEY: delete-then-insert keeps this
+            // idempotent (plain re-INSERT would error on the second run).
+            conn.execute(
+                "DELETE FROM lore_vectors WHERE entity_id = ?",
+                params![entity_id],
+            )
+            .map_err(AppError::from)?;
+            conn.execute(
+                "INSERT INTO lore_vectors (entity_id, embedding) VALUES (?, ?)",
+                params![entity_id, bytes],
+            )
+            .map_err(AppError::from)?;
+            indexed += 1;
+        }
+
+        Ok(indexed)
+    }
+
+    /// Embeds `query` and delegates to `VectorSearchPort::find_similar` for the
+    /// actual vec0 ANN lookup.
+    pub fn semantic_search_lore(
+        &self,
+        project_id: &ProjectId,
+        book_id: Option<BookId>,
+        query: &str,
+        top_k: usize,
+    ) -> AppResult<Vec<SearchResult>> {
+        let embedding = self.embedding_port.generate_embedding(query)?;
+        self.find_similar(project_id, embedding, top_k, book_id, None)
+    }
+
+    /// Ensures `lore_vectors` matches `dim`. Vectors are a reindexable cache,
+    /// so on a dimension change the table is simply dropped and recreated —
+    /// callers are expected to re-store embeddings for that new dimension.
+    /// Caller must already hold `conn` (avoids re-locking `self.connection`).
+    fn ensure_vector_dim(&self, conn: &Connection, dim: usize) -> AppResult<()> {
+        if dim == 0 {
+            return Err(AppError::Validation(
+                "embedding dimension must be greater than zero".to_string(),
+            ));
+        }
+
+        let stored_dim: i64 = conn
+            .query_row(
+                "SELECT dim FROM vector_meta WHERE id = 1",
+                [],
+                |row: &Row| row.get(0),
+            )
+            .map_err(AppError::from)?;
+
+        if stored_dim as usize == dim {
+            return Ok(());
+        }
+
+        // vec0 column types can't be bound as query parameters; `dim` is a
+        // validated Rust `usize` (not user-supplied text), so this is safe.
+        let recreate_sql = format!(
+            "DROP TABLE IF EXISTS lore_vectors;
+             CREATE VIRTUAL TABLE lore_vectors USING vec0(entity_id TEXT PRIMARY KEY, embedding float[{}]);",
+            dim
+        );
+        conn.execute_batch(&recreate_sql).map_err(AppError::from)?;
+        conn.execute(
+            "UPDATE vector_meta SET dim = ? WHERE id = 1",
+            params![dim as i64],
+        )
+        .map_err(AppError::from)?;
+
+        Ok(())
+    }
+
+    /// Stores frontend-computed embeddings (entity_id, embedding) into
+    /// `lore_vectors`, recreating the table if the batch's dimension differs
+    /// from the stored one. Idempotent: re-storing the same entity_id
+    /// replaces its row rather than erroring on the vec0 PRIMARY KEY.
+    pub fn store_lore_vectors(&self, rows: Vec<(String, Vec<f32>)>) -> AppResult<usize> {
+        if rows.is_empty() {
+            return Ok(0);
+        }
+
+        let dim = rows[0].1.len();
+        for (entity_id, embedding) in &rows {
+            if embedding.len() != dim {
+                return Err(AppError::Validation(format!(
+                    "embedding for entity_id '{}' has dimension {} but expected {} (batch must share one dimension)",
+                    entity_id,
+                    embedding.len(),
+                    dim
+                )));
+            }
+        }
+
+        let conn = self
+            .connection
+            .lock()
+            .map_err(|e| AppError::Internal(e.to_string()))?;
+        self.ensure_vector_dim(&conn, dim)?;
+
+        for (entity_id, embedding) in &rows {
+            let bytes = zerocopy::AsBytes::as_bytes(embedding.as_slice()).to_vec();
+            conn.execute(
+                "DELETE FROM lore_vectors WHERE entity_id = ?",
+                params![entity_id],
+            )
+            .map_err(AppError::from)?;
+            conn.execute(
+                "INSERT INTO lore_vectors (entity_id, embedding) VALUES (?, ?)",
+                params![entity_id, bytes],
+            )
+            .map_err(AppError::from)?;
+        }
+
+        Ok(rows.len())
+    }
+
+    /// Lists `(entity_id, title + ' ' + content)` rows in scope for the
+    /// frontend to embed itself. Scope mirrors `VectorSearchPort::find_similar`
+    /// exactly: `book_id = Some` matches that book, `book_id = None` matches
+    /// only global (book_id IS NULL) rows.
+    pub fn list_lore_index_rows(
+        &self,
+        project_id: &ProjectId,
+        book_id: Option<&BookId>,
+    ) -> AppResult<Vec<(String, String)>> {
+        let conn = self
+            .connection
+            .lock()
+            .map_err(|e| AppError::Internal(e.to_string()))?;
+
+        let mut sql =
+            "SELECT entity_id, (title || ' ' || content) FROM lore_search WHERE project_id = ?"
+                .to_string();
+        if book_id.is_some() {
+            sql.push_str(" AND book_id = ?");
+        } else {
+            sql.push_str(" AND book_id IS NULL");
+        }
+
+        let mut stmt = conn.prepare(&sql).map_err(AppError::from)?;
+
+        let mut query_params: Vec<Box<dyn rusqlite::ToSql>> = vec![Box::new(project_id.0.clone())];
+        if let Some(bid) = book_id {
+            query_params.push(Box::new(bid.0.clone()));
+        }
+        let params_refs: Vec<&dyn rusqlite::ToSql> =
+            query_params.iter().map(|b| b.as_ref()).collect();
+
+        let row_iter = stmt
+            .query_map(rusqlite::params_from_iter(params_refs), |row: &Row| {
+                Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+            })
+            .map_err(AppError::from)?;
+
+        let mut results = Vec::new();
+        for row in row_iter {
+            results.push(row.map_err(AppError::from)?);
+        }
+        Ok(results)
     }
 }
 
@@ -448,7 +684,116 @@ impl VectorSearchPort for SqliteDatabase {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::features::lore::domain::{Location, LocationRepository};
+    use crate::features::projects::domain::{Project, ProjectRepository};
     use tempfile::tempdir;
+
+    fn seed_lore_search_row(db: &SqliteDatabase, entity_id: &str, project_id: &str) {
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        conn.execute(
+            "INSERT INTO lore_search (entity_id, project_id, book_id, type, title, content) VALUES (?, ?, NULL, 'character', ?, ?)",
+            params![entity_id, project_id, "Nara", "a brave hunter"],
+        )
+        .expect("Failed to seed lore_search");
+    }
+
+    fn count_lore_vectors(db: &SqliteDatabase) -> i64 {
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        conn.query_row("SELECT COUNT(*) FROM lore_vectors", [], |row| row.get(0))
+            .expect("Failed to count lore_vectors")
+    }
+
+    fn vector_meta_dim(db: &SqliteDatabase) -> i64 {
+        let conn = db.connection.lock().expect("Failed to lock connection");
+        conn.query_row("SELECT dim FROM vector_meta WHERE id = 1", [], |row| {
+            row.get(0)
+        })
+        .expect("Failed to read vector_meta dim")
+    }
+
+    #[test]
+    fn test_reindex_lore_vectors_populates_table() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_reindex.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-reindex".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        let indexed = db
+            .reindex_lore_vectors(&project_id, None)
+            .expect("reindex should succeed");
+
+        assert_eq!(indexed, 1);
+        assert_eq!(count_lore_vectors(&db), 1);
+    }
+
+    #[test]
+    fn test_reindex_lore_vectors_is_idempotent() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_reindex_idempotent.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-idempotent".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        let first = db
+            .reindex_lore_vectors(&project_id, None)
+            .expect("first reindex should succeed");
+        let second = db
+            .reindex_lore_vectors(&project_id, None)
+            .expect("second reindex should succeed without duplicate key error");
+
+        assert_eq!(first, 1);
+        assert_eq!(second, 1);
+        assert_eq!(count_lore_vectors(&db), 1);
+    }
+
+    #[test]
+    fn test_semantic_search_lore_returns_indexed_entity() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_semantic_search.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-semantic".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+        db.reindex_lore_vectors(&project_id, None)
+            .expect("reindex should succeed");
+
+        let results = db
+            .semantic_search_lore(&project_id, None, "Nara a brave hunter", 5)
+            .expect("semantic search should succeed");
+
+        assert!(!results.is_empty());
+        assert_eq!(results[0].entity_id, "char-1");
+    }
+
+    #[test]
+    fn test_creating_location_does_not_populate_lore_vectors() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_offline_first.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_repo: &dyn ProjectRepository = &db;
+        let project = Project::new("Offline Guard".to_string(), "".to_string())
+            .expect("Failed to build project");
+        project_repo
+            .create_project(&project)
+            .expect("Failed to create project");
+
+        let location_repo: &dyn LocationRepository = &db;
+        let location = Location::new(project.id.clone(), None, "Vale do Eco".to_string())
+            .expect("Failed to build location");
+        location_repo
+            .create_location(&location)
+            .expect("Failed to create location");
+
+        assert_eq!(count_lore_vectors(&db), 0);
+    }
 
     #[test]
     fn test_sqlite_connection_creation() {
@@ -485,5 +830,171 @@ mod tests {
             .query_row("PRAGMA journal_mode", [], |row: &Row| row.get(0))
             .expect("Failed to get journal mode");
         assert_eq!(journal_mode.to_uppercase(), "WAL");
+    }
+
+    #[test]
+    fn test_vector_meta_seeded_with_default_dimension_after_migrations() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_vector_meta_seed.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        assert_eq!(vector_meta_dim(&db), 1536);
+    }
+
+    #[test]
+    fn test_store_lore_vectors_recreates_table_for_new_dimension_and_is_searchable() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_store_vectors_768.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-store-vec".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        let embedding = vec![0.5f32; 768];
+        let stored = db
+            .store_lore_vectors(vec![("char-1".to_string(), embedding.clone())])
+            .expect("store_lore_vectors should succeed");
+        assert_eq!(stored, 1);
+        assert_eq!(vector_meta_dim(&db), 768);
+
+        let results = db
+            .find_similar(&project_id, embedding, 5, None, None)
+            .expect("find_similar should succeed");
+
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].entity_id, "char-1");
+        assert!(results[0].score.abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_store_lore_vectors_changing_dimension_recreates_table_and_drops_old_vectors() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_store_vectors_dim_change.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-dim-change".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        assert_eq!(vector_meta_dim(&db), 1536);
+
+        db.store_lore_vectors(vec![("char-1".to_string(), vec![0.1f32; 768])])
+            .expect("first store should succeed");
+        assert_eq!(vector_meta_dim(&db), 768);
+        assert_eq!(count_lore_vectors(&db), 1);
+
+        seed_lore_search_row(&db, "char-2", &project_id.0);
+        db.store_lore_vectors(vec![("char-2".to_string(), vec![0.2f32; 384])])
+            .expect("second store with different dim should succeed");
+
+        assert_eq!(vector_meta_dim(&db), 384);
+        // Recreating lore_vectors for the new dimension drops the previously
+        // stored vectors (it is a reindexable cache) -- only char-2 remains.
+        assert_eq!(count_lore_vectors(&db), 1);
+    }
+
+    #[test]
+    fn test_store_lore_vectors_is_idempotent() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_store_vectors_idempotent.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-store-idempotent".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        let embedding = vec![0.3f32; 768];
+        let first = db
+            .store_lore_vectors(vec![("char-1".to_string(), embedding.clone())])
+            .expect("first store should succeed");
+        let second = db
+            .store_lore_vectors(vec![("char-1".to_string(), embedding)])
+            .expect("second store should succeed without duplicate key error");
+
+        assert_eq!(first, 1);
+        assert_eq!(second, 1);
+        assert_eq!(count_lore_vectors(&db), 1);
+    }
+
+    #[test]
+    fn test_store_lore_vectors_empty_batch_returns_zero_without_error() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_store_vectors_empty.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let stored = db
+            .store_lore_vectors(vec![])
+            .expect("empty batch should succeed");
+        assert_eq!(stored, 0);
+        assert_eq!(vector_meta_dim(&db), 1536);
+    }
+
+    #[test]
+    fn test_store_lore_vectors_rejects_mismatched_dimensions_in_one_batch() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_store_vectors_mismatched.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let result = db.store_lore_vectors(vec![
+            ("char-1".to_string(), vec![0.1f32; 768]),
+            ("char-2".to_string(), vec![0.1f32; 384]),
+        ]);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_store_lore_vectors_rejects_zero_length_embedding() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_store_vectors_zero_len.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let result = db.store_lore_vectors(vec![("char-1".to_string(), vec![])]);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_list_lore_index_rows_scopes_by_project_and_book() {
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_list_index_rows.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-list-index".to_string());
+        let book_id = BookId("book-list-index".to_string());
+
+        {
+            let conn = db.connection.lock().expect("Failed to lock connection");
+            conn.execute(
+                "INSERT INTO lore_search (entity_id, project_id, book_id, type, title, content) VALUES (?, ?, NULL, 'character', ?, ?)",
+                params!["global-1", project_id.0, "Global Hero", "roams free"],
+            )
+            .expect("seed global row");
+            conn.execute(
+                "INSERT INTO lore_search (entity_id, project_id, book_id, type, title, content) VALUES (?, ?, ?, 'character', ?, ?)",
+                params!["book-1", project_id.0, book_id.0, "Book Hero", "tied to book"],
+            )
+            .expect("seed book-scoped row");
+        }
+
+        let global_rows = db
+            .list_lore_index_rows(&project_id, None)
+            .expect("list global rows should succeed");
+        assert_eq!(global_rows.len(), 1);
+        assert_eq!(global_rows[0].0, "global-1");
+        assert_eq!(global_rows[0].1, "Global Hero roams free");
+
+        let book_rows = db
+            .list_lore_index_rows(&project_id, Some(&book_id))
+            .expect("list book rows should succeed");
+        assert_eq!(book_rows.len(), 1);
+        assert_eq!(book_rows[0].0, "book-1");
+        assert_eq!(book_rows[0].1, "Book Hero tied to book");
     }
 }

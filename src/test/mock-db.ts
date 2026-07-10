@@ -301,7 +301,8 @@ export class MockDatabase {
       }
 
       case "search_lore":
-      case "search_codex": {
+      case "search_codex":
+      case "semantic_search_lore": {
         const q = args.query.toLowerCase();
         const results: Array<{ entity_id: string; entity_type: string; snippet: string }> = [];
         this.characters.forEach(c => {
@@ -311,6 +312,9 @@ export class MockDatabase {
         });
         return results;
       }
+
+      case "reindex_lore_vectors":
+        return this.characters.length;
 
       case "health_check":
         return "ok";

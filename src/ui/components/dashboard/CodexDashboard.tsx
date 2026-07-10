@@ -5,6 +5,7 @@ import { CharacterWizard } from "../character/CharacterWizard";
 import { CharacterDashboard } from "../character/CharacterDashboard";
 import { AIGeneratorWizard } from "../character/AIGeneratorWizard";
 import { TauriCharacterRepository } from "../../../infrastructure/tauri/tauri-character-repository";
+import { createSemanticIndexService } from "../../../infrastructure/tauri/semantic-index-service-factory";
 import { LocationList } from "../location/LocationList";
 import { LocationForm } from "../location/LocationForm";
 import { WorldRuleList } from "../world-rule/WorldRuleList";
@@ -43,6 +44,7 @@ import {
   GitBranch,
   Ban,
   Trash2,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
@@ -184,6 +186,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
   const [isSearching, setIsSearching] = useState(false);
 
   const [injectedIds, setInjectedIds] = useState<string[]>([]);
+  const [isReindexing, setIsReindexing] = useState(false);
 
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [isAIGeneratorOpen, setIsAIGeneratorOpen] = useState(false);
@@ -191,6 +194,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
   const [viewingCharacter, setViewingCharacter] = useState<Character | null>(null);
 
   const characterRepo = new TauriCharacterRepository();
+  const semanticIndexService = createSemanticIndexService();
 
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
@@ -367,6 +371,22 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     } catch (error) {
       console.error("Search failed:", error);
       setSearchError(true);
+    }
+  };
+
+  const handleReindex = async () => {
+    setIsReindexing(true);
+    try {
+      const count = await invoke<number>("reindex_lore_vectors", {
+        projectId: currentProjectId,
+        bookId: scope === "book" ? bookId : null,
+      });
+      showToast(`Índice semântico atualizado: ${count} itens reindexados.`, "success");
+    } catch (error) {
+      console.error("Failed to reindex semantic search:", error);
+      showToast("Falha ao reindexar a busca semântica.", "error");
+    } finally {
+      setIsReindexing(false);
     }
   };
 
@@ -880,6 +900,15 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
         </div>
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <SearchBar onSearch={setSearchQuery} />
+
+          <button
+            onClick={handleReindex}
+            disabled={isReindexing}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border border-border-subtle text-text-muted hover:text-text-main hover:bg-bg-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Sparkles size={14} className={isReindexing ? "animate-pulse" : ""} />
+            {isReindexing ? "Reindexando..." : "Reindexar Busca Semântica"}
+          </button>
 
           <div className="flex bg-bg-hover p-1 rounded-full border border-border-subtle">
             <button

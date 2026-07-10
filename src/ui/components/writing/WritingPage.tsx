@@ -3,7 +3,11 @@ import { LlmPort } from "../../../domain/ideation/ports/llm-port";
 import { WritingRequest } from "../../../domain/writing-request";
 import { PointOfView } from "../../../domain/value-objects/point-of-view";
 import { SceneId } from "../../../domain/value-objects/scene-id";
+import { ProjectId } from "../../../domain/value-objects/project-id";
 import { GenerateProseUseCase } from "../../../application/writing/generate-prose";
+import { ContextInjector } from "../../../application/writing/context-injector";
+import { TauriSearchPort } from "../../../infrastructure/tauri/tauri-search-port";
+import { TauriSemanticSearchPort } from "../../../infrastructure/tauri/tauri-semantic-search-port";
 import {
   RefineProseUseCase,
   ProseAction,
@@ -14,10 +18,21 @@ import {
 } from "../../../application/writing/analyze-prose";
 import { WritingSidebar } from "./WritingSidebar";
 import { RsipPanel, RsipResult } from "./RsipPanel";
+import { MultiPerspectivePanel } from "./MultiPerspectivePanel";
+import {
+  AdvancedTechniquesPanel,
+  MotifFormState,
+  NarratorFormState,
+} from "./AdvancedTechniquesPanel";
+import { MotifDefinition } from "../../../domain/techniques/motif-definition";
+import { MotifInjector } from "../../../domain/techniques/motif-injector";
+import { UnreliableNarratorConfig } from "../../../domain/techniques/unreliable-narrator-config";
+import { UnreliableNarratorPromptEnhancer } from "../../../domain/techniques/unreliable-narrator-prompt-enhancer";
 
 interface WritingPageProps {
   llmPort: LlmPort;
   bookId: string;
+  projectId: string;
   onBack: () => void;
 }
 
@@ -37,13 +52,18 @@ const CONTROL_CLASS =
 const SECONDARY_BTN = `${CONTROL_CLASS} border border-border-default text-text-main hover:bg-bg-hover`;
 const PRIMARY_BTN = `${CONTROL_CLASS} bg-accent text-on-accent hover:bg-accent-hover font-medium`;
 
-function buildRequest(beatSummary: string, characterName: string): WritingRequest {
+function buildRequest(
+  beatSummary: string,
+  characterName: string,
+  ragContext?: string,
+): WritingRequest {
   return WritingRequest.create({
     sceneId: SceneId.generate(),
     beatSummary,
     pov: PointOfView.create("third-limited"),
     characterName,
     wordLimit: DEFAULT_WORD_LIMIT,
+    ragContext: ragContext && ragContext.trim() !== "" ? ragContext : undefined,
   });
 }
 
@@ -60,7 +80,60 @@ function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
+const DEFAULT_MOTIF: MotifFormState = {
+  enabled: false,
+  object: "",
+  wound: "",
+  curve: "linear",
+  progress: 0,
+};
+
+const DEFAULT_NARRATOR: NarratorFormState = {
+  enabled: false,
+  highNeuroticism: false,
+  dissonance: false,
+  selfPerception: "",
+};
+
+// Motif and Narrador are UI-only techniques (no changes to GenerateProseUseCase /
+// WritingRequest): their instruction fragments ride along inside ragContext.
+function applyMotif(base: string, motif: MotifFormState): string {
+  if (!motif.enabled || !motif.object.trim() || !motif.wound.trim()) return base;
+  try {
+    const definition = MotifDefinition.create({
+      object: motif.object,
+      associatedWound: motif.wound,
+      frequencyCurve: motif.curve,
+    });
+    return MotifInjector.inject(base, definition, motif.progress);
+  } catch {
+    return base;
+  }
+}
+
+function applyNarrator(base: string, narrator: NarratorFormState): string {
+  if (!narrator.enabled) return base;
+  try {
+    const config = UnreliableNarratorConfig.create({
+      highNeuroticism: narrator.highNeuroticism,
+      dissonance: narrator.dissonance,
+      selfPerception: narrator.selfPerception,
+    });
+    return UnreliableNarratorPromptEnhancer.enhance(base, config);
+  } catch {
+    return base;
+  }
+}
+
+function buildTechniqueDirectives(motif: MotifFormState, narrator: NarratorFormState): string {
+  return applyNarrator(applyMotif("", motif), narrator);
+}
+
+function mergeContext(ragContext: string, directives: string): string {
+  return [ragContext, directives].filter((s) => s.trim() !== "").join("\n\n");
+}
+
+export function WritingPage({ llmPort, bookId, projectId, onBack }: WritingPageProps) {
   const draftKey = `storyforge_draft_${bookId}`;
   const [content, setContent] = useState(
     () => localStorage.getItem(draftKey) ?? "",
@@ -71,6 +144,8 @@ export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
   const [pending, setPending] = useState<PendingAction>(null);
   const [error, setError] = useState<string | null>(null);
   const [rsip, setRsip] = useState<RsipResult | null>(null);
+  const [motif, setMotif] = useState<MotifFormState>(DEFAULT_MOTIF);
+  const [narrator, setNarrator] = useState<NarratorFormState>(DEFAULT_NARRATOR);
   const selectionRef = useRef({ start: 0, end: 0 });
 
   const generateUseCase = useMemo(
@@ -78,6 +153,21 @@ export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
     [llmPort],
   );
   const refineUseCase = useMemo(() => new RefineProseUseCase(llmPort), [llmPort]);
+  const contextInjector = useMemo(
+    () => new ContextInjector(new TauriSearchPort(bookId), new TauriSemanticSearchPort(bookId)),
+    [bookId],
+  );
+
+  // Best-effort keyword RAG: pull Codex context for the beat before generating.
+  // Never blocks generation — a search failure or invalid id yields empty context.
+  async function resolveRagContext(beat: string): Promise<string> {
+    try {
+      const parsed = ProjectId.create(projectId);
+      return await contextInjector.inject(parsed, beat);
+    } catch {
+      return "";
+    }
+  }
 
   useEffect(() => {
     setHighlights(analyzeProse(content));
@@ -100,7 +190,13 @@ export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
     setPending("generate");
     setError(null);
     try {
-      const request = buildRequest(beatSummary, characterName);
+      const ragContext = await resolveRagContext(beatSummary);
+      const directives = buildTechniqueDirectives(motif, narrator);
+      const request = buildRequest(
+        beatSummary,
+        characterName,
+        mergeContext(ragContext, directives),
+      );
       const result = await generateUseCase.execute(request);
       const { draft, critique, finalVersion } = result.proseOutput;
       setRsip({ draft, critique, finalVersion });
@@ -127,6 +223,19 @@ export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
     } finally {
       setPending(null);
     }
+  }
+
+  function getMpsExcerpt(): string {
+    const { start, end } = selectionRef.current;
+    return start < end ? content.slice(start, end) : content;
+  }
+
+  function handleInsertVariation(text: string) {
+    const { start, end } = selectionRef.current;
+    setContent(
+      start < end ? replaceRange(content, start, end, text) : content ? `${content}\n\n${text}` : text,
+    );
+    selectionRef.current = { start: 0, end: 0 };
   }
 
   const busy = pending !== null;
@@ -177,6 +286,14 @@ export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
         </div>
       )}
 
+      {content.trim() !== "" && (
+        <MultiPerspectivePanel
+          llmPort={llmPort}
+          getExcerpt={getMpsExcerpt}
+          onInsert={handleInsertVariation}
+        />
+      )}
+
       <div className="flex-1 flex overflow-hidden">
         <WritingSidebar
           beatSummary={beatSummary}
@@ -196,6 +313,13 @@ export function WritingPage({ llmPort, bookId, onBack }: WritingPageProps) {
             onSelect={handleSelect}
           />
         </main>
+
+        <AdvancedTechniquesPanel
+          motif={motif}
+          onMotifChange={setMotif}
+          narrator={narrator}
+          onNarratorChange={setNarrator}
+        />
 
         <RsipPanel result={rsip} />
       </div>

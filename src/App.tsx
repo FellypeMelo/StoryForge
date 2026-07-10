@@ -8,11 +8,12 @@ import { IdeationWizard } from "./ui/components/ideation/IdeationWizard";
 import StructurePage from "./ui/components/structure/StructurePage";
 import ChaptersPage from "./ui/components/chapters/ChaptersPage";
 import { WritingPage } from "./ui/components/writing/WritingPage";
+import AuditPanel from "./ui/components/audit/AuditPanel";
 import { SettingsPage } from "./ui/components/settings/SettingsPage";
 import { DashboardHome } from "./ui/components/dashboard/DashboardHome";
 import { LlmPort } from "./domain/ideation/ports/llm-port";
 import { DummyLlmPort } from "./infrastructure/llm/dummy-llm-port";
-import { createLlmPort } from "./infrastructure/llm/llm-port-factory";
+import { createRoutedLlmPort } from "./infrastructure/llm/llm-port-factory";
 import { LocalStorageProviderConfigRepository } from "./infrastructure/local/local-storage-provider-config-repository";
 
 interface AppInfo {
@@ -40,8 +41,8 @@ export function App() {
   );
 
   const refreshLlmPort = useCallback(async () => {
-    const found = await providerConfigRepo.findByProvider("llamacpp");
-    setLlmPort(createLlmPort(found.success ? found.data : null));
+    const all = await providerConfigRepo.listAll();
+    setLlmPort(createRoutedLlmPort(all.success ? all.data : []));
   }, []);
 
   useEffect(() => {
@@ -119,11 +120,24 @@ export function App() {
       case "structure":
         return <StructurePage bookId={selectedBookId} onBack={backToDashboard} />;
       case "chapters":
-        return <ChaptersPage bookId={selectedBookId} onBack={backToDashboard} />;
+        return (
+          <ChaptersPage
+            bookId={selectedBookId}
+            onBack={backToDashboard}
+            llmPort={llmPort}
+          />
+        );
       case "write":
         return (
-          <WritingPage llmPort={llmPort} bookId={selectedBookId} onBack={backToDashboard} />
+          <WritingPage
+            llmPort={llmPort}
+            bookId={selectedBookId}
+            projectId={selectedProjectId}
+            onBack={backToDashboard}
+          />
         );
+      case "audit":
+        return <AuditPanel bookId={selectedBookId} onBack={backToDashboard} />;
       case "settings":
         return <SettingsPage onBack={backToDashboard} onProviderChange={refreshLlmPort} />;
       case "dashboard":

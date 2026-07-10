@@ -6,6 +6,7 @@ import {
   Milestone,
   ListTree,
   PenLine,
+  ShieldAlert,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -33,6 +34,7 @@ const PRIMARY_NAV: NavEntry[] = [
   { icon: Milestone, label: "Estrutura", path: "structure" },
   { icon: ListTree, label: "Capítulos", path: "chapters" },
   { icon: PenLine, label: "Escrita", path: "write" },
+  { icon: ShieldAlert, label: "Auditoria", path: "audit" },
 ];
 
 function NavItem({

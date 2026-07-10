@@ -1,14 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
-import { ListOrdered } from "lucide-react";
+import { ListOrdered, Sparkles } from "lucide-react";
 import { ChapterOutline } from "../../../domain/chapter-outline";
 import { ChapterOutlineRepository } from "../../../domain/ports/chapter-outline-repository";
 import { BookId } from "../../../domain/value-objects/book-id";
+import { ChapterId } from "../../../domain/value-objects/chapter-id";
+import { NarrativeFramework } from "../../../domain/narrative-framework";
+import { LlmPort } from "../../../domain/ideation/ports/llm-port";
 import { DetectStructuralErrorsUseCase } from "../../../application/structure/detect-structural-errors";
+import { GenerateBeatSheetUseCase } from "../../../application/structure/generate-beat-sheet";
 import { LocalStorageChapterRepository } from "../../../infrastructure/local/local-storage-chapter-repository";
+import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 import { ConfirmDialog } from "../shared/ConfirmDialog";
 import { useToast } from "../shared/Toast";
 import { ChapterForm } from "./ChapterForm";
 import { ChapterDetail } from "./ChapterDetail";
+import { BeatSheetGenerator } from "./BeatSheetGenerator";
 import { toChapterData } from "./structural-analysis";
 
 export interface ChaptersPageProps {
@@ -16,9 +22,11 @@ export interface ChaptersPageProps {
   onBack: () => void;
   /** Porta injetável para testes; padrão offline-first via localStorage. */
   repository?: ChapterOutlineRepository;
+  /** Motor de IA; padrão simulado para uso offline/testes. */
+  llmPort?: LlmPort;
 }
 
-type PageMode = "list" | "create" | "edit";
+type PageMode = "list" | "create" | "edit" | "generate";
 
 function parseBookId(bookId: string): BookId | null {
   try {
@@ -28,10 +36,19 @@ function parseBookId(bookId: string): BookId | null {
   }
 }
 
-export default function ChaptersPage({ bookId, onBack, repository }: ChaptersPageProps) {
+export default function ChaptersPage({
+  bookId,
+  onBack,
+  repository,
+  llmPort,
+}: ChaptersPageProps) {
   const repo = useMemo(
     () => repository ?? new LocalStorageChapterRepository(),
     [repository],
+  );
+  const beatSheetUseCase = useMemo(
+    () => new GenerateBeatSheetUseCase(llmPort ?? new DummyLlmPort()),
+    [llmPort],
   );
   const parsedBookId = useMemo(() => parseBookId(bookId), [bookId]);
   const { showToast } = useToast();
@@ -93,6 +110,28 @@ export default function ChaptersPage({ bookId, onBack, repository }: ChaptersPag
     setMode("list");
   }
 
+  async function handleGenerate(context: {
+    framework: NarrativeFramework;
+    previousChapterSummary: string;
+    protagonistName: string;
+    protagonistGoal: string;
+  }): Promise<boolean> {
+    try {
+      const result = await beatSheetUseCase.execute({
+        chapterId: ChapterId.generate(),
+        chapterNumber: nextChapterNumber,
+        context,
+      });
+      await persist([...outlines, result.outline], "Beat sheet gerado com IA.");
+      setSelectedIndex(outlines.length);
+      setMode("list");
+      return true;
+    } catch {
+      showToast("Falha ao gerar o beat sheet. Tente novamente.", "error");
+      return false;
+    }
+  }
+
   function handleEdit(outline: ChapterOutline) {
     void persist(
       outlines.map((o, i) => (i === selectedIndex ? outline : o)),
@@ -144,8 +183,19 @@ export default function ChaptersPage({ bookId, onBack, repository }: ChaptersPag
         />
       )}
 
+      {!loading && !loadError && mode === "generate" && (
+        <BeatSheetGenerator
+          chapterNumber={nextChapterNumber}
+          onGenerate={handleGenerate}
+          onCancel={() => setMode("list")}
+        />
+      )}
+
       {!loading && !loadError && mode === "list" && outlines.length === 0 && (
-        <EmptyState onCreate={() => setMode("create")} />
+        <EmptyState
+          onCreate={() => setMode("create")}
+          onGenerate={() => setMode("generate")}
+        />
       )}
 
       {!loading && !loadError && mode === "list" && outlines.length > 0 && (
@@ -170,6 +220,13 @@ export default function ChaptersPage({ bookId, onBack, repository }: ChaptersPag
               className="px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap border border-border-default text-text-muted hover:bg-bg-hover transition-colors cursor-pointer active:scale-[0.98]"
             >
               + Novo capítulo
+            </button>
+            <button
+              onClick={() => setMode("generate")}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap border border-border-default text-accent hover:bg-bg-hover transition-colors cursor-pointer active:scale-[0.98]"
+            >
+              <Sparkles size={14} aria-hidden />
+              Gerar com IA
             </button>
           </div>
 
@@ -210,7 +267,13 @@ export default function ChaptersPage({ bookId, onBack, repository }: ChaptersPag
   );
 }
 
-function EmptyState({ onCreate }: { onCreate: () => void }) {
+function EmptyState({
+  onCreate,
+  onGenerate,
+}: {
+  onCreate: () => void;
+  onGenerate: () => void;
+}) {
   return (
     <div className="py-20 border-2 border-dashed border-border-subtle rounded-xl flex flex-col items-center justify-center text-center space-y-6">
       <div className="p-4 bg-bg-hover rounded-full text-text-muted">
@@ -222,12 +285,21 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
           Estruture sua narrativa capítulo a capítulo com cenas, sequelas e cliffhangers.
         </p>
       </div>
-      <button
-        onClick={onCreate}
-        className="bg-accent text-on-accent px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:bg-accent-hover transition-colors cursor-pointer active:scale-[0.98]"
-      >
-        Planejar primeiro capítulo
-      </button>
+      <div className="flex gap-3">
+        <button
+          onClick={onCreate}
+          className="bg-accent text-on-accent px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:bg-accent-hover transition-colors cursor-pointer active:scale-[0.98]"
+        >
+          Planejar primeiro capítulo
+        </button>
+        <button
+          onClick={onGenerate}
+          className="flex items-center gap-1.5 border border-border-default text-accent px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:bg-bg-hover transition-colors cursor-pointer active:scale-[0.98]"
+        >
+          <Sparkles size={16} aria-hidden />
+          Gerar com IA
+        </button>
+      </div>
     </div>
   );
 }

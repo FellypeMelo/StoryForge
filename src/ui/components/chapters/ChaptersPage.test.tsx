@@ -11,8 +11,50 @@ import { SceneBeat, DisasterType } from "../../../domain/scene-beat";
 import { SequelBeat } from "../../../domain/sequel-beat";
 import { Cliffhanger, CliffhangerType } from "../../../domain/cliffhanger";
 import { ScenePolarity } from "../../../domain/scene-grid";
+import type { LlmPort, LlmResponse } from "../../../domain/ideation/ports/llm-port";
 
 const repo = new LocalStorageChapterRepository();
+
+const BEAT_SHEET_JSON = JSON.stringify({
+  beats: [
+    {
+      type: "scene",
+      goal: "Encontrar o mapa perdido",
+      conflict: "A biblioteca começa a pegar fogo",
+      disaster: "no-and-worse",
+    },
+    {
+      type: "sequel",
+      reaction: "Entra em desespero diante das chamas",
+      dilemma: [
+        "perder o mapa para sempre",
+        "sacrificar a própria vida no fogo",
+        "trair o mentor que confiou nela",
+      ],
+      decision: "Decide arriscar tudo e entrar",
+    },
+    {
+      type: "scene",
+      goal: "Atravessar as estantes em chamas",
+      conflict: "O fogo bloqueia cada corredor",
+      disaster: "yes-but",
+    },
+  ],
+  cliffhanger: { type: "climactic", description: "O teto desaba bloqueando a saída" },
+  startPolarity: "positive",
+  endPolarity: "negative",
+});
+
+function makeLlm(text = BEAT_SHEET_JSON): LlmPort & { prompts: string[] } {
+  const prompts: string[] = [];
+  return {
+    prompts,
+    async complete(prompt: string): Promise<LlmResponse> {
+      prompts.push(prompt);
+      return { text };
+    },
+  };
+}
 
 function buildChapterOne(
   start: "positive" | "negative" = "positive",
@@ -63,11 +105,20 @@ function buildDisconnectedChapterTwo(): ChapterOutline {
   );
 }
 
-function renderPage(bookId: string, repository?: ChapterOutlineRepository) {
+function renderPage(
+  bookId: string,
+  repository?: ChapterOutlineRepository,
+  llmPort?: LlmPort,
+) {
   const onBack = vi.fn();
   const utils = render(
     <ToastProvider>
-      <ChaptersPage bookId={bookId} onBack={onBack} repository={repository} />
+      <ChaptersPage
+        bookId={bookId}
+        onBack={onBack}
+        repository={repository}
+        llmPort={llmPort}
+      />
     </ToastProvider>,
   );
   return { onBack, ...utils };
@@ -153,6 +204,33 @@ describe("ChaptersPage", () => {
       const saved = await repo.getByBookId(BookId.create(bookId));
       expect(saved).toHaveLength(1);
       expect((saved[0].getBeats()[0] as SceneBeat).goal).toBe("Roubar a chave do cofre");
+    });
+  });
+
+  it("gera beat sheet com IA a partir do estado vazio e persiste o capítulo", async () => {
+    const llm = makeLlm();
+    renderPage(bookId, undefined, llm);
+
+    fireEvent.click(await screen.findByRole("button", { name: /Gerar com IA/i }));
+
+    fireEvent.change(await screen.findByLabelText("Protagonista"), {
+      target: { value: "Nara" },
+    });
+    fireEvent.change(screen.getByLabelText("Objetivo do protagonista"), {
+      target: { value: "Recuperar o mapa antes do incêndio" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Gerar beat sheet/i }));
+
+    expect(await screen.findByRole("button", { name: "Cap. 1" })).toBeInTheDocument();
+    expect(screen.getByText("Encontrar o mapa perdido")).toBeInTheDocument();
+    expect(screen.getByText("O teto desaba bloqueando a saída")).toBeInTheDocument();
+    expect(llm.prompts[0]).toContain("Dwight Swain");
+    expect(llm.prompts[0]).toContain("Nara");
+
+    await waitFor(async () => {
+      const saved = await repo.getByBookId(BookId.create(bookId));
+      expect(saved).toHaveLength(1);
+      expect((saved[0].getBeats()[0] as SceneBeat).goal).toBe("Encontrar o mapa perdido");
     });
   });
 

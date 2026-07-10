@@ -8,6 +8,7 @@ import {
   within,
 } from "@testing-library/react";
 import { WritingPage } from "./WritingPage";
+import { mockDb } from "../../../test/mock-db";
 import type { LlmPort, LlmResponse } from "../../../domain/ideation/ports/llm-port";
 
 const RSIP_JSON = JSON.stringify({
@@ -30,15 +31,24 @@ function makeLlm(text = RSIP_JSON): LlmPort & { prompts: string[] } {
 interface RenderOverrides {
   llmPort: LlmPort;
   bookId: string;
+  projectId: string;
   onBack: () => void;
 }
+
+const VALID_PROJECT_ID = "550e8400-e29b-41d4-a716-446655440000";
 
 function renderPage(overrides: Partial<RenderOverrides> = {}) {
   const llmPort = overrides.llmPort ?? makeLlm();
   const onBack = overrides.onBack ?? vi.fn();
   const bookId = overrides.bookId ?? "book-1";
+  const projectId = overrides.projectId ?? VALID_PROJECT_ID;
   const utils = render(
-    <WritingPage llmPort={llmPort} bookId={bookId} onBack={onBack} />,
+    <WritingPage
+      llmPort={llmPort}
+      bookId={bookId}
+      projectId={projectId}
+      onBack={onBack}
+    />,
   );
   return { ...utils, llmPort, onBack };
 }
@@ -120,6 +130,23 @@ describe("WritingPage", () => {
       expect(llm.prompts[0]).toContain("Aria");
     });
 
+    it("injeta contexto do Codex (RAG) no prompt quando há entidades correspondentes", async () => {
+      mockDb.seed({
+        characters: [
+          { id: "c1", project_id: VALID_PROJECT_ID, name: "Herói Trágico" },
+        ],
+      });
+      const llm = makeLlm();
+      renderPage({ llmPort: llm });
+      fillScene();
+
+      fireEvent.click(screen.getByRole("button", { name: "Gerar Prosa" }));
+
+      await screen.findByRole("complementary", { name: "Saída RSIP" });
+      expect(llm.prompts[0]).toContain("STORY CONTEXT");
+      expect(llm.prompts[0]).toContain("Herói Trágico");
+    });
+
     it("mostra estado de carregamento durante a geração", async () => {
       let resolve!: (r: LlmResponse) => void;
       const llm: LlmPort = {
@@ -129,6 +156,8 @@ describe("WritingPage", () => {
       fillScene();
 
       fireEvent.click(screen.getByRole("button", { name: "Gerar Prosa" }));
+      // The RAG context lookup runs before the LLM call; flush it so complete() fires.
+      await act(async () => {});
       expect(screen.getByRole("button", { name: "Gerando..." })).toBeDisabled();
 
       await act(async () => resolve({ text: RSIP_JSON }));
@@ -281,5 +310,95 @@ describe("WritingPage", () => {
     const { onBack } = renderPage();
     fireEvent.click(screen.getByRole("button", { name: /Voltar/ }));
     expect(onBack).toHaveBeenCalledTimes(1);
+  });
+
+  describe("multi-perspectiva", () => {
+    it("não exibe o botão Multi-Perspectiva com o editor vazio", () => {
+      renderPage();
+      expect(
+        screen.queryByRole("button", { name: "Multi-Perspectiva" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("gera variações estilísticas e insere a escolhida no editor", async () => {
+      const mpsJson = JSON.stringify({
+        cinico: "Versão cínica do trecho.",
+        sensorial: "Versão sensorial do trecho.",
+        poetico: "Versão poética do trecho.",
+      });
+      const llm = makeLlm(mpsJson);
+      renderPage({ llmPort: llm });
+
+      fireEvent.change(getEditor(), {
+        target: { value: "Frase original de teste." },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Multi-Perspectiva" }));
+
+      expect(await screen.findByText("Tom Cínico e Seco")).toBeInTheDocument();
+      expect(screen.getByText("Versão cínica do trecho.")).toBeInTheDocument();
+      expect(screen.getByText("Foco Sensorial")).toBeInTheDocument();
+      expect(screen.getByText("Versão sensorial do trecho.")).toBeInTheDocument();
+      expect(screen.getByText("Poético e Cadenciado")).toBeInTheDocument();
+      expect(screen.getByText("Versão poética do trecho.")).toBeInTheDocument();
+
+      fireEvent.click(screen.getAllByRole("button", { name: "Inserir" })[0]);
+      expect(getEditor().value).toContain("Versão cínica do trecho.");
+    });
+  });
+
+  describe("técnicas avançadas", () => {
+    it("inclui o fragmento do Narrador Não-Confiável no prompt quando ativo", async () => {
+      const llm = makeLlm();
+      renderPage({ llmPort: llm });
+      fillScene();
+
+      fireEvent.click(screen.getByRole("button", { name: /Técnicas Avançadas/ }));
+      fireEvent.click(screen.getByLabelText("Narrador Não-Confiável"));
+      fireEvent.click(screen.getByLabelText("Alto neuroticismo"));
+      fireEvent.click(screen.getByLabelText("Dissonância"));
+      fireEvent.change(screen.getByLabelText("Autopercepção"), {
+        target: { value: "Eu sou racional e calmo." },
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: "Gerar Prosa" }));
+
+      await screen.findByRole("complementary", { name: "Saída RSIP" });
+      expect(llm.prompts[0]).toContain("divergir da AÇÃO");
+    });
+
+    it("inclui o fragmento de Motivo Simbólico no prompt quando habilitado com progresso alto", async () => {
+      const llm = makeLlm();
+      renderPage({ llmPort: llm });
+      fillScene();
+
+      fireEvent.click(screen.getByRole("button", { name: /Técnicas Avançadas/ }));
+      fireEvent.click(screen.getByLabelText("Motivo Simbólico"));
+      fireEvent.change(screen.getByLabelText("Símbolo"), {
+        target: { value: "espelho quebrado" },
+      });
+      fireEvent.change(screen.getByLabelText("Ferida associada"), {
+        target: { value: "medo de abandono" },
+      });
+      fireEvent.change(screen.getByLabelText(/Proximidade do confronto/), {
+        target: { value: "0.9" },
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: "Gerar Prosa" }));
+
+      await screen.findByRole("complementary", { name: "Saída RSIP" });
+      expect(llm.prompts[0]).toContain("espelho quebrado");
+    });
+
+    it("não inclui fragmentos de técnicas avançadas quando ambas estão desativadas", async () => {
+      const llm = makeLlm();
+      renderPage({ llmPort: llm });
+      fillScene();
+
+      fireEvent.click(screen.getByRole("button", { name: "Gerar Prosa" }));
+
+      await screen.findByRole("complementary", { name: "Saída RSIP" });
+      expect(llm.prompts[0]).not.toContain("NARRADOR NÃO-CONFIÁVEL");
+      expect(llm.prompts[0]).not.toContain("MOTIVO SIMBÓLICO");
+    });
   });
 });

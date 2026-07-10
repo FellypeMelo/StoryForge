@@ -6,6 +6,8 @@
 //
 import { describe, it, expect, beforeAll } from "vitest";
 import { LlamaCppAdapter } from "../infrastructure/llm/llama-cpp-adapter";
+import { OpenAiAdapter } from "../infrastructure/llm/openai-adapter";
+import { LlmRouter } from "../infrastructure/llm/llm-router";
 import { CircuitBreakerDecorator } from "../infrastructure/llm/circuit-breaker-decorator";
 import { ExtractClichesUseCase } from "../application/ideation/extract-cliches";
 import { GeneratePremisesUseCase } from "../application/ideation/generate-premises";
@@ -177,6 +179,41 @@ describe.skipIf(!process.env.E2E_LLM)("E2E — StoryForge contra llama.cpp vivo"
         }),
       );
       expect(result.outline.beatCount()).toBeGreaterThan(0);
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "OpenAiAdapter: fala com o endpoint compatível /v1/chat/completions do llama.cpp",
+    async () => {
+      const openai = new OpenAiAdapter({
+        apiKey: "not-needed",
+        model: "local",
+        baseUrl: `${URL}/v1`,
+      });
+      const r = await withRetry(() =>
+        openai.complete("Responda apenas: OK", { maxTokens: 16 }),
+      );
+      expect(typeof r.text).toBe("string");
+      expect(r.text.length).toBeGreaterThan(0);
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "LlmRouter: cai do provedor quebrado para o llama.cpp real",
+    async () => {
+      const broken: CircuitBreakerDecorator = new CircuitBreakerDecorator(
+        new OpenAiAdapter({
+          apiKey: "x",
+          model: "local",
+          baseUrl: "http://127.0.0.1:1/v1",
+        }),
+        { failureThreshold: 3, resetTimeout: 30_000 },
+      );
+      const router = new LlmRouter([broken, new CircuitBreakerDecorator(adapter)]);
+      const r = await withRetry(() => router.complete("Responda apenas: OK", { maxTokens: 8 }));
+      expect(r.text.length).toBeGreaterThan(0);
     },
     TIMEOUT,
   );

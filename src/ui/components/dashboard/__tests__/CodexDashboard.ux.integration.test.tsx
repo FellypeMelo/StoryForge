@@ -107,6 +107,29 @@ describe("CodexDashboard UX", () => {
       expect(await screen.findByRole("alert")).toHaveTextContent(/pelo menos 2 personagens/i);
       expect(screen.queryByLabelText(/Natureza do Vínculo/i)).not.toBeInTheDocument();
     }, 30000);
+
+    it("should reindex semantic search offline and show the item count in a toast", async () => {
+      renderDashboard();
+      await waitForNotLoading();
+
+      fireEvent.click(screen.getByRole("button", { name: /Reindexar Busca Semântica/i }));
+
+      expect(
+        await screen.findByText(/Índice semântico atualizado: 2 itens reindexados/i),
+      ).toBeInTheDocument();
+    }, 30000);
+
+    it("should show an error toast when reindexing fails", async () => {
+      renderDashboard();
+      await waitForNotLoading();
+
+      invokeMock.mockRejectedValueOnce(new Error("embedding server down"));
+      fireEvent.click(screen.getByRole("button", { name: /Reindexar Busca Semântica/i }));
+
+      expect(
+        await screen.findByText(/Falha ao reindexar a busca semântica/i),
+      ).toBeInTheDocument();
+    }, 30000);
   });
 
   describe("error states", () => {

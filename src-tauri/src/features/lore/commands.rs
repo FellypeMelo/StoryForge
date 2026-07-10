@@ -1,4 +1,4 @@
-use crate::domain::ports::SearchResult;
+use crate::domain::ports::{SearchResult, VectorSearchPort};
 use crate::domain::result::AppResult;
 use crate::domain::value_objects::{BookId, ProjectId};
 use crate::features::lore::application::LoreService;
@@ -7,7 +7,23 @@ use crate::features::lore::domain::{
     TimelineEvent, TimelineEventId, WorldRule, WorldRuleId,
 };
 use crate::infrastructure::sqlite::SqliteDatabase;
+use serde::{Deserialize, Serialize};
 use tauri::State;
+
+/// A `lore_search` row shaped for the frontend to embed itself:
+/// `entity_id` plus the concatenated `title + ' ' + content` text.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LoreIndexRow {
+    pub entity_id: String,
+    pub text: String,
+}
+
+/// A frontend-computed embedding ready to be persisted into `lore_vectors`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StoreVectorRow {
+    pub entity_id: String,
+    pub embedding: Vec<f32>,
+}
 
 #[tauri::command]
 pub async fn create_location(
@@ -310,6 +326,85 @@ pub async fn search_lore(
         state.inner(),
     );
     service.search_lore(ProjectId(project_id), &query, book_id.map(BookId))
+}
+
+#[tauri::command]
+pub async fn reindex_lore_vectors(
+    state: State<'_, SqliteDatabase>,
+    project_id: String,
+    book_id: Option<String>,
+) -> AppResult<usize> {
+    let book_id = book_id.map(BookId);
+    state
+        .inner()
+        .reindex_lore_vectors(&ProjectId(project_id), book_id.as_ref())
+}
+
+#[tauri::command]
+pub async fn semantic_search_lore(
+    state: State<'_, SqliteDatabase>,
+    project_id: String,
+    book_id: Option<String>,
+    query: String,
+    top_k: usize,
+) -> AppResult<Vec<SearchResult>> {
+    state
+        .inner()
+        .semantic_search_lore(&ProjectId(project_id), book_id.map(BookId), &query, top_k)
+}
+
+/// Lists rows the frontend should embed (via its own `fetch`-based embedding
+/// call) and pass to `store_lore_vectors`. Scope mirrors `search_lore` /
+/// `semantic_search_lore`: `book_id = Some` scopes to that book, `None`
+/// scopes to project-global (book_id IS NULL) rows only.
+#[tauri::command]
+pub async fn list_lore_index_rows(
+    state: State<'_, SqliteDatabase>,
+    project_id: String,
+    book_id: Option<String>,
+) -> AppResult<Vec<LoreIndexRow>> {
+    let book_id = book_id.map(BookId);
+    let rows = state
+        .inner()
+        .list_lore_index_rows(&ProjectId(project_id), book_id.as_ref())?;
+    Ok(rows
+        .into_iter()
+        .map(|(entity_id, text)| LoreIndexRow { entity_id, text })
+        .collect())
+}
+
+/// Persists frontend-computed embeddings into `lore_vectors`, recreating the
+/// table automatically if the embedding dimension differs from what's
+/// currently stored.
+#[tauri::command]
+pub async fn store_lore_vectors(
+    state: State<'_, SqliteDatabase>,
+    rows: Vec<StoreVectorRow>,
+) -> AppResult<usize> {
+    let rows = rows
+        .into_iter()
+        .map(|row| (row.entity_id, row.embedding))
+        .collect();
+    state.inner().store_lore_vectors(rows)
+}
+
+/// Runs ANN search against `lore_vectors` using a frontend-computed query
+/// embedding, bypassing the offline `MockEmbeddingPort` entirely.
+#[tauri::command]
+pub async fn semantic_search_by_vector(
+    state: State<'_, SqliteDatabase>,
+    project_id: String,
+    book_id: Option<String>,
+    embedding: Vec<f32>,
+    top_k: usize,
+) -> AppResult<Vec<SearchResult>> {
+    state.inner().find_similar(
+        &ProjectId(project_id),
+        embedding,
+        top_k,
+        book_id.map(BookId),
+        None,
+    )
 }
 
 #[tauri::command]
