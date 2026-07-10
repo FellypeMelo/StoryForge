@@ -1,7 +1,7 @@
-use crate::features::projects::domain::Project;
-use crate::features::projects::application::ProjectService;
-use crate::domain::value_objects::ProjectId;
 use crate::domain::result::AppResult;
+use crate::domain::value_objects::ProjectId;
+use crate::features::projects::application::ProjectService;
+use crate::features::projects::domain::Project;
 use crate::infrastructure::sqlite::SqliteDatabase;
 use tauri::State;
 

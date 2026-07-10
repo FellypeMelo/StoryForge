@@ -1,7 +1,7 @@
-use crate::features::books::domain::{Book, BookRepository, BookId, ProjectId};
-use crate::infrastructure::sqlite::SqliteDatabase;
-use crate::domain::result::AppResult;
 use crate::domain::error::AppError;
+use crate::domain::result::AppResult;
+use crate::features::books::domain::{Book, BookId, BookRepository, ProjectId};
+use crate::infrastructure::sqlite::SqliteDatabase;
 use rusqlite::{params, Row};
 
 impl BookRepository for SqliteDatabase {

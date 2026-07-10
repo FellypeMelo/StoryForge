@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { AppShell } from "./ui/components/layout/AppShell";
 import { CodexDashboard } from "./ui/components/dashboard/CodexDashboard";
@@ -8,7 +8,12 @@ import { IdeationWizard } from "./ui/components/ideation/IdeationWizard";
 import StructurePage from "./ui/components/structure/StructurePage";
 import ChaptersPage from "./ui/components/chapters/ChaptersPage";
 import { WritingPage } from "./ui/components/writing/WritingPage";
+import { SettingsPage } from "./ui/components/settings/SettingsPage";
+import { DashboardHome } from "./ui/components/dashboard/DashboardHome";
+import { LlmPort } from "./domain/ideation/ports/llm-port";
 import { DummyLlmPort } from "./infrastructure/llm/dummy-llm-port";
+import { createLlmPort } from "./infrastructure/llm/llm-port-factory";
+import { LocalStorageProviderConfigRepository } from "./infrastructure/local/local-storage-provider-config-repository";
 
 interface AppInfo {
   name: string;
@@ -19,17 +24,25 @@ interface HealthStatus {
   database: boolean;
 }
 
+const providerConfigRepo = new LocalStorageProviderConfigRepository();
+
 export function App() {
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState<string>("dashboard");
+  const [llmPort, setLlmPort] = useState<LlmPort>(() => new DummyLlmPort());
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(() =>
     localStorage.getItem("storyforge_last_project"),
   );
   const [selectedBookId, setSelectedBookId] = useState<string | null>(() =>
     localStorage.getItem("storyforge_last_book"),
   );
+
+  const refreshLlmPort = useCallback(async () => {
+    const found = await providerConfigRepo.findByProvider("llamacpp");
+    setLlmPort(createLlmPort(found.success ? found.data : null));
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +58,8 @@ export function App() {
     };
 
     fetchData();
-  }, []);
+    refreshLlmPort();
+  }, [refreshLlmPort]);
 
   const handleSelectProject = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -66,6 +80,8 @@ export function App() {
     setSelectedBookId(null);
     localStorage.removeItem("storyforge_last_book");
   };
+
+  const backToDashboard = () => setCurrentPath("dashboard");
 
   const renderContent = () => {
     if (!selectedProjectId) {
@@ -88,7 +104,7 @@ export function App() {
           <CodexDashboard
             projectId={selectedProjectId}
             bookId={selectedBookId}
-            onBack={() => setCurrentPath("dashboard")}
+            onBack={backToDashboard}
           />
         );
       case "ideation":
@@ -96,144 +112,30 @@ export function App() {
           <IdeationWizard
             projectId={selectedProjectId}
             bookId={selectedBookId}
-            onBack={() => setCurrentPath("dashboard")}
+            onBack={backToDashboard}
+            llmPort={llmPort}
           />
         );
       case "structure":
-        return (
-          <StructurePage onBack={() => setCurrentPath("dashboard")} />
-        );
+        return <StructurePage bookId={selectedBookId} onBack={backToDashboard} />;
       case "chapters":
-        return (
-          <ChaptersPage onBack={() => setCurrentPath("dashboard")} />
-        );
+        return <ChaptersPage bookId={selectedBookId} onBack={backToDashboard} />;
       case "write":
         return (
-          <WritingPage
-            llmPort={new DummyLlmPort()}
-            onBack={() => setCurrentPath("dashboard")}
-          />
+          <WritingPage llmPort={llmPort} bookId={selectedBookId} onBack={backToDashboard} />
         );
+      case "settings":
+        return <SettingsPage onBack={backToDashboard} onProviderChange={refreshLlmPort} />;
       case "dashboard":
       default:
         return (
-          <div className="space-y-16 py-8">
-            <header className="space-y-6">
-              <div className="flex justify-between items-center w-full">
-                <h1 className="text-5xl md:text-6xl font-serif text-text-main tracking-tight leading-tight">
-                  Bem-vindo à Forja
-                </h1>
-                <button
-                  onClick={handleBackToProjects}
-                  className="px-4 py-2 text-sm border border-border-default rounded text-text-muted hover:text-text-main hover:border-text-main transition-colors"
-                >
-                  Trocar Universo
-                </button>
-              </div>
-              <p className="text-text-muted text-xl max-w-2xl font-serif leading-relaxed">
-                Este é o seu espaço de trabalho. Aqui, você forjará mundos, dará vida a personagens
-                e tecerá narrativas intrincadas.
-              </p>
-            </header>
-
-            {error && (
-              <div className="py-4 border-b border-border-subtle text-text-muted font-mono text-sm">
-                <span className="font-bold">Erro no Sistema:</span> {error}
-              </div>
-            )}
-
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-16 font-sans">
-              <div className="space-y-6">
-                <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">
-                  Status do Sistema
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-end border-b border-border-subtle pb-2">
-                    <span className="text-text-muted text-sm tracking-wide">
-                      Conexão com Banco de Dados
-                    </span>
-                    <span
-                      className={`text-sm font-medium ${health?.database ? "text-text-main" : "text-text-muted opacity-50"}`}
-                    >
-                      {health
-                        ? health.database
-                          ? "Sincronizado"
-                          : "Desconectado"
-                        : "Verificando..."}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-end border-b border-border-subtle pb-2">
-                    <span className="text-text-muted text-sm tracking-wide">Versão do Cliente</span>
-                    <span className="text-text-main text-sm font-mono">
-                      {appInfo?.version || "..."}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <h3 className="text-text-main font-bold tracking-widest uppercase text-xs">
-                  Ações Rápidas
-                </h3>
-                <div className="flex flex-col gap-3">
-                  <button
-                    onClick={() => {}}
-                    className="text-left bg-bg-hover hover:bg-border-subtle px-5 py-4 rounded transition-colors text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
-                  >
-                    Detalhes do Livro
-                    <span className="text-text-muted group-hover:text-text-main transition-colors font-serif">
-                      →
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentPath("ideation")}
-                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
-                  >
-                    Gerador de Ideias (CHI)
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
-                      →
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentPath("codex")}
-                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
-                  >
-                    Codex da História (Lore)
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
-                      →
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentPath("structure")}
-                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
-                  >
-                    Estrutura Narrativa
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
-                      →
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentPath("chapters")}
-                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
-                  >
-                    Capítulos
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
-                      →
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentPath("write")}
-                    className="text-left bg-transparent hover:bg-bg-hover border border-border-subtle hover:border-transparent px-5 py-4 rounded transition-all text-text-main font-medium text-sm flex items-center justify-between group cursor-pointer"
-                  >
-                    Assistente de Escrita
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity font-serif">
-                      →
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </section>
-          </div>
+          <DashboardHome
+            appVersion={appInfo?.version}
+            dbHealthy={health?.database}
+            error={error}
+            onNavigate={setCurrentPath}
+            onSwitchUniverse={handleBackToProjects}
+          />
         );
     }
   };

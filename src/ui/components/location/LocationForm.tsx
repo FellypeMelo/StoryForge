@@ -36,6 +36,7 @@ export function LocationForm({ location, onSave, onCancel }: LocationFormProps) 
           <button
             type="button"
             onClick={onCancel}
+            aria-label="Fechar"
             className="p-2 hover:bg-bg-hover rounded-full cursor-pointer"
           >
             <X size={20} />
@@ -44,7 +45,7 @@ export function LocationForm({ location, onSave, onCancel }: LocationFormProps) 
         </div>
         <button
           type="submit"
-          className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
+          className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
         >
           <Save size={16} /> Salvar Local
         </button>
@@ -67,9 +68,9 @@ export function LocationForm({ location, onSave, onCancel }: LocationFormProps) 
               type="text"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full bg-bg-hover border ${errors.name ? "border-red-500" : "border-border-subtle"} p-3 rounded text-text-main focus:border-text-main outline-none`}
+              className={`w-full bg-bg-hover border ${errors.name ? "border-danger" : "border-border-subtle"} p-3 rounded-lg text-text-main focus:border-text-main outline-none`}
             />
-            {errors.name && <p className="text-[10px] text-red-500">{errors.name}</p>}
+            {errors.name && <p className="text-[10px] text-danger">{errors.name}</p>}
           </div>
           <div className="space-y-2">
             <label htmlFor="description" className="text-xs font-medium text-text-muted">
@@ -81,7 +82,7 @@ export function LocationForm({ location, onSave, onCancel }: LocationFormProps) 
               value={formData.description}
               onChange={handleChange}
               rows={4}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none resize-none"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none resize-none"
             />
           </div>
           <div className="space-y-2">
@@ -94,7 +95,7 @@ export function LocationForm({ location, onSave, onCancel }: LocationFormProps) 
               type="text"
               value={formData.symbolicMeaning}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none"
               placeholder="O que este lugar representa?"
             />
           </div>

@@ -104,7 +104,7 @@ describe("CharacterWizard Integration", () => {
     expect(mockOnSave).not.toHaveBeenCalled();
   });
 
-  it("should alert and stay on step 4 if fewer than 3 tells are provided", async () => {
+  it("should show an inline error (not alert) and stay on step 4 if fewer than 3 tells are provided", async () => {
     const character = getNewCharacter();
     render(<CharacterWizard character={character} onSave={mockOnSave} onCancel={mockOnCancel} />);
     fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "Valid Name" } });
@@ -116,7 +116,8 @@ describe("CharacterWizard Integration", () => {
 
     fireEvent.click(screen.getByText(/Finalizar Ficha/i));
 
-    expect(window.alert).toHaveBeenCalledWith(expect.stringContaining("pelo menos 3 traços físicos"));
+    expect(window.alert).not.toHaveBeenCalled();
+    expect(screen.getByText(/pelo menos 3 traços físicos/i)).toBeInTheDocument();
     expect(screen.getByText(/Passo 4 de 4/i)).toBeInTheDocument();
     expect(mockOnSave).not.toHaveBeenCalled();
   });

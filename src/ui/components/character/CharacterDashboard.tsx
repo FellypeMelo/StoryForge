@@ -22,7 +22,7 @@ export function CharacterDashboard({ character, onEdit, onDelete }: CharacterDas
       <div className="flex justify-between items-center sticky top-0 bg-bg-base/80 backdrop-blur-md py-4 z-20 border-b border-border-subtle">
         <div className="flex items-center gap-4">
           <div
-            className={`p-2 rounded-lg ${isComplete ? "bg-green-500/10 text-green-500" : "bg-amber-500/10 text-amber-500"}`}
+            className={`p-2 rounded-lg ${isComplete ? "bg-success/10 text-success" : "bg-accent-soft text-accent"}`}
           >
             {isComplete ? <ShieldCheck size={20} /> : <ShieldAlert size={20} />}
           </div>
@@ -36,13 +36,14 @@ export function CharacterDashboard({ character, onEdit, onDelete }: CharacterDas
         <div className="flex items-center gap-2">
           <button
             onClick={() => onEdit(character)}
-            className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
+            className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
           >
             <Edit3 size={16} /> Editar
           </button>
           <button
             onClick={() => onDelete(character.id.value)}
-            className="p-2 text-text-muted hover:text-red-500 transition-colors cursor-pointer"
+            aria-label="Excluir personagem"
+            className="p-2 text-text-muted hover:text-danger transition-colors cursor-pointer"
           >
             <Trash2 size={18} />
           </button>
@@ -83,20 +84,20 @@ export function CharacterDashboard({ character, onEdit, onDelete }: CharacterDas
               <h3 className="text-xs font-bold tracking-widest uppercase">Arco de Hauge</h3>
             </div>
             <div className="grid grid-cols-1 gap-6">
-              <div className="p-4 bg-bg-hover rounded-lg border border-border-subtle">
+              <div className="p-4 bg-bg-hover rounded-xl border border-border-subtle">
                 <span className="text-[10px] font-bold uppercase text-text-muted block mb-1">
                   A Ferida (Wound)
                 </span>
                 <p className="text-sm text-text-main">{props.hauge_wound || "Não definida"}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-bg-hover rounded-lg border border-border-subtle">
+                <div className="p-4 bg-bg-hover rounded-xl border border-border-subtle">
                   <span className="text-[10px] font-bold uppercase text-text-muted block mb-1">
                     Medo
                   </span>
                   <p className="text-sm text-text-main">{props.hauge_fear || "---"}</p>
                 </div>
-                <div className="p-4 bg-bg-hover rounded-lg border border-border-subtle">
+                <div className="p-4 bg-bg-hover rounded-xl border border-border-subtle">
                   <span className="text-[10px] font-bold uppercase text-text-muted block mb-1">
                     Crença
                   </span>
@@ -104,7 +105,7 @@ export function CharacterDashboard({ character, onEdit, onDelete }: CharacterDas
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex-1 p-4 border border-dashed border-border-subtle rounded-lg text-center">
+                <div className="flex-1 p-4 border border-dashed border-border-subtle rounded-xl text-center">
                   <span className="text-[10px] font-bold uppercase text-text-muted block mb-1">
                     Identidade
                   </span>
@@ -113,7 +114,7 @@ export function CharacterDashboard({ character, onEdit, onDelete }: CharacterDas
                   </span>
                 </div>
                 <div className="text-text-muted">vs</div>
-                <div className="flex-1 p-4 border border-text-main/20 rounded-lg text-center bg-text-main/5">
+                <div className="flex-1 p-4 border border-text-main/20 rounded-xl text-center bg-text-main/5">
                   <span className="text-[10px] font-bold uppercase text-text-main block mb-1">
                     Essência
                   </span>
@@ -164,7 +165,7 @@ export function CharacterDashboard({ character, onEdit, onDelete }: CharacterDas
                     {verbalTics.map((tic: string, i: number) => (
                       <span
                         key={i}
-                        className="text-xs px-2 py-1 bg-bg-hover rounded border border-border-subtle text-text-main italic"
+                        className="text-xs px-2 py-1 bg-bg-hover rounded-full border border-border-subtle text-text-main italic"
                       >
                         "{tic}"
                       </span>

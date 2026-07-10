@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { invoke } from "@tauri-apps/api/core";
 import { BookSelector } from "../BookSelector";
 import { mockDb } from "../../../../test/mock-db";
 import { getStandardSeed, STANDARD_PROJECT_ID } from "../../../../test/seeds/standard-seed";
@@ -76,6 +77,27 @@ describe("BookSelector Integration", () => {
     await waitFor(() => {
       expect(screen.getByText(/Nenhum Livro Registrado/i)).toBeInTheDocument();
     });
+  });
+
+  it("should show an inline error with retry when loading books fails", async () => {
+    mockDb.seed(getStandardSeed());
+    vi.mocked(invoke).mockRejectedValueOnce(new Error("db offline"));
+
+    render(
+      <BookSelector
+        projectId={STANDARD_PROJECT_ID}
+        onSelectBook={onSelectBook}
+        onBack={onBack}
+      />
+    );
+
+    expect(await screen.findByText(/Não foi possível carregar os livros/i)).toBeInTheDocument();
+    expect(screen.queryByText("Livro 1: O Despertar")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Tentar novamente/i }));
+
+    expect(await screen.findByText("Livro 1: O Despertar")).toBeInTheDocument();
+    expect(screen.queryByText(/Não foi possível carregar/i)).not.toBeInTheDocument();
   });
 
   it("should create a new book", async () => {

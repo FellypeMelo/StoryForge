@@ -1,5 +1,6 @@
 import { Premise } from "../../domain/ideation/premise";
 import { LlmPort } from "../../domain/ideation/ports/llm-port";
+import { extractJson } from "../shared/extract-json";
 
 export interface ValidationResult {
   isValid: boolean;
@@ -29,12 +30,12 @@ export class ValidatePremiseUseCase {
     const response = await this.llmPort.complete(prompt, { temperature: 0.3 });
 
     try {
-      const data = JSON.parse(response.text);
+      const data = extractJson<{ isValid?: boolean; reason?: string }>(response.text);
       return {
         isValid: !!data.isValid,
         reason: data.reason || "No reason provided by LLM.",
       };
-    } catch (error) {
+    } catch {
       throw new Error("Failed to parse validation result from LLM");
     }
   }

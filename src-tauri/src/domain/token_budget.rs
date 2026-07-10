@@ -19,14 +19,14 @@ impl TokenBudgetCalculator {
     pub fn validate_budget(&self, current_text: &str, new_snippet: &str) -> AppResult<()> {
         let current_tokens = self.estimate_tokens(current_text);
         let new_tokens = self.estimate_tokens(new_snippet);
-        
+
         if current_tokens + new_tokens > self.max_tokens {
             return Err(AppError::Validation(format!(
                 "Token budget exceeded: {} + {} > {}",
                 current_tokens, new_tokens, self.max_tokens
             )));
         }
-        
+
         Ok(())
     }
 }
@@ -47,7 +47,7 @@ mod tests {
         let calculator = TokenBudgetCalculator::new(10);
         let current = "This is a long text that uses many tokens."; // ~42 chars -> 10 tokens
         let snippet = "More text."; // 10 chars -> 2 tokens
-        
+
         let result = calculator.validate_budget(current, snippet);
         assert!(result.is_err());
         if let Err(AppError::Validation(msg)) = result {
@@ -57,5 +57,3 @@ mod tests {
         }
     }
 }
-
-

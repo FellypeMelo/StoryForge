@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { CodexDashboard } from "../dashboard/CodexDashboard";
+import { ToastProvider } from "../shared/Toast";
 import { mockDb } from "../../../test/mock-db";
 
 describe("CodexDashboard Modal Integration", () => {
@@ -9,6 +10,13 @@ describe("CodexDashboard Modal Integration", () => {
     bookId: "123e4567-e89b-12d3-a456-426614174001",
     onBack: vi.fn(),
   };
+
+  const renderDashboard = () =>
+    render(
+      <ToastProvider>
+        <CodexDashboard {...mockProps} />
+      </ToastProvider>,
+    );
 
   beforeEach(() => {
     mockDb.reset();
@@ -21,7 +29,7 @@ describe("CodexDashboard Modal Integration", () => {
   };
 
   it("should open SlideOver with LocationForm when 'Criar Local' is clicked", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     // Switch to locations tab
@@ -37,7 +45,7 @@ describe("CodexDashboard Modal Integration", () => {
   });
 
   it("should open SlideOver with WorldRuleForm when 'Criar Regra' is clicked", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     // Switch to rules tab
@@ -53,7 +61,7 @@ describe("CodexDashboard Modal Integration", () => {
   });
 
   it("should open SlideOver with CharacterWizard when 'Criar Personagem' is clicked", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     const addCharacterButton = screen.getByRole("button", { name: /Criar Manualmente/i });
@@ -64,7 +72,7 @@ describe("CodexDashboard Modal Integration", () => {
   });
 
   it("should reset form state when modal is closed and reopened", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     // Open Location modal

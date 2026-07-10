@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { CodexDashboard } from "../CodexDashboard";
+import { ToastProvider } from "../../shared/Toast";
 import { mockDb } from "../../../../test/mock-db";
 import { getStandardSeed, STANDARD_PROJECT_ID, STANDARD_BOOK_ID } from "../../../../test/seeds/standard-seed";
 
@@ -17,14 +18,25 @@ describe("CodexDashboard Extended Integration", () => {
     vi.clearAllMocks();
   });
 
+  const renderDashboard = () =>
+    render(
+      <ToastProvider>
+        <CodexDashboard {...mockProps} />
+      </ToastProvider>,
+    );
+
   const waitForNotLoading = async () => {
     await waitFor(() => {
       expect(screen.queryByText(/Consultando os arquivos/i)).not.toBeInTheDocument();
     }, { timeout: 10000 });
   };
 
+  const confirmDelete = async () => {
+    fireEvent.click(await screen.findByRole("button", { name: /^Excluir$/i }));
+  };
+
   it("should handle World Rule creation, editing and deletion", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     fireEvent.click(screen.getByRole("button", { name: /Regras/i }));
     await waitForNotLoading();
 
@@ -42,13 +54,18 @@ describe("CodexDashboard Extended Integration", () => {
     fireEvent.change(editInput, { target: { value: "Regra Atualizada" } });
     fireEvent.click(screen.getByText(/Salvar Regra/i));
 
-    // Use findBy to wait for refresh
+    // Wait for the form to close first: while it is open, its textarea also
+    // exposes "Regra Atualizada" as text content and would be matched by
+    // findByText just before being detached from the document.
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/Conteúdo da Regra/i)).not.toBeInTheDocument();
+    }, { timeout: 10000 });
     expect(await screen.findByText("Regra Atualizada")).toBeInTheDocument();
 
     // 3. Move to Project (from SlideOver)
     fireEvent.click(screen.getByText("Regra Atualizada"));
     fireEvent.click(await screen.findByRole("button", { name: /^Mover para Universo$/i }));
-    
+
     await waitFor(() => {
       expect(screen.queryByText("Regra Atualizada")).not.toBeInTheDocument();
     }, { timeout: 10000 });
@@ -56,10 +73,11 @@ describe("CodexDashboard Extended Integration", () => {
     // 4. Delete (Go to Universe scope to find it)
     fireEvent.click(screen.getByRole("button", { name: /^Universo$/i }));
     await waitForNotLoading();
-    
+
     fireEvent.click(screen.getByText("Regra Atualizada"));
     const deleteBtn = await screen.findByTitle("Excluir Regra");
     fireEvent.click(deleteBtn);
+    await confirmDelete();
 
     await waitFor(() => {
       expect(screen.queryByText("Regra Atualizada")).not.toBeInTheDocument();
@@ -67,7 +85,7 @@ describe("CodexDashboard Extended Integration", () => {
   }, 30000);
 
   it("should handle Timeline Event creation and deletion", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     fireEvent.click(screen.getByRole("button", { name: /Linha do Tempo/i }));
     await waitForNotLoading();
 
@@ -82,6 +100,7 @@ describe("CodexDashboard Extended Integration", () => {
     fireEvent.click(screen.getByText("Evento Épico"));
     const deleteBtn = await screen.findByTitle("Excluir Evento");
     fireEvent.click(deleteBtn);
+    await confirmDelete();
 
     await waitFor(() => {
       expect(screen.queryByText("Evento Épico")).not.toBeInTheDocument();
@@ -89,7 +108,7 @@ describe("CodexDashboard Extended Integration", () => {
   }, 30000);
 
   it("should handle Relationship creation and deletion", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     fireEvent.click(screen.getByRole("button", { name: /Relacionamentos/i }));
     await waitForNotLoading();
 
@@ -104,6 +123,7 @@ describe("CodexDashboard Extended Integration", () => {
     fireEvent.click(screen.getByText("Inimigos Mortais"));
     const deleteBtn = await screen.findByTitle("Excluir Relacionamento");
     fireEvent.click(deleteBtn);
+    await confirmDelete();
 
     await waitFor(() => {
       expect(screen.queryByText("Inimigos Mortais")).not.toBeInTheDocument();
@@ -111,7 +131,7 @@ describe("CodexDashboard Extended Integration", () => {
   }, 30000);
 
   it("should handle Blacklist creation and deletion", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     fireEvent.click(screen.getByRole("button", { name: /Lista Negra/i }));
     await waitForNotLoading();
 
@@ -126,6 +146,7 @@ describe("CodexDashboard Extended Integration", () => {
     fireEvent.click(screen.getByText("Profecia"));
     const deleteBtn = await screen.findByTitle("Excluir Entrada");
     fireEvent.click(deleteBtn);
+    await confirmDelete();
 
     await waitFor(() => {
       expect(screen.queryByText("Profecia")).not.toBeInTheDocument();
@@ -133,7 +154,7 @@ describe("CodexDashboard Extended Integration", () => {
   }, 30000);
 
   it("should handle Location creation, editing and deletion", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     fireEvent.click(screen.getByRole("button", { name: /Locais/i }));
     await waitForNotLoading();
 
@@ -157,6 +178,7 @@ describe("CodexDashboard Extended Integration", () => {
     fireEvent.click(screen.getByText("Cidade das Nuvens"));
     const deleteBtn = await screen.findByTitle("Excluir Local");
     fireEvent.click(deleteBtn);
+    await confirmDelete();
 
     await waitFor(() => {
       expect(screen.queryByText("Cidade das Nuvens")).not.toBeInTheDocument();

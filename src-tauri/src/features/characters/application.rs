@@ -1,5 +1,5 @@
+use super::domain::{BookId, Character, CharacterId, CharacterRepository, ProjectId};
 use crate::domain::result::AppResult;
-use super::domain::{Character, CharacterId, ProjectId, BookId, CharacterRepository};
 
 pub struct CharacterService<'a> {
     repository: &'a dyn CharacterRepository,
@@ -10,7 +10,12 @@ impl<'a> CharacterService<'a> {
         Self { repository }
     }
 
-    pub fn create_character(&self, project_id: ProjectId, book_id: Option<BookId>, name: String) -> AppResult<Character> {
+    pub fn create_character(
+        &self,
+        project_id: ProjectId,
+        book_id: Option<BookId>,
+        name: String,
+    ) -> AppResult<Character> {
         let character = Character::new(project_id, book_id, name)?;
         self.repository.create_character(&character)?;
         Ok(character)
@@ -59,17 +64,33 @@ mod tests {
 
     struct MockRepo;
     impl CharacterRepository for MockRepo {
-        fn create_character(&self, _c: &Character) -> AppResult<()> { Ok(()) }
+        fn create_character(&self, _c: &Character) -> AppResult<()> {
+            Ok(())
+        }
         fn get_character_by_id(&self, _id: &CharacterId) -> AppResult<Character> {
             Ok(Character::new(ProjectId("p".to_string()), None, "N".to_string()).unwrap())
         }
-        fn list_characters_by_project(&self, _p: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
-        fn list_characters_by_book(&self, _b: &BookId) -> AppResult<Vec<Character>> { Ok(vec![]) }
-        fn list_global_characters(&self, _p: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
-        fn move_character_to_book(&self, _id: &CharacterId, _b: &BookId) -> AppResult<()> { Ok(()) }
-        fn move_character_to_project(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
-        fn update_character(&self, _c: &Character) -> AppResult<()> { Ok(()) }
-        fn delete_character(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+        fn list_characters_by_project(&self, _p: &ProjectId) -> AppResult<Vec<Character>> {
+            Ok(vec![])
+        }
+        fn list_characters_by_book(&self, _b: &BookId) -> AppResult<Vec<Character>> {
+            Ok(vec![])
+        }
+        fn list_global_characters(&self, _p: &ProjectId) -> AppResult<Vec<Character>> {
+            Ok(vec![])
+        }
+        fn move_character_to_book(&self, _id: &CharacterId, _b: &BookId) -> AppResult<()> {
+            Ok(())
+        }
+        fn move_character_to_project(&self, _id: &CharacterId) -> AppResult<()> {
+            Ok(())
+        }
+        fn update_character(&self, _c: &Character) -> AppResult<()> {
+            Ok(())
+        }
+        fn delete_character(&self, _id: &CharacterId) -> AppResult<()> {
+            Ok(())
+        }
     }
 
     #[test]
@@ -81,7 +102,9 @@ mod tests {
         let cid = CharacterId::new();
         let character = Character::new(pid.clone(), None, "N".to_string()).unwrap();
 
-        assert!(service.create_character(pid.clone(), None, "N".to_string()).is_ok());
+        assert!(service
+            .create_character(pid.clone(), None, "N".to_string())
+            .is_ok());
         assert!(service.save_character(&character).is_ok());
         assert!(service.get_character(cid.clone()).is_ok());
         assert!(service.list_characters_by_project(pid.clone()).is_ok());

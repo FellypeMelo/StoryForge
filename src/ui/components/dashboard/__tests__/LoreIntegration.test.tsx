@@ -7,7 +7,6 @@ import { Relationship } from "../../../../domain/relationship";
 import { BlacklistEntry } from "../../../../domain/blacklist-entry";
 import { Character } from "../../../../domain/character";
 import { ProjectId } from "../../../../domain/value-objects/project-id";
-import { CharacterId } from "../../../../domain/value-objects/character-id";
 import { TimelineEventId, RelationshipId, BlacklistEntryId } from "../../../../domain/value-objects/codex-ids";
 
 describe("Lore Components Integration", () => {
@@ -32,6 +31,11 @@ describe("Lore Components Integration", () => {
       expect(screen.getByText("A Quebra do Selo")).toBeInTheDocument();
       fireEvent.click(screen.getByText("A Quebra do Selo"));
       expect(onSelect).toHaveBeenCalledWith(mockEvent);
+    });
+
+    it("should render timeline cards as keyboard-accessible buttons", () => {
+      render(<TimelineList events={[mockEvent]} onSelect={vi.fn()} />);
+      expect(screen.getByRole("button", { name: /A Quebra do Selo/i })).toBeInTheDocument();
     });
 
     it("should handle timeline form submission", () => {
@@ -62,6 +66,11 @@ describe("Lore Components Integration", () => {
       expect(screen.getByText("Mestre e Aprendiz")).toBeInTheDocument();
       fireEvent.click(screen.getByText("Mestre e Aprendiz"));
       expect(onSelect).toHaveBeenCalledWith(mockRel);
+    });
+
+    it("should render relationship cards as keyboard-accessible buttons", () => {
+      render(<RelationshipList relationships={[mockRel]} onSelect={vi.fn()} />);
+      expect(screen.getByRole("button", { name: /Mestre e Aprendiz/i })).toBeInTheDocument();
     });
 
     it("should handle relationship form submission", () => {
@@ -118,6 +127,11 @@ describe("Lore Components Integration", () => {
       expect(screen.getByText("Escolhido")).toBeInTheDocument();
       fireEvent.click(screen.getByText("Escolhido"));
       expect(onSelect).toHaveBeenCalledWith(mockEntry);
+    });
+
+    it("should render blacklist entries as keyboard-accessible buttons", () => {
+      render(<BlacklistList entries={[mockEntry]} onSelect={vi.fn()} />);
+      expect(screen.getByRole("button", { name: /Escolhido/i })).toBeInTheDocument();
     });
 
     it("should handle blacklist form submission", () => {

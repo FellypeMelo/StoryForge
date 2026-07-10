@@ -135,10 +135,10 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full bg-bg-hover border ${errors.name ? "border-red-500" : "border-border-subtle"} p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors`}
+              className={`w-full bg-bg-hover border ${errors.name ? "border-danger" : "border-border-subtle"} p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors`}
               placeholder="Nome do Personagem"
             />
-            {errors.name && <p className="text-[10px] text-red-500 font-sans">{errors.name}</p>}
+            {errors.name && <p className="text-[10px] text-danger font-sans">{errors.name}</p>}
           </div>
           <div className="space-y-2">
             <label htmlFor="age" className="text-xs font-medium text-text-muted">
@@ -150,7 +150,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="number"
               value={formData.age}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
             />
           </div>
           <div className="md:col-span-3 space-y-2">
@@ -163,7 +163,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.occupation}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="ex. Herói Relutante, Arquivista, Antigo Espião"
             />
           </div>
@@ -177,7 +177,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               value={formData.physical_description}
               onChange={handleChange}
               rows={3}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
               placeholder="Traços visuais, estilo, presença..."
             />
           </div>
@@ -225,7 +225,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2 space-y-2">
             <label htmlFor="hauge_wound" className="text-xs font-medium text-text-muted flex items-center gap-2">
-              <Zap size={12} className="text-amber-500" /> A Ferida (Wound)
+              <Zap size={12} className="text-accent" /> A Ferida (Wound)
             </label>
             <textarea
               id="hauge_wound"
@@ -233,7 +233,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               value={formData.hauge_wound}
               onChange={handleChange}
               rows={2}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
               placeholder="O evento traumático do passado..."
             />
           </div>
@@ -247,13 +247,13 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.hauge_belief}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="A mentira em que acreditam"
             />
           </div>
           <div className="space-y-2">
             <label htmlFor="hauge_fear" className="text-xs font-medium text-text-muted flex items-center gap-2">
-              <ShieldAlert size={12} className="text-red-500" /> O Medo (Fear)
+              <ShieldAlert size={12} className="text-danger" /> O Medo (Fear)
             </label>
             <input
               id="hauge_fear"
@@ -261,7 +261,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.hauge_fear}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="O que os impede de mudar"
             />
           </div>
@@ -275,7 +275,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.hauge_identity}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="Como se protegem do mundo"
             />
           </div>
@@ -289,7 +289,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.hauge_essence}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors border-dashed border-purple-500/30"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors border-dashed border-accent/30"
               placeholder="Quem são verdadeiramente por dentro"
             />
           </div>
@@ -314,7 +314,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.voice_sentence_length}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="ex. Frases curtas e ríspidas"
             />
           </div>
@@ -328,7 +328,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.voice_formality}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="ex. Arcaico, Gírias de rua, Acadêmico"
             />
           </div>
@@ -342,7 +342,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.voice_evasion_mechanism}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="O que fazem quando não querem responder algo?"
             />
           </div>
@@ -353,7 +353,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               <button
                 type="button"
                 onClick={() => addListItem("voice_verbal_tics")}
-                className="text-[10px] flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors"
+                className="text-[10px] flex items-center gap-1 text-accent hover:text-accent-hover transition-colors"
               >
                 <Plus size={10} /> Adicionar Tic
               </button>
@@ -370,7 +370,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
                   <button
                     type="button"
                     onClick={() => removeListItem("voice_verbal_tics", index)}
-                    className="text-text-muted hover:text-red-400 transition-colors"
+                    className="text-text-muted hover:text-danger transition-colors"
                   >
                     <Trash2 size={10} />
                   </button>
@@ -396,14 +396,14 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
                 <textarea
                   value={tell}
                   onChange={(e) => handleListChange("physical_tells", index, e.target.value)}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-xs text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-xs text-text-main focus:border-text-main outline-none transition-colors resize-none"
                   rows={2}
                   placeholder={`Tell #${index + 1}`}
                 />
                 <button
                   type="button"
                   onClick={() => removeListItem("physical_tells", index)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity disabled:hidden"
+                  className="absolute -top-2 -right-2 bg-danger text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity disabled:hidden"
                   disabled={JSON.parse(formData.physical_tells || "[]").length <= 3}
                 >
                   <X size={8} />
@@ -440,7 +440,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.goal}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="O que eles querem agora?"
             />
           </div>
@@ -454,7 +454,7 @@ export function CharacterForm({ character, onSave, onCancel }: CharacterFormProp
               type="text"
               value={formData.motivation}
               onChange={handleChange}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
               placeholder="Por que eles querem isso?"
             />
           </div>

@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { AppShell } from "../layout/AppShell";
 
 describe("AppShell Navigation", () => {
-  it("should call onNavigate with 'codex' when Codex da História is clicked", () => {
+  it("should call onNavigate with 'codex' when Codex is clicked", () => {
     const onNavigate = vi.fn();
     render(
       <AppShell onNavigate={onNavigate}>
@@ -11,7 +11,7 @@ describe("AppShell Navigation", () => {
       </AppShell>,
     );
 
-    const codexButton = screen.getByText("Codex da História");
+    const codexButton = screen.getByRole("button", { name: /^Codex$/i });
     fireEvent.click(codexButton);
 
     expect(onNavigate).toHaveBeenCalledWith("codex");

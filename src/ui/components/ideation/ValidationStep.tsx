@@ -5,6 +5,7 @@ import { WorldbuildingPipeline } from "../../../application/worldbuilding/worldb
 import { Premise as PremiseEntity } from "../../../domain/ideation/premise";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 import { WorldRuleRepository } from "../../../domain/ports/world-rule-repository";
+import { LlmPort } from "../../../domain/ideation/ports/llm-port";
 import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 import { TauriWorldRuleRepository } from "../../../infrastructure/tauri/tauri-world-rule-repository";
 
@@ -15,6 +16,7 @@ interface ValidationStepProps {
   onFinish: () => void;
   projectId: string;
   bookId: string;
+  llmPort?: LlmPort;
 }
 
 export function ValidationStep({
@@ -24,18 +26,20 @@ export function ValidationStep({
   onFinish,
   projectId,
   bookId,
+  llmPort = new DummyLlmPort(),
 }: ValidationStepProps) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const selectedPremiseData =
     state.selectedPremiseIndex !== null ? state.premises[state.selectedPremiseIndex] : null;
 
   const handleValidate = async () => {
     if (!selectedPremiseData) return;
     setLoading(true);
+    setError(null);
 
     try {
-      const llmPort = new DummyLlmPort();
       const useCase = new ValidatePremiseUseCase(llmPort);
 
       const premise = new PremiseEntity(
@@ -47,8 +51,9 @@ export function ValidationStep({
 
       const result = await useCase.execute(premise);
       updateState({ validationResult: result });
-    } catch (error) {
-      console.error("Erro ao validar premissa:", error);
+    } catch (err) {
+      console.error("Erro ao validar premissa:", err);
+      setError("Falha ao consultar a IA. Verifique o provedor em Preferências e tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -57,9 +62,9 @@ export function ValidationStep({
   const handleSaveAndForgeWorld = async () => {
     if (!selectedPremiseData) return;
     setSaving(true);
+    setError(null);
 
     try {
-      const llmPort = new DummyLlmPort();
       const worldRuleRepo = new TauriWorldRuleRepository(bookId) as WorldRuleRepository;
       const pipeline = new WorldbuildingPipeline(llmPort, worldRuleRepo);
 
@@ -72,8 +77,9 @@ export function ValidationStep({
 
       await pipeline.run(ProjectId.create(projectId), premise);
       onFinish();
-    } catch (error) {
-      console.error("Erro ao forjar mundo:", error);
+    } catch (err) {
+      console.error("Erro ao forjar mundo:", err);
+      setError("Falha ao forjar o universo. Verifique o provedor em Preferências e tente novamente.");
     } finally {
       setSaving(false);
     }
@@ -113,6 +119,12 @@ export function ValidationStep({
         </div>
       </div>
 
+      {error && (
+        <p role="alert" className="text-sm text-danger text-center">
+          {error}
+        </p>
+      )}
+
       {!state.validationResult ? (
         <div className="flex justify-center">
           <button
@@ -133,11 +145,11 @@ export function ValidationStep({
       ) : (
         <div className="space-y-6 animate-in fade-in zoom-in duration-500">
           <div
-            className={`p-6 rounded-lg border ${state.validationResult.isValid ? "border-text-main bg-bg-main" : "border-red-500/50 bg-red-500/5"}`}
+            className={`p-6 rounded-xl border ${state.validationResult.isValid ? "border-border-default bg-accent-soft" : "border-danger/40 bg-danger/5"}`}
           >
             <div className="flex items-center gap-3 mb-4">
               <div
-                className={`w-2 h-2 rounded-full ${state.validationResult.isValid ? "bg-text-main" : "bg-red-500"}`}
+                className={`w-2 h-2 rounded-full ${state.validationResult.isValid ? "bg-success" : "bg-danger"}`}
               />
               <h4 className="font-bold uppercase tracking-tighter">Análise da Forja</h4>
             </div>

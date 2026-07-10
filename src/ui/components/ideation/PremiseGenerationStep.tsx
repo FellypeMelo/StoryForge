@@ -5,6 +5,7 @@ import { CrossPollinationSeed } from "../../../domain/ideation/cross-pollination
 import { Genre } from "../../../domain/value-objects/genre";
 import { AcademicDiscipline } from "../../../domain/value-objects/academic-discipline";
 import { ClicheBlacklist } from "../../../domain/ideation/cliche-blacklist";
+import { LlmPort } from "../../../domain/ideation/ports/llm-port";
 import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 
 interface PremiseGenerationStepProps {
@@ -12,6 +13,7 @@ interface PremiseGenerationStepProps {
   updateState: (updates: Partial<IdeationState>) => void;
   onNext: () => void;
   onBack: () => void;
+  llmPort?: LlmPort;
 }
 
 const DISCIPLINES = [
@@ -30,15 +32,17 @@ export function PremiseGenerationStep({
   updateState,
   onNext,
   onBack,
+  llmPort = new DummyLlmPort(),
 }: PremiseGenerationStepProps) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!state.discipline) return;
     setLoading(true);
+    setError(null);
 
     try {
-      const llmPort = new DummyLlmPort();
       const useCase = new GeneratePremisesUseCase(llmPort);
 
       const seed = new CrossPollinationSeed(
@@ -58,8 +62,9 @@ export function PremiseGenerationStep({
           stakes: p.stakes,
         })),
       });
-    } catch (error) {
-      console.error("Erro ao gerar premissas:", error);
+    } catch (err) {
+      console.error("Erro ao gerar premissas:", err);
+      setError("Falha ao consultar a IA. Verifique o provedor em Preferências e tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -106,6 +111,12 @@ export function PremiseGenerationStep({
           )}
         </button>
       </div>
+
+      {error && (
+        <p role="alert" className="text-sm text-danger text-center">
+          {error}
+        </p>
+      )}
 
       {state.premises.length > 0 && !loading && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in zoom-in duration-500">

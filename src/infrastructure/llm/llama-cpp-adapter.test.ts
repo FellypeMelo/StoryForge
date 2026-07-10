@@ -16,7 +16,7 @@ describe("LlamaCppAdapter", () => {
       tokens_evaluated: 5,
     };
 
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockResponse),
     });
@@ -27,7 +27,7 @@ describe("LlamaCppAdapter", () => {
       stopSequences: ["\n"],
     });
 
-    expect(global.fetch).toHaveBeenCalledWith(`${baseUrl}/completion`, {
+    expect(globalThis.fetch).toHaveBeenCalledWith(`${baseUrl}/completion`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -47,7 +47,7 @@ describe("LlamaCppAdapter", () => {
   });
 
   it("should throw an error if the API request fails", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 500,
     });

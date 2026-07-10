@@ -1,12 +1,9 @@
+use crate::domain::error::AppError;
 use crate::domain::ports::{
-    DatabasePort, EmbeddingPort,
-    VectorSearchPort, SearchResult, EntityType
+    DatabasePort, EmbeddingPort, EntityType, SearchResult, VectorSearchPort,
 };
 use crate::domain::result::AppResult;
-use crate::domain::error::AppError;
-pub use crate::domain::value_objects::{
-    BookId, ProjectId,
-};
+pub use crate::domain::value_objects::{BookId, ProjectId};
 use rusqlite::{Connection, Result, Row};
 use std::path::Path;
 use std::sync::{Mutex, Once};
@@ -35,13 +32,20 @@ pub struct SqliteDatabase {
 impl SqliteDatabase {
     pub fn new(path: &Path) -> Result<Self> {
         SQLITE_VEC_INIT.call_once(|| unsafe {
-            rusqlite::ffi::sqlite3_auto_extension(Some(std::mem::transmute(
+            rusqlite::ffi::sqlite3_auto_extension(Some(std::mem::transmute::<
+                *const (),
+                unsafe extern "C" fn(
+                    *mut rusqlite::ffi::sqlite3,
+                    *mut *const i8,
+                    *const rusqlite::ffi::sqlite3_api_routines,
+                ) -> i32,
+            >(
                 sqlite_vec::sqlite3_vec_init as *const (),
             )));
         });
 
         let connection = Connection::open(path)?;
-        connection.pragma_update(None, "journal_mode", &"WAL")?;
+        connection.pragma_update(None, "journal_mode", "WAL")?;
 
         Ok(SqliteDatabase {
             connection: Mutex::new(connection),
@@ -51,10 +55,7 @@ impl SqliteDatabase {
 
     pub fn run_migrations(&self) -> Result<()> {
         let conn = self.connection.lock().map_err(|e| {
-            rusqlite::Error::ToSqlConversionFailure(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                e.to_string(),
-            )))
+            rusqlite::Error::ToSqlConversionFailure(Box::new(std::io::Error::other(e.to_string())))
         })?;
         let current_version: i32 =
             conn.query_row("PRAGMA user_version", [], |row: &Row| row.get(0))?;

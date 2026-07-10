@@ -11,6 +11,13 @@ export class CliffhangerType {
   static PrePoint() { return new CliffhangerType("pre-point", "Pre-point"); }
   static Climactic() { return new CliffhangerType("climactic", "Climático"); }
   static PostPoint() { return new CliffhangerType("post-point", "Post-point"); }
+
+  static fromValue(value: string): CliffhangerType | null {
+    return (
+      [this.PrePoint(), this.Climactic(), this.PostPoint()].find((t) => t.value === value) ??
+      null
+    );
+  }
 }
 
 export class Cliffhanger {

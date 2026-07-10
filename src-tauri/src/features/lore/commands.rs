@@ -1,11 +1,11 @@
-use crate::features::lore::domain::{
-    BlacklistEntry, Location, Relationship, TimelineEvent, WorldRule,
-    LocationId, WorldRuleId, TimelineEventId, RelationshipId, BlacklistEntryId
-};
-use crate::features::lore::application::LoreService;
-use crate::domain::value_objects::{BookId, ProjectId};
-use crate::domain::result::AppResult;
 use crate::domain::ports::SearchResult;
+use crate::domain::result::AppResult;
+use crate::domain::value_objects::{BookId, ProjectId};
+use crate::features::lore::application::LoreService;
+use crate::features::lore::domain::{
+    BlacklistEntry, BlacklistEntryId, Location, LocationId, Relationship, RelationshipId,
+    TimelineEvent, TimelineEventId, WorldRule, WorldRuleId,
+};
 use crate::infrastructure::sqlite::SqliteDatabase;
 use tauri::State;
 
@@ -17,7 +17,12 @@ pub async fn create_location(
     name: String,
 ) -> AppResult<Location> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.create_location(ProjectId(project_id), book_id.map(BookId), name)
 }
@@ -28,7 +33,12 @@ pub async fn list_locations(
     project_id: String,
 ) -> AppResult<Vec<Location>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_locations_by_project(ProjectId(project_id))
 }
@@ -39,7 +49,12 @@ pub async fn list_locations_by_book(
     book_id: String,
 ) -> AppResult<Vec<Location>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_locations_by_book(BookId(book_id))
 }
@@ -50,7 +65,12 @@ pub async fn list_global_locations(
     project_id: String,
 ) -> AppResult<Vec<Location>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_global_locations(ProjectId(project_id))
 }
@@ -62,7 +82,12 @@ pub async fn move_location_to_book(
     book_id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.move_location_to_book(LocationId(id), BookId(book_id))
 }
@@ -73,9 +98,56 @@ pub async fn move_location_to_project(
     id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.move_location_to_project(LocationId(id))
+}
+
+#[tauri::command]
+pub async fn get_location(state: State<'_, SqliteDatabase>, id: String) -> AppResult<Location> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.get_location(LocationId(id))
+}
+
+#[tauri::command]
+pub async fn update_location(
+    state: State<'_, SqliteDatabase>,
+    location: Location,
+) -> AppResult<()> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.update_location(location)
+}
+
+#[tauri::command]
+pub async fn delete_location(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.delete_location(LocationId(id))
 }
 
 #[tauri::command]
@@ -87,7 +159,12 @@ pub async fn create_world_rule(
     content: String,
 ) -> AppResult<WorldRule> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.create_world_rule(
         ProjectId(project_id),
@@ -103,7 +180,12 @@ pub async fn list_world_rules(
     project_id: String,
 ) -> AppResult<Vec<WorldRule>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_world_rules_by_project(ProjectId(project_id))
 }
@@ -114,7 +196,12 @@ pub async fn list_world_rules_by_book(
     book_id: String,
 ) -> AppResult<Vec<WorldRule>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_world_rules_by_book(BookId(book_id))
 }
@@ -125,7 +212,12 @@ pub async fn list_global_world_rules(
     project_id: String,
 ) -> AppResult<Vec<WorldRule>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_global_world_rules(ProjectId(project_id))
 }
@@ -137,12 +229,14 @@ pub async fn move_world_rule_to_book(
     book_id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
-    service.move_world_rule_to_book(
-        WorldRuleId(id),
-        BookId(book_id),
-    )
+    service.move_world_rule_to_book(WorldRuleId(id), BookId(book_id))
 }
 
 #[tauri::command]
@@ -151,9 +245,53 @@ pub async fn move_world_rule_to_project(
     id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.move_world_rule_to_project(WorldRuleId(id))
+}
+
+#[tauri::command]
+pub async fn get_world_rule(state: State<'_, SqliteDatabase>, id: String) -> AppResult<WorldRule> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.get_world_rule(WorldRuleId(id))
+}
+
+#[tauri::command]
+pub async fn update_world_rule(state: State<'_, SqliteDatabase>, rule: WorldRule) -> AppResult<()> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.update_world_rule(rule)
+}
+
+#[tauri::command]
+pub async fn delete_world_rule(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.delete_world_rule(WorldRuleId(id))
 }
 
 #[tauri::command]
@@ -164,7 +302,12 @@ pub async fn search_lore(
     query: String,
 ) -> AppResult<Vec<SearchResult>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.search_lore(ProjectId(project_id), &query, book_id.map(BookId))
 }
@@ -178,7 +321,12 @@ pub async fn get_lore_context(
     max_tokens: usize,
 ) -> AppResult<String> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.inject_context(
         &ProjectId(project_id),
@@ -197,7 +345,12 @@ pub async fn create_timeline_event(
     description: String,
 ) -> AppResult<TimelineEvent> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.create_timeline_event(ProjectId(project_id), book_id.map(BookId), description)
 }
@@ -208,7 +361,12 @@ pub async fn list_timeline_events_by_book(
     book_id: String,
 ) -> AppResult<Vec<TimelineEvent>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_timeline_events_by_book(BookId(book_id))
 }
@@ -219,7 +377,12 @@ pub async fn list_global_timeline_events(
     project_id: String,
 ) -> AppResult<Vec<TimelineEvent>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_global_timeline_events(ProjectId(project_id))
 }
@@ -230,7 +393,12 @@ pub async fn update_timeline_event(
     event: TimelineEvent,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.update_timeline_event(event)
 }
@@ -242,12 +410,14 @@ pub async fn move_timeline_event_to_book(
     book_id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
-    service.move_timeline_event_to_book(
-        TimelineEventId(id),
-        BookId(book_id),
-    )
+    service.move_timeline_event_to_book(TimelineEventId(id), BookId(book_id))
 }
 
 #[tauri::command]
@@ -256,7 +426,12 @@ pub async fn move_timeline_event_to_project(
     id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.move_timeline_event_to_project(TimelineEventId(id))
 }
@@ -264,7 +439,12 @@ pub async fn move_timeline_event_to_project(
 #[tauri::command]
 pub async fn delete_timeline_event(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.delete_timeline_event(TimelineEventId(id))
 }
@@ -280,7 +460,12 @@ pub async fn create_relationship(
     r#type: String,
 ) -> AppResult<Relationship> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.create_relationship(
         ProjectId(project_id),
@@ -297,7 +482,12 @@ pub async fn list_relationships_by_book(
     book_id: String,
 ) -> AppResult<Vec<Relationship>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_relationships_by_book(BookId(book_id))
 }
@@ -308,7 +498,12 @@ pub async fn list_global_relationships(
     project_id: String,
 ) -> AppResult<Vec<Relationship>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_global_relationships(ProjectId(project_id))
 }
@@ -319,7 +514,12 @@ pub async fn update_relationship(
     relationship: Relationship,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.update_relationship(relationship)
 }
@@ -331,12 +531,14 @@ pub async fn move_relationship_to_book(
     book_id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
-    service.move_relationship_to_book(
-        RelationshipId(id),
-        BookId(book_id),
-    )
+    service.move_relationship_to_book(RelationshipId(id), BookId(book_id))
 }
 
 #[tauri::command]
@@ -345,7 +547,12 @@ pub async fn move_relationship_to_project(
     id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.move_relationship_to_project(RelationshipId(id))
 }
@@ -353,7 +560,12 @@ pub async fn move_relationship_to_project(
 #[tauri::command]
 pub async fn delete_relationship(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.delete_relationship(RelationshipId(id))
 }
@@ -367,9 +579,30 @@ pub async fn create_blacklist_entry(
     term: String,
 ) -> AppResult<BlacklistEntry> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.create_blacklist_entry(ProjectId(project_id), book_id.map(BookId), term)
+}
+
+#[tauri::command]
+pub async fn get_blacklist_entry(
+    state: State<'_, SqliteDatabase>,
+    id: String,
+) -> AppResult<BlacklistEntry> {
+    let service = LoreService::new(
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+    );
+    service.get_blacklist_entry(BlacklistEntryId(id))
 }
 
 #[tauri::command]
@@ -378,7 +611,12 @@ pub async fn list_blacklist_entries_by_book(
     book_id: String,
 ) -> AppResult<Vec<BlacklistEntry>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_blacklist_entries_by_book(BookId(book_id))
 }
@@ -389,7 +627,12 @@ pub async fn list_global_blacklist_entries(
     project_id: String,
 ) -> AppResult<Vec<BlacklistEntry>> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.list_global_blacklist_entries(ProjectId(project_id))
 }
@@ -400,7 +643,12 @@ pub async fn update_blacklist_entry(
     entry: BlacklistEntry,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.update_blacklist_entry(entry)
 }
@@ -412,12 +660,14 @@ pub async fn move_blacklist_entry_to_book(
     book_id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
-    service.move_blacklist_entry_to_book(
-        BlacklistEntryId(id),
-        BookId(book_id),
-    )
+    service.move_blacklist_entry_to_book(BlacklistEntryId(id), BookId(book_id))
 }
 
 #[tauri::command]
@@ -426,7 +676,12 @@ pub async fn move_blacklist_entry_to_project(
     id: String,
 ) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.move_blacklist_entry_to_project(BlacklistEntryId(id))
 }
@@ -434,7 +689,12 @@ pub async fn move_blacklist_entry_to_project(
 #[tauri::command]
 pub async fn delete_blacklist_entry(state: State<'_, SqliteDatabase>, id: String) -> AppResult<()> {
     let service = LoreService::new(
-        state.inner(), state.inner(), state.inner(), state.inner(), state.inner(), state.inner()
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
+        state.inner(),
     );
     service.delete_blacklist_entry(BlacklistEntryId(id))
 }

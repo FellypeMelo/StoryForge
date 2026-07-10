@@ -10,6 +10,7 @@ interface ProjectSelectorProps {
 export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
@@ -21,10 +22,12 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
   const loadProjects = async () => {
     try {
       setIsLoading(true);
+      setLoadError(null);
       const data = await invoke<Project[]>("list_projects");
       setProjects(data);
     } catch (err) {
       console.error("Failed to load projects", err);
+      setLoadError("Não foi possível carregar seus universos.");
     } finally {
       setIsLoading(false);
     }
@@ -43,8 +46,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
       setIsCreating(false);
       setNewProjectName("");
       setNewProjectDescription("");
-      // @ts-ignore - Tauri returns raw ID string
-      onSelectProject(project.id);
+      onSelectProject(typeof project.id === "string" ? project.id : String(project.id));
     } catch (err) {
       console.error("Failed to create project", err);
     }
@@ -52,6 +54,26 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
 
   if (isLoading) {
     return <div className="p-8 flex justify-center text-text-muted">Carregando universos...</div>;
+  }
+
+  if (loadError) {
+    return (
+      <div className="max-w-4xl mx-auto p-8">
+        <div
+          role="alert"
+          className="text-center py-20 border border-border-subtle border-dashed rounded-xl space-y-4"
+        >
+          <p className="text-danger font-sans">{loadError}</p>
+          <button
+            type="button"
+            onClick={loadProjects}
+            className="px-4 py-2 rounded-lg border border-border-default text-sm font-medium text-text-main hover:bg-bg-hover transition-colors"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -65,7 +87,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
         </div>
         <button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded font-medium hover:opacity-90 transition-all"
+          className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-all"
         >
           <Plus size={18} />
           <span>Novo Universo</span>
@@ -73,7 +95,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
       </header>
 
       {isCreating && (
-        <div className="bg-bg-hover border border-border-subtle p-6 rounded-lg space-y-4">
+        <div className="bg-bg-hover border border-border-subtle p-6 rounded-xl space-y-4">
           <h2 className="text-xl font-serif text-text-main">Criar Novo Universo</h2>
           <form onSubmit={handleCreateProject} className="space-y-4">
             <div>
@@ -86,7 +108,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 placeholder="Ex: As Crônicas de Gelo e Fogo"
-                className="w-full bg-bg-main border border-border-default rounded px-3 py-2 text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-text-muted transition-colors"
+                className="w-full bg-bg-main border border-border-default rounded-lg px-3 py-2 text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-text-muted transition-colors"
                 autoFocus
               />
             </div>
@@ -100,21 +122,21 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
                 value={newProjectDescription}
                 onChange={(e) => setNewProjectDescription(e.target.value)}
                 placeholder="Ex: Um mundo de fantasia focado em intrigas políticas."
-                className="w-full bg-bg-main border border-border-default rounded px-3 py-2 text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-text-muted transition-colors"
+                className="w-full bg-bg-main border border-border-default rounded-lg px-3 py-2 text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-text-muted transition-colors"
               />
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="px-4 py-2 rounded text-text-muted hover:text-text-main transition-colors text-sm font-medium"
+                className="px-4 py-2 rounded-lg text-text-muted hover:text-text-main transition-colors text-sm font-medium"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={!newProjectName.trim()}
-                className="bg-text-main text-bg-base px-4 py-2 rounded font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-text-main text-bg-base px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Criar
               </button>
@@ -124,7 +146,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
       )}
 
       {projects.length === 0 && !isCreating ? (
-        <div className="text-center py-20 border border-border-subtle border-dashed rounded-lg">
+        <div className="text-center py-20 border border-border-subtle border-dashed rounded-xl">
           <BookIcon className="mx-auto h-12 w-12 text-text-muted opacity-50 mb-4" />
           <h3 className="text-xl font-serif text-text-main mb-2">Nenhum Universo Encontrado</h3>
           <p className="text-text-muted max-w-md mx-auto">
@@ -138,7 +160,7 @@ export function ProjectSelector({ onSelectProject }: ProjectSelectorProps) {
             <button
               key={project.id as any}
               onClick={() => onSelectProject(project.id as any)}
-              className="text-left group flex flex-col h-full bg-bg-main border border-border-subtle rounded-lg p-6 hover:border-text-muted hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-text-muted"
+              className="text-left group flex flex-col h-full bg-bg-main border border-border-subtle rounded-xl p-6 hover:border-text-muted hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-text-muted"
             >
               <div className="mb-4 text-text-muted group-hover:text-text-main transition-colors">
                 <BookIcon size={24} />

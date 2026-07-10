@@ -1,35 +1,66 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/lora";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/jetbrains-mono";
 
 @theme {
-  --font-serif: "Merriweather", "Lora", "Crimson Text", serif;
-  --font-sans: "Inter", "SF Pro Display", sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-serif: "Lora Variable", "Lora", Georgia, serif;
+  --font-sans: "Geist Variable", "Geist", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
 
   --color-bg-base: var(--sf-bg);
   --color-bg-main: var(--sf-bg);
+  --color-bg-surface: var(--sf-surface);
   --color-text-main: var(--sf-text-main);
   --color-text-muted: var(--sf-text-muted);
   --color-border-subtle: var(--sf-border);
-  --color-border-default: var(--sf-text-muted);
+  --color-border-default: var(--sf-border-strong);
   --color-bg-hover: var(--sf-hover);
+  --color-accent: var(--sf-accent);
+  --color-accent-hover: var(--sf-accent-hover);
+  --color-on-accent: var(--sf-on-accent);
+  --color-accent-soft: var(--sf-accent-soft);
+  --color-success: var(--sf-success);
+  --color-danger: var(--sf-danger);
+
+  /* Radius rule: controls (buttons/inputs) = radius-lg, surfaces (cards/modals) = radius-xl */
+  --radius-control: 0.5rem;
+  --radius-surface: 0.75rem;
 }
 
 @layer base {
   :root {
-    --sf-bg: #f9f9fb;
-    --sf-text-main: #2a2a2a;
-    --sf-text-muted: rgba(42, 42, 42, 0.4);
-    --sf-border: rgba(0, 0, 0, 0.04);
-    --sf-hover: rgba(0, 0, 0, 0.03);
+    --sf-bg: #fafaf9;
+    --sf-surface: #ffffff;
+    --sf-text-main: #1c1917;
+    --sf-text-muted: #57534e;
+    --sf-border: rgba(28, 25, 23, 0.08);
+    --sf-border-strong: rgba(28, 25, 23, 0.22);
+    --sf-hover: rgba(28, 25, 23, 0.04);
+    --sf-accent: #b45309;
+    --sf-accent-hover: #92400e;
+    --sf-on-accent: #ffffff;
+    --sf-accent-soft: rgba(180, 83, 9, 0.09);
+    --sf-success: #047857;
+    --sf-danger: #b91c1c;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --sf-bg: #000000;
-      --sf-text-main: #eaeaea;
-      --sf-text-muted: rgba(234, 234, 234, 0.3);
-      --sf-border: rgba(255, 255, 255, 0.06);
-      --sf-hover: rgba(255, 255, 255, 0.05);
+      --sf-bg: #0c0a09;
+      --sf-surface: #1c1917;
+      --sf-text-main: #e7e5e4;
+      --sf-text-muted: #a8a29e;
+      --sf-border: rgba(231, 229, 228, 0.09);
+      --sf-border-strong: rgba(231, 229, 228, 0.28);
+      --sf-hover: rgba(231, 229, 228, 0.05);
+      --sf-accent: #f59e0b;
+      --sf-accent-hover: #fbbf24;
+      --sf-on-accent: #1c1917;
+      --sf-accent-soft: rgba(245, 158, 11, 0.12);
+      --sf-success: #34d399;
+      --sf-danger: #f87171;
     }
   }
 
@@ -42,7 +73,6 @@
       color 0.3s ease;
   }
 
-  /* Ultra-Minimalist Custom Scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -51,7 +81,7 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--sf-border);
+    background: var(--sf-border-strong);
     border-radius: 10px;
     transition: background 0.3s ease;
   }
@@ -59,10 +89,19 @@
     background: var(--sf-text-muted);
   }
 
-  /* Monochromatic Accessibility Focus Rings */
   *:focus-visible {
-    outline: 2px solid var(--sf-text-muted) !important;
-    outline-offset: 4px !important;
+    outline: 2px solid var(--sf-accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -70,7 +109,7 @@
   @keyframes scale-fade-in {
     from {
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.97);
     }
     to {
       opacity: 1;
@@ -79,6 +118,19 @@
   }
 
   .animate-scale-fade {
-    animation: scale-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: scale-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fade-in-simple {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in-simple 0.3s ease forwards;
   }
 }

@@ -56,11 +56,7 @@ describe("CharacterForm Full Test", () => {
     expect(tellInputs.length).toBe(4);
 
     // Try to remove a tell (minimum 3 check)
-    const removeTellButtons = screen.getAllByRole("button").filter(b => b.querySelector("svg.lucide-x") && b.getAttribute("disabled") === null);
-    // Wait, the X buttons for tells use <X size={8} />.
-    // Let's find them by their class or container.
-    // Actually, I can just click the 4th one.
-    fireEvent.click(screen.getAllByRole("button").find(b => b.classList.contains("bg-red-500"))!);
+    fireEvent.click(screen.getAllByRole("button").find(b => b.classList.contains("bg-danger"))!);
     expect(screen.getAllByPlaceholderText(/Tell #/i).length).toBe(3);
   });
 

@@ -1,10 +1,19 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { App } from "./App";
+import { ToastProvider } from "./ui/components/shared/Toast";
 import { mockDb } from "./test/mock-db";
 import { getStandardSeed, STANDARD_PROJECT_ID, STANDARD_BOOK_ID } from "./test/seeds/standard-seed";
 
 describe("App Integration", () => {
+  // Espelha o main.tsx, que monta o ToastProvider na raiz do app
+  const renderApp = () =>
+    render(
+      <ToastProvider>
+        <App />
+      </ToastProvider>,
+    );
+
   beforeEach(() => {
     mockDb.reset();
     localStorage.clear();
@@ -13,7 +22,7 @@ describe("App Integration", () => {
 
   it("should navigate through the entire flow: Project -> Book -> Dashboard", async () => {
     mockDb.seed(getStandardSeed());
-    render(<App />);
+    renderApp();
 
     // 1. Project Selection
     await waitFor(() => {
@@ -45,7 +54,7 @@ describe("App Integration", () => {
     localStorage.setItem("storyforge_last_project", STANDARD_PROJECT_ID);
     localStorage.setItem("storyforge_last_book", STANDARD_BOOK_ID);
 
-    render(<App />);
+    renderApp();
 
     await waitFor(() => {
       expect(screen.getByText(/Bem-vindo à Forja/i)).toBeInTheDocument();
@@ -57,10 +66,10 @@ describe("App Integration", () => {
     localStorage.setItem("storyforge_last_project", STANDARD_PROJECT_ID);
     localStorage.setItem("storyforge_last_book", STANDARD_BOOK_ID);
 
-    render(<App />);
+    renderApp();
 
     // Navigate to Codex (target sidebar button specifically)
-    const codexLink = await screen.findByRole("button", { name: /^Codex da História$/i });
+    const codexLink = await screen.findByRole("button", { name: /^Codex$/i });
     fireEvent.click(codexLink);
 
     await waitFor(() => {
@@ -83,7 +92,7 @@ describe("App Integration", () => {
     localStorage.setItem("storyforge_last_project", STANDARD_PROJECT_ID);
     localStorage.setItem("storyforge_last_book", STANDARD_BOOK_ID);
 
-    render(<App />);
+    renderApp();
 
     await waitFor(() => {
       expect(screen.getByText(/Trocar Universo/i)).toBeInTheDocument();

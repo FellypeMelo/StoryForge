@@ -1,8 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ContextInjector } from "./context-injector";
-import { SearchPort } from "../../domain/ports/search-port";
+import { SearchPort, EntityType, SearchResult } from "../../domain/ports/search-port";
 import { VectorSearchPort } from "../../domain/ports/vector-search-port";
 import { ProjectId } from "../../domain/value-objects/project-id";
+import { Result, DomainError } from "../../domain/result";
+
+function ok(results: SearchResult[]): Result<SearchResult[], DomainError> {
+  return { success: true, data: results };
+}
+
+function result(entityId: string, snippet: string): SearchResult {
+  return { entityId, type: EntityType.Character, snippet, score: 1 };
+}
 
 describe("ContextInjector", () => {
   let mockSearchPort: SearchPort;
@@ -10,38 +19,56 @@ describe("ContextInjector", () => {
   let injector: ContextInjector;
 
   beforeEach(() => {
-    mockSearchPort = { search: vi.fn() } as any;
-    mockVectorPort = { findSimilar: vi.fn() } as any;
+    mockSearchPort = { search: vi.fn() };
+    mockVectorPort = { findSimilar: vi.fn() };
     injector = new ContextInjector(mockSearchPort, mockVectorPort);
   });
 
-  it("should inject context based on entities found in text", async () => {
+  it("injeta contexto com base nas entidades encontradas no texto", async () => {
     const projectId = ProjectId.generate();
     const text = "Aria went to the Whispering Woods.";
 
-    // Mock finding Aria
-    (mockSearchPort.search as any).mockImplementation(async (query: string) => {
-      if (query === "Aria") {
-        return { 
-          results: [{ text: "Aria is a brave hunter.", score: 1 }] 
-        };
-      }
-      if (query === "Whispering Woods") {
-        return { 
-          results: [{ text: "The Whispering Woods are full of ghosts.", score: 1 }] 
-        };
-      }
-      return { results: [] };
-    });
+    (mockSearchPort.search as ReturnType<typeof vi.fn>).mockImplementation(
+      async (_p: ProjectId, query: string) => {
+        if (query === "Aria") return ok([result("c1", "Aria is a brave hunter.")]);
+        if (query === "Whispering Woods")
+          return ok([result("l1", "The Whispering Woods are full of ghosts.")]);
+        return ok([]);
+      },
+    );
 
-    const result = await injector.inject(projectId, text);
+    const output = await injector.inject(projectId, text);
 
-    expect(result).toContain("Aria is a brave hunter.");
-    expect(result).toContain("The Whispering Woods are full of ghosts.");
+    expect(output).toContain("Aria is a brave hunter.");
+    expect(output).toContain("The Whispering Woods are full of ghosts.");
   });
 
-  it("should respect token budget by limiting results", async () => {
-     // This test would check if it truncates or limits the number of RAG snippets
-     // For now, let's just implement the basic logic
+  it("retorna vazio quando nenhuma entidade tem lore", async () => {
+    const projectId = ProjectId.generate();
+    (mockSearchPort.search as ReturnType<typeof vi.fn>).mockResolvedValue(ok([]));
+
+    const output = await injector.inject(projectId, "Nothing Relevant Here");
+    expect(output).toBe("");
+  });
+
+  it("ignora falhas de busca sem lançar", async () => {
+    const projectId = ProjectId.generate();
+    (mockSearchPort.search as ReturnType<typeof vi.fn>).mockResolvedValue({
+      success: false,
+      error: new DomainError("busca falhou"),
+    });
+
+    const output = await injector.inject(projectId, "Aria walks.");
+    expect(output).toBe("");
+  });
+
+  it("passa o projectId para a busca (escopo correto)", async () => {
+    const projectId = ProjectId.generate();
+    const searchSpy = mockSearchPort.search as ReturnType<typeof vi.fn>;
+    searchSpy.mockResolvedValue(ok([]));
+
+    await injector.inject(projectId, "Aria walks.");
+
+    expect(searchSpy).toHaveBeenCalledWith(projectId, "Aria");
   });
 });

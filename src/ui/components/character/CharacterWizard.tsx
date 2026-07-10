@@ -9,12 +9,22 @@ interface CharacterWizardProps {
   onCancel: () => void;
 }
 
+function CharacterCounter({ current, limit }: { current: number; limit: number }) {
+  return (
+    <div
+      className={`text-[10px] font-mono mt-1 text-right ${current > limit ? "text-danger font-bold" : "text-text-muted"}`}
+    >
+      {current} / {limit}
+    </div>
+  );
+}
+
 export function CharacterWizard({ character, onSave, onCancel }: CharacterWizardProps) {
   const DRAFT_KEY = `character_draft_${character.id.value}`;
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<CharacterProps>(character.toProps());
-  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; tells?: string }>({});
   const [hoveredTrait, setHoveredTrait] = useState<string | null>(null);
 
   // Parse JSON strings from formData for UI
@@ -94,8 +104,12 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
   };
   const removeVerbalTic = (index: number) => setVerbalTics(prev => prev.filter((_, i) => i !== index));
 
-  const addPhysicalTell = () => setPhysicalTells(prev => [...prev, ""]);
+  const addPhysicalTell = () => {
+    setErrors((prev) => ({ ...prev, tells: undefined }));
+    setPhysicalTells(prev => [...prev, ""]);
+  };
   const updatePhysicalTell = (index: number, value: string) => {
+    setErrors((prev) => ({ ...prev, tells: undefined }));
     const newTells = [...physicalTells];
     newTells[index] = value;
     setPhysicalTells(newTells);
@@ -136,14 +150,6 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
     },
   ];
 
-  const CharacterCounter = ({ current, limit }: { current: number; limit: number }) => (
-    <div
-      className={`text-[10px] font-mono mt-1 text-right ${current > limit ? "text-red-500 font-bold" : "text-text-muted"}`}
-    >
-      {current} / {limit}
-    </div>
-  );
-
   const handleFinalSave = () => {
     if (!formData.name.trim()) {
       setErrors({ name: "Nome é obrigatório" });
@@ -152,7 +158,10 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
     }
 
     if (physicalTells.filter(t => t.trim()).length < 3) {
-      alert("É necessário fornecer pelo menos 3 traços físicos (Physical Tells).");
+      setErrors((prev) => ({
+        ...prev,
+        tells: "É necessário fornecer pelo menos 3 traços físicos (Physical Tells).",
+      }));
       setStep(4);
       return;
     }
@@ -168,6 +177,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
         <div className="flex items-center gap-4">
           <button
             onClick={onCancel}
+            aria-label="Fechar"
             className="p-2 hover:bg-bg-hover rounded-full transition-colors cursor-pointer text-text-muted"
           >
             <X size={20} />
@@ -183,7 +193,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
         {step === 4 && (
           <button
             onClick={handleFinalSave}
-            className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-md shadow-text-main/10"
+            className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-md shadow-text-main/10"
           >
             <Save size={16} />
             Finalizar Ficha
@@ -212,10 +222,10 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                   value={formData.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full bg-bg-hover border ${errors.name ? "border-red-500" : "border-border-subtle"} p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors`}
+                  className={`w-full bg-bg-hover border ${errors.name ? "border-danger" : "border-border-subtle"} p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors`}
                   placeholder="Nome do Personagem"
                 />
-                {errors.name && <p className="text-[10px] text-red-500 font-sans">{errors.name}</p>}
+                {errors.name && <p className="text-[10px] text-danger font-sans">{errors.name}</p>}
               </div>
               <div className="space-y-2">
                 <label htmlFor="age" className="text-xs font-medium text-text-muted">
@@ -227,7 +237,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                   type="number"
                   value={formData.age}
                   onChange={handleChange}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                 />
               </div>
               <div className="md:col-span-3 space-y-2">
@@ -240,7 +250,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                   type="text"
                   value={formData.occupation}
                   onChange={handleChange}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                   placeholder="ex. Herói Relutante, Arquivista, Antigo Espião"
                 />
               </div>
@@ -257,7 +267,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                   value={formData.physical_description}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                   placeholder="Traços visuais, estilo, presença..."
                 />
                 <CharacterCounter
@@ -277,7 +287,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.goal}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="O que eles querem agora?"
                   />
                 </div>
@@ -291,7 +301,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.motivation}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="Por que eles querem isso?"
                   />
                 </div>
@@ -305,7 +315,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     value={formData.internal_conflict}
                     onChange={handleChange}
                     rows={2}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                     placeholder="A força interna que os impede de avançar..."
                   />
                 </div>
@@ -328,7 +338,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                 <OceanRadarChart scores={formData.ocean_scores} size={280} />
                 {hoveredTrait && (
                   <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                    <div className="bg-text-main text-bg-base text-[10px] p-3 rounded shadow-xl max-w-[150px] animate-in zoom-in-95 duration-200 text-center font-sans leading-relaxed">
+                    <div className="bg-text-main text-bg-base text-[10px] p-3 rounded-lg shadow-xl max-w-[150px] animate-in zoom-in-95 duration-200 text-center font-sans leading-relaxed">
                       {oceanTraits.find((t) => t.key === hoveredTrait)?.description}
                     </div>
                   </div>
@@ -352,7 +362,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-tighter text-text-muted px-1.5 py-0.5 bg-bg-base rounded border border-border-subtle">
+                        <span className="text-[10px] font-bold uppercase tracking-tighter text-text-muted px-1.5 py-0.5 bg-bg-base rounded-full border border-border-subtle">
                           {getSemanticLabel(formData.ocean_scores[trait.key])}
                         </span>
                         <span className="text-xs font-mono text-text-muted">
@@ -392,7 +402,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     value={formData.hauge_wound}
                     onChange={handleChange}
                     rows={2}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                     placeholder="O trauma do passado..."
                   />
                 </div>
@@ -404,7 +414,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     value={formData.hauge_fear}
                     onChange={handleChange}
                     rows={2}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors resize-none"
                     placeholder="O que os impede de agir..."
                   />
                 </div>
@@ -417,7 +427,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                   type="text"
                   value={formData.hauge_belief}
                   onChange={handleChange}
-                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                  className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                   placeholder="A mentira em que eles acreditam..."
                 />
               </div>
@@ -430,7 +440,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.hauge_identity}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="Quem eles fingem ser..."
                   />
                 </div>
@@ -442,7 +452,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.hauge_essence}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="Quem eles realmente são..."
                   />
                 </div>
@@ -468,7 +478,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.voice_sentence_length}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="ex. Curta e grossa, Prolixa..."
                   />
                 </div>
@@ -480,7 +490,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.voice_formality}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="ex. Arcaica, Gírias de rua..."
                   />
                 </div>
@@ -492,7 +502,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                     type="text"
                     value={formData.voice_evasion_mechanism}
                     onChange={handleChange}
-                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans text-text-main focus:border-text-main outline-none transition-colors"
+                    className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans text-text-main focus:border-text-main outline-none transition-colors"
                     placeholder="ex. Muda de assunto, Sarcasmo..."
                   />
                 </div>
@@ -501,7 +511,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <label className="text-xs font-medium text-text-muted">Tiques Verbais</label>
-                  <button onClick={addVerbalTic} className="p-1 hover:bg-bg-hover rounded text-text-main transition-colors">
+                  <button onClick={addVerbalTic} aria-label="Adicionar tique verbal" className="p-1 hover:bg-bg-hover rounded-lg text-text-main transition-colors">
                     <Plus size={14} />
                   </button>
                 </div>
@@ -511,10 +521,10 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
                       <input
                         value={tic}
                         onChange={(e) => updateVerbalTic(i, e.target.value)}
-                        className="flex-1 bg-bg-hover border border-border-subtle p-2 rounded text-sm outline-none focus:border-text-main"
+                        className="flex-1 bg-bg-hover border border-border-subtle p-2 rounded-lg text-sm outline-none focus:border-text-main"
                         placeholder="ex. 'Sabe?', 'Tipo...'"
                       />
-                      <button onClick={() => removeVerbalTic(i)} className="p-2 text-text-muted hover:text-red-500 transition-colors">
+                      <button onClick={() => removeVerbalTic(i)} aria-label="Remover tique verbal" className="p-2 text-text-muted hover:text-danger transition-colors">
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -525,20 +535,23 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
               <div className="space-y-4 pt-4 border-t border-border-subtle">
                 <div className="flex justify-between items-center">
                   <label className="text-xs font-medium text-text-muted">Physical Tells (Mínimo 3)</label>
-                  <button onClick={addPhysicalTell} className="p-1 hover:bg-bg-hover rounded text-text-main transition-colors">
+                  <button onClick={addPhysicalTell} aria-label="Adicionar traço físico" className="p-1 hover:bg-bg-hover rounded-lg text-text-main transition-colors">
                     <Plus size={14} />
                   </button>
                 </div>
+                {errors.tells && (
+                  <p role="alert" className="text-[10px] text-danger font-sans">{errors.tells}</p>
+                )}
                 <div className="grid grid-cols-1 gap-2">
                   {physicalTells.map((tell, i) => (
                     <div key={i} className="flex gap-2">
                       <input
                         value={tell}
                         onChange={(e) => updatePhysicalTell(i, e.target.value)}
-                        className="flex-1 bg-bg-hover border border-border-subtle p-2 rounded text-sm outline-none focus:border-text-main"
+                        className="flex-1 bg-bg-hover border border-border-subtle p-2 rounded-lg text-sm outline-none focus:border-text-main"
                         placeholder="ex. Evita contato visual, Batuca os dedos..."
                       />
-                      <button onClick={() => removePhysicalTell(i)} className="p-2 text-text-muted hover:text-red-500 transition-colors">
+                      <button onClick={() => removePhysicalTell(i)} aria-label="Remover traço físico" className="p-2 text-text-muted hover:text-danger transition-colors">
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -555,7 +568,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
         <button
           onClick={prevStep}
           disabled={step === 1}
-          className={`flex items-center gap-2 px-4 py-2 rounded font-sans text-sm transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-sans text-sm transition-all ${
             step === 1
               ? "text-text-muted/30 cursor-not-allowed"
               : "text-text-main hover:bg-bg-hover cursor-pointer"
@@ -568,7 +581,7 @@ export function CharacterWizard({ character, onSave, onCancel }: CharacterWizard
         <button
           onClick={nextStep}
           disabled={step === 4}
-          className={`flex items-center gap-2 px-6 py-2 rounded font-sans font-bold text-sm transition-all ${
+          className={`flex items-center gap-2 px-6 py-2 rounded-lg font-sans font-bold text-sm transition-all ${
             step === 4
               ? "text-text-muted/30 cursor-not-allowed"
               : "bg-text-main text-bg-base hover:opacity-90 cursor-pointer shadow-md shadow-text-main/10"

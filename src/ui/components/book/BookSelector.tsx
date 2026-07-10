@@ -14,6 +14,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
   const [books, setBooks] = useState<Book[]>([]);
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [newBookTitle, setNewBookTitle] = useState("");
 
@@ -26,15 +27,18 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
   const loadData = async () => {
     try {
       setIsLoading(true);
+      setLoadError(null);
       // Fetch both the project details and its books
+      // (get_project is registered in src-tauri/src/lib.rs)
       const [bookData, projectData] = await Promise.all([
         invoke<Book[]>("list_books", { projectId }),
-        invoke<Project>("get_project", { id: projectId }), // Assuming this command exists, if not we'll just handle undefined
+        invoke<Project>("get_project", { id: projectId }),
       ]);
       setBooks(bookData);
       setProject(projectData);
     } catch (err) {
       console.error("Failed to load project/books", err);
+      setLoadError("Não foi possível carregar os livros deste universo.");
     } finally {
       setIsLoading(false);
     }
@@ -52,8 +56,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
       setBooks([...books, book]);
       setIsCreating(false);
       setNewBookTitle("");
-      // @ts-ignore - Tauri returns raw ID string
-      onSelectBook(book.id);
+      onSelectBook(typeof book.id === "string" ? book.id : String(book.id));
     } catch (err) {
       console.error("Failed to create book", err);
     }
@@ -61,6 +64,33 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
 
   if (isLoading) {
     return <div className="p-8 flex justify-center text-text-muted">Carregando livros...</div>;
+  }
+
+  if (loadError) {
+    return (
+      <div className="max-w-4xl mx-auto p-8 space-y-8">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-sm font-medium text-text-muted hover:text-text-main transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>Voltar aos Universos</span>
+        </button>
+        <div
+          role="alert"
+          className="text-center py-20 border border-border-subtle border-dashed rounded-xl space-y-4"
+        >
+          <p className="text-danger font-sans">{loadError}</p>
+          <button
+            type="button"
+            onClick={loadData}
+            className="px-4 py-2 rounded-lg border border-border-default text-sm font-medium text-text-main hover:bg-bg-hover transition-colors"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -87,7 +117,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
         </div>
         <button
           onClick={() => setIsCreating(true)}
-          className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded font-medium hover:opacity-90 transition-all"
+          className="flex items-center gap-2 bg-text-main text-bg-base px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-all"
         >
           <Plus size={18} />
           <span>Novo Livro</span>
@@ -95,7 +125,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
       </header>
 
       {isCreating && (
-        <div className="bg-bg-hover border border-border-subtle p-6 rounded-lg space-y-4">
+        <div className="bg-bg-hover border border-border-subtle p-6 rounded-xl space-y-4">
           <h2 className="text-xl font-serif text-text-main">Criar Novo Livro</h2>
           <form onSubmit={handleCreateBook} className="space-y-4">
             <div>
@@ -108,7 +138,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
                 value={newBookTitle}
                 onChange={(e) => setNewBookTitle(e.target.value)}
                 placeholder="Ex: A Sociedade do Anel"
-                className="w-full bg-bg-main border border-border-default rounded px-3 py-2 text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-text-muted transition-colors"
+                className="w-full bg-bg-main border border-border-default rounded-lg px-3 py-2 text-text-main placeholder:text-text-muted/50 focus:outline-none focus:border-text-muted transition-colors"
                 autoFocus
               />
             </div>
@@ -116,14 +146,14 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
               <button
                 type="button"
                 onClick={() => setIsCreating(false)}
-                className="px-4 py-2 rounded text-text-muted hover:text-text-main transition-colors text-sm font-medium"
+                className="px-4 py-2 rounded-lg text-text-muted hover:text-text-main transition-colors text-sm font-medium"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={!newBookTitle.trim()}
-                className="bg-text-main text-bg-base px-4 py-2 rounded font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-text-main text-bg-base px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Criar
               </button>
@@ -133,7 +163,7 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
       )}
 
       {books.length === 0 && !isCreating ? (
-        <div className="text-center py-20 border border-border-subtle border-dashed rounded-lg">
+        <div className="text-center py-20 border border-border-subtle border-dashed rounded-xl">
           <BookOpen className="mx-auto h-12 w-12 text-text-muted opacity-50 mb-4" />
           <h3 className="text-xl font-serif text-text-main mb-2">Nenhum Livro Registrado</h3>
           <p className="text-text-muted max-w-md mx-auto">
@@ -147,13 +177,13 @@ export function BookSelector({ projectId, onSelectBook, onBack }: BookSelectorPr
             <button
               key={book.id as any}
               onClick={() => onSelectBook(book.id as any)}
-              className="text-left group flex flex-col h-full bg-bg-main border border-border-subtle rounded-lg p-6 hover:border-text-muted hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-text-muted"
+              className="text-left group flex flex-col h-full bg-bg-main border border-border-subtle rounded-xl p-6 hover:border-text-muted hover:shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-text-muted"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="text-text-muted group-hover:text-text-main transition-colors">
                   <BookOpen size={24} />
                 </div>
-                <span className="text-xs px-2 py-1 rounded bg-bg-hover text-text-muted font-mono">
+                <span className="text-xs px-2 py-1 rounded-full bg-bg-hover text-text-muted font-mono">
                   {book.genre || "Geral"}
                 </span>
               </div>

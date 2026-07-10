@@ -1,7 +1,7 @@
+use crate::domain::error::AppError;
+use crate::domain::result::AppResult;
 use crate::features::projects::domain::*;
 use crate::infrastructure::sqlite::SqliteDatabase;
-use crate::domain::result::AppResult;
-use crate::domain::error::AppError;
 use rusqlite::{params, Row};
 
 impl ProjectRepository for SqliteDatabase {

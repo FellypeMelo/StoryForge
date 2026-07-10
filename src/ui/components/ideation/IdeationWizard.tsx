@@ -2,11 +2,14 @@ import { useState } from "react";
 import { ClicheExtractionStep } from "./ClicheExtractionStep";
 import { PremiseGenerationStep } from "./PremiseGenerationStep";
 import { ValidationStep } from "./ValidationStep";
+import { LlmPort } from "../../../domain/ideation/ports/llm-port";
+import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 
 interface IdeationWizardProps {
   projectId: string;
   bookId: string;
   onBack: () => void;
+  llmPort?: LlmPort;
 }
 
 export type IdeationState = {
@@ -26,7 +29,12 @@ export type IdeationState = {
   } | null;
 };
 
-export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProps) {
+export function IdeationWizard({
+  projectId,
+  bookId,
+  onBack,
+  llmPort = new DummyLlmPort(),
+}: IdeationWizardProps) {
   const [step, setStep] = useState(1);
   const [state, setState] = useState<IdeationState>({
     genre: "",
@@ -45,7 +53,7 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
   };
 
   return (
-    <div className="space-y-8 py-8 animate-in fade-in duration-500">
+    <div className="space-y-8 py-8 animate-fade-in">
       <header className="space-y-4">
         <div className="flex justify-between items-center">
           <h1 className="text-4xl font-serif text-text-main tracking-tight">
@@ -53,7 +61,7 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
           </h1>
           <button
             onClick={onBack}
-            className="px-4 py-2 text-sm border border-border-default rounded text-text-muted hover:text-text-main transition-colors"
+            className="px-4 py-2 text-sm border border-border-default rounded-lg text-text-muted hover:text-text-main hover:bg-bg-hover transition-colors cursor-pointer active:scale-[0.98]"
           >
             Sair
           </button>
@@ -62,19 +70,20 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-text-main" : "bg-border-subtle"}`}
+              className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-accent" : "bg-border-subtle"}`}
             />
           ))}
         </div>
       </header>
 
-      <div className="min-h-[500px] border border-border-subtle rounded-lg p-8">
+      <div className="min-h-[500px] border border-border-subtle rounded-xl p-8">
         {step === 1 && (
           <ClicheExtractionStep
             state={state}
             updateState={updateState}
             onNext={nextStep}
             projectId={projectId}
+            llmPort={llmPort}
           />
         )}
         {step === 2 && (
@@ -83,6 +92,7 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
             updateState={updateState}
             onNext={nextStep}
             onBack={prevStep}
+            llmPort={llmPort}
           />
         )}
         {step === 3 && (
@@ -93,8 +103,9 @@ export function IdeationWizard({ projectId, bookId, onBack }: IdeationWizardProp
             onFinish={onBack}
             projectId={projectId}
             bookId={bookId}
+            llmPort={llmPort}
           />
-        )}{" "}
+        )}
       </div>
     </div>
   );
