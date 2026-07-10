@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { CodexDashboard } from "../CodexDashboard";
+import { ToastProvider } from "../../shared/Toast";
 import { mockDb } from "../../../../test/mock-db";
 import { getStandardSeed, STANDARD_PROJECT_ID, STANDARD_BOOK_ID } from "../../../../test/seeds/standard-seed";
 
@@ -10,6 +11,13 @@ describe("CodexDashboard Integration", () => {
     bookId: STANDARD_BOOK_ID,
     onBack: () => {},
   };
+
+  const renderDashboard = () =>
+    render(
+      <ToastProvider>
+        <CodexDashboard {...mockProps} />
+      </ToastProvider>,
+    );
 
   beforeEach(() => {
     mockDb.reset();
@@ -23,7 +31,7 @@ describe("CodexDashboard Integration", () => {
   };
 
   it("should show seeded lore items and allow adding a new one without duplication", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     // 1. Check existing character from seed
@@ -34,7 +42,7 @@ describe("CodexDashboard Integration", () => {
     expect(await screen.findByText("Ficha Completa")).toBeInTheDocument();
     expect(screen.getByText("Líder nato")).toBeInTheDocument();
     expect(screen.getByText("Sarcasmo")).toBeInTheDocument();
-    
+
     // Go back to list
     fireEvent.click(screen.getByRole("button", { name: /Voltar/i }));
     await waitForNotLoading();
@@ -67,7 +75,7 @@ describe("CodexDashboard Integration", () => {
   }, 30000);
 
   it("should correctly switch between tabs and load corresponding lore", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     // Rules
@@ -92,7 +100,7 @@ describe("CodexDashboard Integration", () => {
   }, 30000);
 
   it("should filter results based on search query", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     const searchInput = screen.getByPlaceholderText(/Pesquisar sabedoria/i);
@@ -104,7 +112,7 @@ describe("CodexDashboard Integration", () => {
   }, 30000);
 
   it("should handle character move and delete", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     // 1. View character
@@ -113,7 +121,7 @@ describe("CodexDashboard Integration", () => {
 
     // 2. Test Move to Project (removing from book scope)
     fireEvent.click(screen.getByRole("button", { name: /^Mover para Universo$/i }));
-    
+
     await waitFor(() => {
       expect(screen.queryByText("Alaric")).not.toBeInTheDocument();
     }, { timeout: 10000 });
@@ -127,10 +135,11 @@ describe("CodexDashboard Integration", () => {
       expect(screen.getAllByText("Universo").some(el => el.tagName === "SPAN")).toBe(true);
     }, { timeout: 10000 });
 
-    // 4. Delete character
+    // 4. Delete character (agora requer confirmação)
     fireEvent.click(screen.getByText("Alaric"));
-    const deleteBtn = (await screen.findAllByRole("button")).find(b => b.querySelector("svg.lucide-trash2"));
-    if (deleteBtn) fireEvent.click(deleteBtn);
+    const deleteBtn = await screen.findByRole("button", { name: /Excluir personagem/i });
+    fireEvent.click(deleteBtn);
+    fireEvent.click(await screen.findByRole("button", { name: /^Excluir$/i }));
 
     await waitFor(() => {
       expect(screen.queryByText("Alaric")).not.toBeInTheDocument();
@@ -138,7 +147,7 @@ describe("CodexDashboard Integration", () => {
   }, 30000);
 
   it("should toggle between book and project scope", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
     await waitForNotLoading();
 
     const projectScopeBtn = screen.getByRole("button", { name: /^Universo$/i });

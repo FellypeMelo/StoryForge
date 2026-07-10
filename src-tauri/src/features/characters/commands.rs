@@ -1,6 +1,6 @@
-use crate::features::characters::domain::{BookId, Character, CharacterId, ProjectId};
-use crate::features::characters::application::CharacterService;
 use crate::domain::result::AppResult;
+use crate::features::characters::application::CharacterService;
+use crate::features::characters::domain::{BookId, Character, CharacterId, ProjectId};
 use crate::infrastructure::sqlite::SqliteDatabase;
 use tauri::State;
 

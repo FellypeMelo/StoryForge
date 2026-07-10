@@ -1,7 +1,7 @@
-use crate::features::books::domain::{BookRepository, BookId};
-use crate::infrastructure::sqlite::SqliteDatabase;
 use crate::features::books::application::BookService;
+use crate::features::books::domain::{BookId, BookRepository};
 use crate::features::projects::domain::{Project, ProjectRepository};
+use crate::infrastructure::sqlite::SqliteDatabase;
 use tempfile::tempdir;
 
 #[test]
@@ -20,7 +20,9 @@ fn test_book_service_flow() {
 
     // 1. Create
     let title = "The Fellowship of the AI".to_string();
-    let book = service.create_book(project_id.clone(), title.clone()).unwrap();
+    let book = service
+        .create_book(project_id.clone(), title.clone())
+        .unwrap();
     assert_eq!(book.title, title);
 
     // 2. Get
@@ -36,7 +38,7 @@ fn test_book_service_flow() {
     let mut updated_book = fetched;
     updated_book.title = "The Return of the Coder".to_string();
     service.update_book(updated_book.clone()).unwrap();
-    
+
     let fetched_updated = service.get_book(book.id.clone()).unwrap();
     assert_eq!(fetched_updated.title, "The Return of the Coder");
 

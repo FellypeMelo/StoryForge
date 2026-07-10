@@ -13,7 +13,10 @@ describe("CircuitBreakerDecorator", () => {
 
   it("should pass through requests when the circuit is closed", async () => {
     (mockProvider.complete as any).mockResolvedValue({ text: "Success" });
-    const decorator = new CircuitBreakerDecorator(mockProvider, { failureThreshold: 2 });
+    const decorator = new CircuitBreakerDecorator(mockProvider, {
+      failureThreshold: 2,
+      resetTimeout: 30000,
+    });
 
     const response = await decorator.complete("Hello");
 

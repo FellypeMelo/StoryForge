@@ -15,7 +15,9 @@ pub struct Project {
 impl Project {
     pub fn new(name: String, description: String) -> AppResult<Self> {
         if name.trim().is_empty() {
-            return Err(AppError::Validation("Project name cannot be empty".to_string()));
+            return Err(AppError::Validation(
+                "Project name cannot be empty".to_string(),
+            ));
         }
         Ok(Self {
             id: ProjectId::new(),
@@ -32,4 +34,29 @@ pub trait ProjectRepository {
     fn list_all_projects(&self) -> AppResult<Vec<Project>>;
     fn update_project(&self, project: &Project) -> AppResult<()>;
     fn delete_project(&self, id: &ProjectId) -> AppResult<()>;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_project_new_rejects_empty_name() {
+        let result = Project::new("".to_string(), "desc".to_string());
+        assert!(matches!(result, Err(AppError::Validation(_))));
+    }
+
+    #[test]
+    fn test_project_new_rejects_whitespace_only_name() {
+        let result = Project::new("   ".to_string(), "desc".to_string());
+        assert!(matches!(result, Err(AppError::Validation(_))));
+    }
+
+    #[test]
+    fn test_project_new_succeeds_with_valid_name() {
+        let project = Project::new("Saga".to_string(), "Epic".to_string()).unwrap();
+        assert_eq!(project.name, "Saga");
+        assert_eq!(project.description, "Epic");
+        assert!(!project.id.0.is_empty());
+    }
 }

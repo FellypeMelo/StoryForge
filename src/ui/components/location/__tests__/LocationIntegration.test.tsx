@@ -44,6 +44,11 @@ describe("Location Components", () => {
       fireEvent.click(screen.getByText(/Criar Local/i));
       expect(onCreateNew).toHaveBeenCalled();
     });
+
+    it("should render location cards as keyboard-accessible buttons", () => {
+      render(<LocationList locations={[mockLocation]} onSelect={vi.fn()} />);
+      expect(screen.getByRole("button", { name: /Vale do Eco/i })).toBeInTheDocument();
+    });
   });
 
   describe("LocationForm", () => {

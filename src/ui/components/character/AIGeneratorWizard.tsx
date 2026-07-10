@@ -3,6 +3,7 @@ import { Sparkles, ChevronRight, Brain, Loader2, X } from "lucide-react";
 import { ProjectId } from "../../../domain/value-objects/project-id";
 import { Premise } from "../../../domain/ideation/premise";
 import { GenerateCharacterUseCase } from "../../../application/character/generate-character";
+import { CharacterRepository } from "../../../domain/ports/character-repository";
 import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 import { Character } from "../../../domain/character";
 
@@ -12,7 +13,7 @@ interface AIGeneratorWizardProps {
   projectId: string;
   onGenerated: (character: Character) => void;
   onCancel: () => void;
-  repository: any; // CharacterRepository
+  repository: CharacterRepository;
 }
 
 export function AIGeneratorWizard({
@@ -85,13 +86,17 @@ export function AIGeneratorWizard({
   };
 
   return (
-    <div className="space-y-8 p-8 bg-bg-base border border-border-subtle rounded-xl max-w-md mx-auto animate-in fade-in zoom-in duration-300 shadow-2xl shadow-purple-500/5">
+    <div className="space-y-8 p-8 bg-bg-base border border-border-subtle rounded-xl max-w-md mx-auto animate-in fade-in zoom-in duration-300 shadow-2xl">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 text-purple-500">
+        <div className="flex items-center gap-3 text-accent">
           <Sparkles size={24} />
           <h2 className="text-xl font-serif">Forjar com IA</h2>
         </div>
-        <button onClick={onCancel} className="text-text-muted hover:text-text-main p-1">
+        <button
+          onClick={onCancel}
+          aria-label="Fechar"
+          className="text-text-muted hover:text-text-main p-1"
+        >
           <X size={20} />
         </button>
       </div>
@@ -99,7 +104,7 @@ export function AIGeneratorWizard({
       <div className="space-y-1">
         <div className="h-1 w-full bg-bg-hover rounded-full overflow-hidden">
           <div
-            className="h-full bg-purple-500 transition-all duration-500"
+            className="h-full bg-accent transition-all duration-500"
             style={{ width: `${(step / 2) * 100}%` }}
           />
         </div>
@@ -116,7 +121,7 @@ export function AIGeneratorWizard({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="ex. Arthur, Elara, ou deixe em branco..."
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans outline-none focus:border-purple-500 transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans outline-none focus:border-accent transition-colors"
             />
           </div>
           <div className="space-y-2">
@@ -126,7 +131,7 @@ export function AIGeneratorWizard({
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans outline-none focus:border-purple-500 appearance-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans outline-none focus:border-accent appearance-none transition-colors"
             >
               <option>Protagonista</option>
               <option>Antagonista</option>
@@ -138,7 +143,7 @@ export function AIGeneratorWizard({
           </div>
           <button
             onClick={() => setStep(2)}
-            className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white p-4 rounded font-bold hover:bg-purple-700 transition-all shadow-lg shadow-purple-500/20"
+            className="w-full flex items-center justify-center gap-2 bg-accent text-on-accent p-4 rounded-lg font-bold hover:bg-accent-hover transition-all shadow-lg"
           >
             Próximo <ChevronRight size={16} />
           </button>
@@ -156,20 +161,20 @@ export function AIGeneratorWizard({
               onChange={(e) => setContext(e.target.value)}
               placeholder="Sobre o que é a história? Algum detalhe específico para este personagem?"
               rows={5}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded font-sans outline-none focus:border-purple-500 resize-none transition-colors"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg font-sans outline-none focus:border-accent resize-none transition-colors"
             />
           </div>
           <div className="flex gap-3">
             <button
               onClick={() => setStep(1)}
-              className="flex-1 p-4 border border-border-subtle rounded font-bold hover:bg-bg-hover transition-colors"
+              className="flex-1 p-4 border border-border-subtle rounded-lg font-bold hover:bg-bg-hover transition-colors"
             >
               Voltar
             </button>
             <button
               disabled={loading}
               onClick={handleGenerate}
-              className="flex-[2] flex items-center justify-center gap-2 bg-purple-600 text-white p-4 rounded font-bold hover:bg-purple-700 disabled:opacity-50 transition-all shadow-lg shadow-purple-500/20"
+              className="flex-[2] flex items-center justify-center gap-2 bg-accent text-on-accent p-4 rounded-lg font-bold hover:bg-accent-hover disabled:opacity-50 transition-all shadow-lg"
             >
               {loading ? <Loader2 className="animate-spin" size={18} /> : <Brain size={18} />}
               Forjar Alma

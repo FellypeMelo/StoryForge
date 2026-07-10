@@ -2,6 +2,16 @@ import { describe, it, expect } from "vitest";
 import { SceneBeat, DisasterType } from "./scene-beat";
 
 describe("DisasterType", () => {
+  it("resolves fromValue for valid disasters", () => {
+    expect(DisasterType.fromValue("no")?.value).toBe("no");
+    expect(DisasterType.fromValue("no-and-worse")?.value).toBe("no-and-worse");
+    expect(DisasterType.fromValue("yes-but")?.value).toBe("yes-but");
+  });
+
+  it("returns null fromValue for unknown disaster", () => {
+    expect(DisasterType.fromValue("desconhecido")).toBeNull();
+  });
+
   it("provides all 4 types", () => {
     expect(DisasterType.No().label).toBe("Não");
     expect(DisasterType.NoAndWorse().label).toBe("Não, e pior...");

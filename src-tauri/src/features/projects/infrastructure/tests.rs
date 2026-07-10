@@ -1,7 +1,7 @@
-use crate::features::projects::domain::ProjectRepository;
-use crate::features::projects::application::ProjectService;
-use crate::infrastructure::sqlite::SqliteDatabase;
 use crate::domain::value_objects::ProjectId;
+use crate::features::projects::application::ProjectService;
+use crate::features::projects::domain::ProjectRepository;
+use crate::infrastructure::sqlite::SqliteDatabase;
 use tempfile::tempdir;
 
 #[test]
@@ -16,7 +16,9 @@ fn test_project_service_flow() {
     // 1. Create
     let name = "Epic Saga".to_string();
     let description = "A massive world".to_string();
-    let project = service.create_project(name.clone(), description.clone()).unwrap();
+    let project = service
+        .create_project(name.clone(), description.clone())
+        .unwrap();
     assert_eq!(project.name, name);
     assert_eq!(project.description, description);
 
@@ -29,7 +31,7 @@ fn test_project_service_flow() {
     let mut updated_project = project.clone();
     updated_project.name = "Legendary Saga".to_string();
     service.update_project(updated_project.clone()).unwrap();
-    
+
     let fetched = db.get_project_by_id(&project.id).unwrap();
     assert_eq!(fetched.name, "Legendary Saga");
 

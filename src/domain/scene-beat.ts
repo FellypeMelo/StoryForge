@@ -12,6 +12,13 @@ export class DisasterType {
   static NoAndWorse() { return new DisasterType("no-and-worse", "Não, e pior..."); }
   static YesBut() { return new DisasterType("yes-but", "Sim, mas..."); }
   static CleanSuccess() { return new DisasterType("clean-success", "Sucesso limpo"); }
+
+  /** Somente desastres válidos para SceneBeat (clean-success é rejeitado). */
+  static fromValue(value: string): DisasterType | null {
+    return (
+      [this.No(), this.NoAndWorse(), this.YesBut()].find((d) => d.value === value) ?? null
+    );
+  }
 }
 
 /**

@@ -1,9 +1,9 @@
-use crate::features::lore::domain::*;
-use crate::features::lore::application::LoreService;
-use crate::features::projects::domain::{Project, ProjectRepository};
-use crate::features::characters::domain::{Character, CharacterRepository};
-use crate::infrastructure::sqlite::SqliteDatabase;
 use crate::domain::value_objects::ProjectId;
+use crate::features::characters::domain::{Character, CharacterRepository};
+use crate::features::lore::application::LoreService;
+use crate::features::lore::domain::*;
+use crate::features::projects::domain::{Project, ProjectRepository};
+use crate::infrastructure::sqlite::SqliteDatabase;
 use tempfile::tempdir;
 
 fn setup_db() -> (SqliteDatabase, ProjectId) {
@@ -53,7 +53,13 @@ fn test_world_rule_repository() {
     let (db, project_id) = setup_db();
     let repo: &dyn WorldRuleRepository = &db;
 
-    let rule = WorldRule::new(project_id.clone(), None, "Magic".to_string(), "Magic costs mana".to_string()).unwrap();
+    let rule = WorldRule::new(
+        project_id.clone(),
+        None,
+        "Magic".to_string(),
+        "Magic costs mana".to_string(),
+    )
+    .unwrap();
     repo.create_world_rule(&rule).unwrap();
 
     let fetched = repo.get_world_rule_by_id(&rule.id).unwrap();
@@ -92,7 +98,14 @@ fn test_relationship_repository() {
     char_repo.create_character(&char_a).unwrap();
     char_repo.create_character(&char_b).unwrap();
 
-    let rel = Relationship::new(project_id.clone(), None, char_a.id.clone(), char_b.id.clone(), "Friends".to_string()).unwrap();
+    let rel = Relationship::new(
+        project_id.clone(),
+        None,
+        char_a.id.clone(),
+        char_b.id.clone(),
+        "Friends".to_string(),
+    )
+    .unwrap();
     repo.create_relationship(&rel).unwrap();
 
     let fetched = repo.get_relationship_by_id(&rel.id).unwrap();
@@ -117,6 +130,66 @@ fn test_blacklist_repository() {
     assert!(repo.get_blacklist_entry_by_id(&entry.id).is_err());
 }
 
+// Replica o JSON exato que o CodexDashboard envia em update_location.
+#[test]
+fn test_lore_service_location_update_flow_with_frontend_payload() {
+    let (db, project_id) = setup_db();
+    let service = LoreService::new(&db, &db, &db, &db, &db, &db);
+
+    let created = service
+        .create_location(project_id.clone(), None, "Old Name".to_string())
+        .unwrap();
+    let payload = format!(
+        r#"{{"id":"{}","project_id":"{}","book_id":null,"name":"New Name","description":"Desc","symbolicMeaning":"Hope"}}"#,
+        created.id.0, project_id.0
+    );
+    let location: Location = serde_json::from_str(&payload).unwrap();
+    service.update_location(location).unwrap();
+
+    let fetched = service.get_location(created.id.clone()).unwrap();
+    assert_eq!(fetched.name, "New Name");
+    assert_eq!(fetched.symbolic_meaning, "Hope");
+
+    service.delete_location(created.id.clone()).unwrap();
+    assert!(service.get_location(created.id).is_err());
+}
+
+#[test]
+fn test_lore_service_world_rule_update_flow() {
+    let (db, project_id) = setup_db();
+    let service = LoreService::new(&db, &db, &db, &db, &db, &db);
+
+    let created = service
+        .create_world_rule(
+            project_id.clone(),
+            None,
+            "Magic".to_string(),
+            "Costs mana".to_string(),
+        )
+        .unwrap();
+    let mut updated = service.get_world_rule(created.id.clone()).unwrap();
+    updated.content = "Costs blood".to_string();
+    service.update_world_rule(updated).unwrap();
+
+    let fetched = service.get_world_rule(created.id.clone()).unwrap();
+    assert_eq!(fetched.content, "Costs blood");
+
+    service.delete_world_rule(created.id.clone()).unwrap();
+    assert!(service.get_world_rule(created.id).is_err());
+}
+
+#[test]
+fn test_lore_service_blacklist_entry_get_flow() {
+    let (db, project_id) = setup_db();
+    let service = LoreService::new(&db, &db, &db, &db, &db, &db);
+
+    let created = service
+        .create_blacklist_entry(project_id, None, "forbidden".to_string())
+        .unwrap();
+    let fetched = service.get_blacklist_entry(created.id.clone()).unwrap();
+    assert_eq!(fetched.term, "forbidden");
+}
+
 #[test]
 fn test_lore_service_inject_context() {
     let (db, project_id) = setup_db();
@@ -127,7 +200,9 @@ fn test_lore_service_inject_context() {
     let loc_repo: &dyn LocationRepository = &db;
     loc_repo.create_location(&location).unwrap();
 
-    let context = service.inject_context(&project_id, None, "The road to Winterfell is long", 1000).unwrap();
+    let context = service
+        .inject_context(&project_id, None, "The road to Winterfell is long", 1000)
+        .unwrap();
     assert!(context.contains("--- LORE CONTEXT ---"));
     assert!(context.contains("Winterfell"));
 }

@@ -13,6 +13,8 @@ import { TimelineList, RelationshipList, BlacklistList } from "./LoreLists";
 import { TimelineEventForm, RelationshipForm, BlacklistEntryForm } from "./LoreForms";
 import { SearchBar } from "../shared/SearchBar";
 import { SlideOver } from "../shared/SlideOver";
+import { ConfirmDialog } from "../shared/ConfirmDialog";
+import { useToast } from "../shared/Toast";
 import { Character } from "../../../domain/character";
 import { ProjectId as ProjectIdVO } from "../../../domain/value-objects/project-id";
 import { BookId as BookIdVO } from "../../../domain/value-objects/book-id";
@@ -27,23 +29,108 @@ import { TimelineEvent } from "../../../domain/timeline-event";
 import { Relationship } from "../../../domain/relationship";
 import { BlacklistEntry } from "../../../domain/blacklist-entry";
 import {
+  LocationId as LocationIdVO,
+  WorldRuleId as WorldRuleIdVO,
+  TimelineEventId as TimelineEventIdVO,
+  RelationshipId as RelationshipIdVO,
+  BlacklistEntryId as BlacklistEntryIdVO,
+} from "../../../domain/value-objects/codex-ids";
+import {
   Users,
   MapPin,
   Scroll,
   Clock,
   GitBranch,
   Ban,
-  Search,
-  Plus,
-  ChevronLeft,
-  ArrowRight,
-  Loader2,
-  Sparkles,
   Trash2,
+  type LucideIcon,
 } from "lucide-react";
 
 type Tab = "characters" | "locations" | "rules" | "timeline" | "relationships" | "blacklist";
 type Scope = "book" | "global";
+type DeleteKind = "character" | "location" | "rule" | "event" | "relationship" | "blacklist";
+
+const DELETE_COPY: Record<DeleteKind, { title: string; description: string }> = {
+  character: {
+    title: "Excluir personagem",
+    description: "O personagem será removido permanentemente do Codex. Esta ação não pode ser desfeita.",
+  },
+  location: {
+    title: "Excluir local",
+    description: "O local será removido permanentemente do Codex. Esta ação não pode ser desfeita.",
+  },
+  rule: {
+    title: "Excluir regra",
+    description: "A regra do mundo será removida permanentemente do Codex. Esta ação não pode ser desfeita.",
+  },
+  event: {
+    title: "Excluir evento",
+    description: "O evento será removido permanentemente da linha do tempo. Esta ação não pode ser desfeita.",
+  },
+  relationship: {
+    title: "Excluir relacionamento",
+    description: "O relacionamento será removido permanentemente do Codex. Esta ação não pode ser desfeita.",
+  },
+  blacklist: {
+    title: "Excluir entrada",
+    description: "A entrada será removida permanentemente da lista negra. Esta ação não pode ser desfeita.",
+  },
+};
+
+// Raw Tauri command row shapes (snake_case), mirroring the serde structs in
+// src-tauri/src/features/lore/domain.rs. The *Id fields are plain strings on
+// the wire because the backend's `XxxId(pub String)` newtypes serialize as strings.
+interface RawLocationRow {
+  id: string;
+  project_id: string;
+  book_id: string | null;
+  name: string;
+  description: string;
+  symbolic_meaning: string;
+}
+
+interface RawWorldRuleRow {
+  id: string;
+  project_id: string;
+  book_id: string | null;
+  category: string;
+  content: string;
+  hierarchy: number;
+}
+
+interface RawTimelineEventRow {
+  id: string;
+  project_id: string;
+  book_id: string | null;
+  date: string;
+  description: string;
+  causal_dependencies: string[];
+}
+
+interface RawRelationshipRow {
+  id: string;
+  project_id: string;
+  book_id: string | null;
+  character_a: string;
+  character_b: string;
+  type: string;
+}
+
+interface RawBlacklistEntryRow {
+  id: string;
+  project_id: string;
+  book_id: string | null;
+  term: string;
+  category: string;
+  reason: string;
+}
+
+interface RawSearchResultRow {
+  entity_id: string;
+  entity_type: string;
+  snippet: string;
+  score: number;
+}
 
 function mapScoreToNumber(score: OceanTraitScore): number {
   switch (score) {
@@ -78,8 +165,12 @@ interface CodexDashboardProps {
 }
 
 export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProps) {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<Tab>("characters");
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [searchError, setSearchError] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{ kind: DeleteKind; id: string } | null>(null);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [rules, setRules] = useState<WorldRule[]>([]);
@@ -89,7 +180,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
   const [scope, setScope] = useState<Scope>("book");
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<RawSearchResultRow[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const [injectedIds, setInjectedIds] = useState<string[]>([]);
@@ -139,15 +230,18 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     if (searchQuery.trim() !== "") return;
 
     setLoading(true);
+    setLoadError(false);
     try {
       if (activeTab === "characters") {
-        const result = scope === "book" 
+        const result = scope === "book"
           ? await characterRepo.findByBook(BookIdVO.create(bookId))
           : await characterRepo.findByProject(ProjectIdVO.create(projectId));
-          
-        if (result.success) {
-          // Map CharacterSheet to Character for the UI
-          setCharacters(result.data.map(sheet => Character.create({
+
+        if (!result.success) {
+          throw new Error(result.error.message);
+        }
+        // Map CharacterSheet to Character for the UI
+        setCharacters(result.data.map(sheet => Character.create({
             id: sheet.id,
             projectId: sheet.projectId,
             bookId: sheet.bookId,
@@ -169,100 +263,102 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
             voice_verbal_tics: JSON.stringify(sheet.voice.verbalTics),
             voice_evasion_mechanism: sheet.voice.evasionMechanism,
             physical_tells: JSON.stringify(sheet.tells.list),
-          } as any)));
-        }
+          })));
       } else if (activeTab === "locations") {
         const command = scope === "book" ? "list_locations_by_book" : "list_global_locations";
         const params = scope === "book" ? { bookId } : { projectId };
-        const data = await invoke<any[]>(command, params);
+        const data = await invoke<RawLocationRow[]>(command, params);
         setLocations(
           data.map((d) =>
             Location.create({
               ...d,
-              id: { value: d.id },
-              projectId: { value: d.project_id },
-              bookId: d.book_id ? { value: d.book_id } : undefined,
+              id: LocationIdVO.create(d.id),
+              projectId: ProjectIdVO.create(d.project_id),
+              bookId: d.book_id ? BookIdVO.create(d.book_id) : undefined,
               name: d.name || "Sem nome",
-            } as any),
+            }),
           ),
         );
       } else if (activeTab === "rules") {
         const command = scope === "book" ? "list_world_rules_by_book" : "list_global_world_rules";
         const params = scope === "book" ? { bookId } : { projectId };
-        const data = await invoke<any[]>(command, params);
+        const data = await invoke<RawWorldRuleRow[]>(command, params);
         setRules(
           data.map((d) =>
             WorldRule.create({
               ...d,
-              id: { value: d.id },
-              projectId: { value: d.project_id },
-              bookId: d.book_id ? { value: d.book_id } : undefined,
+              id: WorldRuleIdVO.create(d.id),
+              projectId: ProjectIdVO.create(d.project_id),
+              bookId: d.book_id ? BookIdVO.create(d.book_id) : undefined,
               category: d.category || "Geral",
               content: d.content || "",
-            } as any),
+            }),
           ),
         );
       } else if (activeTab === "timeline") {
         const command =
           scope === "book" ? "list_timeline_events_by_book" : "list_global_timeline_events";
         const params = scope === "book" ? { bookId } : { projectId };
-        const data = await invoke<any[]>(command, params);
+        const data = await invoke<RawTimelineEventRow[]>(command, params);
         setEvents(
           data.map((d) =>
             TimelineEvent.create({
               ...d,
-              id: { value: d.id },
-              projectId: { value: d.project_id },
-              bookId: d.book_id ? { value: d.book_id } : undefined,
+              id: TimelineEventIdVO.create(d.id),
+              projectId: ProjectIdVO.create(d.project_id),
+              bookId: d.book_id ? BookIdVO.create(d.book_id) : undefined,
               description: d.description || "",
-            } as any),
+            }),
           ),
         );
       } else if (activeTab === "relationships") {
         const command =
           scope === "book" ? "list_relationships_by_book" : "list_global_relationships";
         const params = scope === "book" ? { bookId } : { projectId };
-        const data = await invoke<any[]>(command, params);
+        const data = await invoke<RawRelationshipRow[]>(command, params);
         setRelationships(
           data.map((d) =>
             Relationship.create({
+              // `type` is carried through by the spread above (raw field name
+              // already matches RelationshipProps.type), no explicit mapping needed.
               ...d,
-              id: { value: d.id },
-              projectId: { value: d.project_id },
-              bookId: d.book_id ? { value: d.book_id } : undefined,
-              characterAId: { value: d.character_a },
-              characterBId: { value: d.character_b },
-              relationshipType: d.type || "",
-            } as any),
+              id: RelationshipIdVO.create(d.id),
+              projectId: ProjectIdVO.create(d.project_id),
+              bookId: d.book_id ? BookIdVO.create(d.book_id) : undefined,
+              characterAId: CharacterIdVO.create(d.character_a),
+              characterBId: CharacterIdVO.create(d.character_b),
+            }),
           ),
         );
       } else if (activeTab === "blacklist") {
         const command =
           scope === "book" ? "list_blacklist_entries_by_book" : "list_global_blacklist_entries";
         const params = scope === "book" ? { bookId } : { projectId };
-        const data = await invoke<any[]>(command, params);
+        const data = await invoke<RawBlacklistEntryRow[]>(command, params);
         setEntries(
           data.map((d) =>
             BlacklistEntry.create({
               ...d,
-              id: { value: d.id },
-              projectId: { value: d.project_id },
-              bookId: d.book_id ? { value: d.book_id } : undefined,
+              id: BlacklistEntryIdVO.create(d.id),
+              projectId: ProjectIdVO.create(d.project_id),
+              bookId: d.book_id ? BookIdVO.create(d.book_id) : undefined,
               term: d.term || "",
-            } as any),
+            }),
           ),
         );
       }
     } catch (error) {
       console.error("Failed to load lore data:", error);
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSearch = async (query: string) => {
+    setSearchError(false);
     try {
-      const results = await invoke<any[]>("search_lore", {
+      const results = await invoke<RawSearchResultRow[]>("search_lore", {
         projectId: currentProjectId,
         bookId: scope === "book" ? bookId : null,
         query,
@@ -270,7 +366,24 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       setSearchResults(results);
     } catch (error) {
       console.error("Search failed:", error);
+      setSearchError(true);
     }
+  };
+
+  const requestDelete = (kind: DeleteKind, id: string) => {
+    setPendingDelete({ kind, id });
+  };
+
+  const confirmPendingDelete = async () => {
+    if (!pendingDelete) return;
+    const { kind, id } = pendingDelete;
+    setPendingDelete(null);
+    if (kind === "character") await handleDeleteCharacter(id);
+    else if (kind === "location") await handleDeleteLocation(id);
+    else if (kind === "rule") await handleDeleteRule(id);
+    else if (kind === "event") await handleDeleteEvent(id);
+    else if (kind === "relationship") await handleDeleteRelationship(id);
+    else await handleDeleteBlacklist(id);
   };
 
   const handleDeleteLocation = async (id: string) => {
@@ -521,9 +634,9 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     // We need a TimelineEvent.generate or create a blank one
     // Assuming TimelineEvent.create works with just projectId and description
     const newEvent = TimelineEvent.create({
-      id: CharacterIdVO.generate() as any, // TimelineEventId.generate()
+      id: TimelineEventIdVO.generate(),
       projectId: ProjectIdVO.create(currentProjectId),
-      bookId: scope === "book" ? { value: bookId } : undefined,
+      bookId: scope === "book" ? BookIdVO.create(bookId) : undefined,
       description: "Novo Evento",
     });
     setEditingEvent(newEvent);
@@ -541,7 +654,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       const exists = events.some(e => e.id.value === event.id.value);
 
       if (!exists) {
-        const created = await invoke<any>("create_timeline_event", {
+        const created = await invoke<{ id: string }>("create_timeline_event", {
           projectId: currentProjectId,
           bookId: scope === "book" ? bookId : null,
           description: data.description,
@@ -576,13 +689,13 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
 
   const handleCreateRelationship = () => {
     if (characters.length < 2) {
-      alert("Você precisa de pelo menos 2 personagens para criar um relacionamento.");
+      showToast("Você precisa de pelo menos 2 personagens para criar um relacionamento.", "error");
       return;
     }
     const newRel = Relationship.create({
-      id: CharacterIdVO.generate() as any,
+      id: RelationshipIdVO.generate(),
       projectId: ProjectIdVO.create(currentProjectId),
-      bookId: scope === "book" ? { value: bookId } : undefined,
+      bookId: scope === "book" ? BookIdVO.create(bookId) : undefined,
       characterAId: characters[0].id,
       characterBId: characters[1].id,
       type: "Conhecidos",
@@ -602,7 +715,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       const exists = relationships.some(r => r.id.value === rel.id.value);
 
       if (!exists) {
-        const created = await invoke<any>("create_relationship", {
+        const created = await invoke<{ id: string }>("create_relationship", {
           projectId: currentProjectId,
           bookId: scope === "book" ? bookId : null,
           characterA: data.characterAId.value,
@@ -641,9 +754,9 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
 
   const handleCreateBlacklist = () => {
     const newEntry = BlacklistEntry.create({
-      id: CharacterIdVO.generate() as any,
+      id: BlacklistEntryIdVO.generate(),
       projectId: ProjectIdVO.create(currentProjectId),
-      bookId: scope === "book" ? { value: bookId } : undefined,
+      bookId: scope === "book" ? BookIdVO.create(bookId) : undefined,
       term: "Novo Termo",
     });
     setEditingBlacklistEntry(newEntry);
@@ -661,7 +774,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
       const exists = entries.some(e => e.id.value === entry.id.value);
 
       if (!exists) {
-        const created = await invoke<any>("create_blacklist_entry", {
+        const created = await invoke<{ id: string }>("create_blacklist_entry", {
           projectId: currentProjectId,
           bookId: scope === "book" ? bookId : null,
           term: data.term,
@@ -736,7 +849,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
     }
   };
 
-  const tabs: { id: Tab; label: string; icon: any }[] = [
+  const tabs: { id: Tab; label: string; icon: LucideIcon }[] = [
     { id: "characters", label: "Personagens", icon: Users },
     { id: "locations", label: "Locais", icon: MapPin },
     { id: "rules", label: "Regras do Mundo", icon: Scroll },
@@ -768,10 +881,10 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <SearchBar onSearch={setSearchQuery} />
 
-          <div className="flex bg-bg-hover p-1 rounded-lg border border-border-subtle">
+          <div className="flex bg-bg-hover p-1 rounded-full border border-border-subtle">
             <button
               onClick={() => setScope("book")}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold tracking-widest uppercase transition-all ${
+              className={`px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all ${
                 scope === "book"
                   ? "bg-text-main text-bg-base shadow-sm"
                   : "text-text-muted hover:text-text-main"
@@ -781,7 +894,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
             </button>
             <button
               onClick={() => setScope("global")}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold tracking-widest uppercase transition-all ${
+              className={`px-3 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all ${
                 scope === "global"
                   ? "bg-text-main text-bg-base shadow-sm"
                   : "text-text-muted hover:text-text-main"
@@ -815,36 +928,48 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
 
       <main className="min-h-[400px]">
         {isSearching ? (
-          <div className="space-y-6">
-            <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
-              Resultados da Busca ({searchResults.length})
-            </h2>
-            {searchResults.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4">
-                {searchResults.map((res) => (
-                  <div
-                    key={res.entity_id}
-                    className="bg-bg-hover p-4 rounded-lg border border-border-subtle hover:border-text-main transition-colors"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted px-2 py-0.5 bg-bg-base rounded">
-                        {res.entity_type}
-                      </span>
+          searchError ? (
+            <CodexErrorState
+              message="A busca falhou. Verifique os arquivos e tente novamente."
+              onRetry={() => handleSearch(searchQuery)}
+            />
+          ) : (
+            <div className="space-y-6">
+              <h2 className="text-xs font-bold tracking-widest uppercase text-text-muted">
+                Resultados da Busca ({searchResults.length})
+              </h2>
+              {searchResults.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4">
+                  {searchResults.map((res) => (
+                    <div
+                      key={res.entity_id}
+                      className="bg-bg-hover p-4 rounded-xl border border-border-subtle hover:border-text-main transition-colors"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted px-2 py-0.5 bg-bg-base rounded-full">
+                          {res.entity_type}
+                        </span>
+                      </div>
+                      <p className="text-sm font-serif text-text-main">{res.snippet}</p>
                     </div>
-                    <p className="text-sm font-serif text-text-main">{res.snippet}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="py-20 text-center text-text-muted font-sans">
-                Nenhuma entrada correspondente encontrada.
-              </div>
-            )}
-          </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-20 text-center text-text-muted font-sans">
+                  Nenhuma entrada correspondente encontrada.
+                </div>
+              )}
+            </div>
+          )
         ) : loading ? (
           <div className="py-20 text-center font-mono text-text-muted animate-pulse">
             Consultando os arquivos...
           </div>
+        ) : loadError ? (
+          <CodexErrorState
+            message="Não foi possível carregar os dados do Codex."
+            onRetry={loadData}
+          />
         ) : (
           <>
             {activeTab === "characters" && (
@@ -911,7 +1036,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               {(editingCharacter?.bookId || viewingCharacter?.bookId) ? (
                 <button
                   onClick={() => handleMoveToProject((editingCharacter?.id || viewingCharacter?.id)!.value)}
-                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                  className="text-[10px] font-bold tracking-widest uppercase text-accent hover:text-accent-hover hover:underline"
                 >
                   Mover para Universo
                 </button>
@@ -930,7 +1055,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               <CharacterDashboard
                 character={viewingCharacter}
                 onEdit={handleEditCharacter}
-                onDelete={handleDeleteCharacter}
+                onDelete={(id) => requestDelete("character", id)}
               />
             )}
             {editingCharacter && (
@@ -960,9 +1085,10 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
           {editingLocation && (
             <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
               <button
-                onClick={() => handleDeleteLocation(editingLocation.id.value)}
-                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                onClick={() => requestDelete("location", editingLocation.id.value)}
+                className="text-text-muted hover:text-danger transition-colors p-1"
                 title="Excluir Local"
+                aria-label="Excluir local"
               >
                 <Trash2 size={14} />
               </button>
@@ -970,7 +1096,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               {editingLocation.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingLocation.id.value)}
-                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                  className="text-[10px] font-bold tracking-widest uppercase text-accent hover:text-accent-hover hover:underline"
                 >
                   Mover para Universo
                 </button>
@@ -1010,9 +1136,10 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
           {editingRule && (
             <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
               <button
-                onClick={() => handleDeleteRule(editingRule.id.value)}
-                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                onClick={() => requestDelete("rule", editingRule.id.value)}
+                className="text-text-muted hover:text-danger transition-colors p-1"
                 title="Excluir Regra"
+                aria-label="Excluir regra"
               >
                 <Trash2 size={14} />
               </button>
@@ -1020,7 +1147,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               {editingRule.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingRule.id.value)}
-                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                  className="text-[10px] font-bold tracking-widest uppercase text-accent hover:text-accent-hover hover:underline"
                 >
                   Mover para Universo
                 </button>
@@ -1060,9 +1187,10 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
           {editingEvent && (
             <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
               <button
-                onClick={() => handleDeleteEvent(editingEvent.id.value)}
-                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                onClick={() => requestDelete("event", editingEvent.id.value)}
+                className="text-text-muted hover:text-danger transition-colors p-1"
                 title="Excluir Evento"
+                aria-label="Excluir evento"
               >
                 <Trash2 size={14} />
               </button>
@@ -1070,7 +1198,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               {editingEvent.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingEvent.id.value)}
-                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                  className="text-[10px] font-bold tracking-widest uppercase text-accent hover:text-accent-hover hover:underline"
                 >
                   Mover para Universo
                 </button>
@@ -1110,9 +1238,10 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
           {editingRelationship && (
             <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
               <button
-                onClick={() => handleDeleteRelationship(editingRelationship.id.value)}
-                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                onClick={() => requestDelete("relationship", editingRelationship.id.value)}
+                className="text-text-muted hover:text-danger transition-colors p-1"
                 title="Excluir Relacionamento"
+                aria-label="Excluir relacionamento"
               >
                 <Trash2 size={14} />
               </button>
@@ -1120,7 +1249,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               {editingRelationship.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingRelationship.id.value)}
-                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                  className="text-[10px] font-bold tracking-widest uppercase text-accent hover:text-accent-hover hover:underline"
                 >
                   Mover para Universo
                 </button>
@@ -1161,9 +1290,10 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
           {editingBlacklistEntry && (
             <div className="p-4 border-b border-border-subtle flex justify-end items-center gap-4 bg-bg-hover/50">
               <button
-                onClick={() => handleDeleteBlacklist(editingBlacklistEntry.id.value)}
-                className="text-text-muted hover:text-red-500 transition-colors p-1"
+                onClick={() => requestDelete("blacklist", editingBlacklistEntry.id.value)}
+                className="text-text-muted hover:text-danger transition-colors p-1"
                 title="Excluir Entrada"
+                aria-label="Excluir entrada da lista negra"
               >
                 <Trash2 size={14} />
               </button>
@@ -1171,7 +1301,7 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
               {editingBlacklistEntry.bookId ? (
                 <button
                   onClick={() => handleMoveToProject(editingBlacklistEntry.id.value)}
-                  className="text-[10px] font-bold tracking-widest uppercase text-purple-500 hover:underline"
+                  className="text-[10px] font-bold tracking-widest uppercase text-accent hover:text-accent-hover hover:underline"
                 >
                   Mover para Universo
                 </button>
@@ -1213,6 +1343,35 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
           />
         </div>
       </SlideOver>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title={pendingDelete ? DELETE_COPY[pendingDelete.kind].title : ""}
+        description={pendingDelete ? DELETE_COPY[pendingDelete.kind].description : ""}
+        confirmLabel="Excluir"
+        onConfirm={confirmPendingDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
+    </div>
+  );
+}
+
+interface CodexErrorStateProps {
+  message: string;
+  onRetry: () => void;
+}
+
+function CodexErrorState({ message, onRetry }: CodexErrorStateProps) {
+  return (
+    <div role="alert" className="py-20 flex flex-col items-center gap-4 text-center">
+      <p className="text-danger font-sans text-sm">{message}</p>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="px-4 py-2 rounded-lg border border-border-default text-sm font-bold text-text-main hover:bg-bg-hover transition-colors cursor-pointer"
+      >
+        Tentar novamente
+      </button>
     </div>
   );
 }

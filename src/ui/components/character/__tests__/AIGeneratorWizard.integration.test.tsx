@@ -2,14 +2,19 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { AIGeneratorWizard } from "../AIGeneratorWizard";
 import { Character } from "../../../../domain/character";
+import { CharacterRepository } from "../../../../domain/ports/character-repository";
 
 describe("AIGeneratorWizard Integration", () => {
   const projectId = "550e8400-e29b-41d4-a716-446655440000";
   const mockOnGenerated = vi.fn();
   const mockOnCancel = vi.fn();
-  
-  const mockRepository = {
-    save: vi.fn().mockResolvedValue({ success: true })
+
+  const mockRepository: CharacterRepository = {
+    save: vi.fn().mockResolvedValue({ success: true, data: undefined }),
+    findById: vi.fn(),
+    findByProject: vi.fn(),
+    findByBook: vi.fn(),
+    delete: vi.fn(),
   };
 
   beforeEach(() => {

@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 export class MockDatabase {
   private projects: any[] = [];
   private books: any[] = [];
@@ -305,7 +303,7 @@ export class MockDatabase {
       case "search_lore":
       case "search_codex": {
         const q = args.query.toLowerCase();
-        const results = [];
+        const results: Array<{ entity_id: string; entity_type: string; snippet: string }> = [];
         this.characters.forEach(c => {
           if (c.name.toLowerCase().includes(q)) {
             results.push({ entity_id: c.id, entity_type: "character", snippet: c.name });

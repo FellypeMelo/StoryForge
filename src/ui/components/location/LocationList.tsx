@@ -28,7 +28,7 @@ export function LocationList({
         </div>
         <button
           onClick={onCreateNew}
-          className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          className="bg-text-main text-bg-base px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
           Criar Local
         </button>
@@ -54,14 +54,15 @@ export function LocationList({
         {locations.map((loc) => {
           const isInjected = injectedIds.includes(loc.id.value);
           return (
-            <div
+            <button
+              type="button"
               key={loc.id.value}
               onClick={() => onSelect?.(loc)}
-              className={`group bg-bg-base border ${isInjected ? "border-text-main shadow-lg shadow-text-main/5" : "border-border-subtle"} p-6 rounded-lg space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full`}
+              className={`group w-full text-left bg-bg-base border ${isInjected ? "border-text-main shadow-lg shadow-text-main/5" : "border-border-subtle"} p-6 rounded-xl space-y-4 hover:border-text-main transition-all duration-300 cursor-pointer flex flex-col h-full`}
             >
-              <div className="flex items-start justify-between">
+              <div className="w-full flex items-start justify-between">
                 <div
-                  className={`p-3 rounded group-hover:bg-text-main group-hover:text-bg-base transition-colors duration-300 ${isInjected ? "bg-text-main text-bg-base" : "bg-bg-hover"}`}
+                  className={`p-3 rounded-lg group-hover:bg-text-main group-hover:text-bg-base transition-colors duration-300 ${isInjected ? "bg-text-main text-bg-base" : "bg-bg-hover"}`}
                 >
                   <MapPin size={24} strokeWidth={1.5} />
                 </div>
@@ -70,12 +71,12 @@ export function LocationList({
                     {loc.id.value.slice(0, 8)}
                   </span>
                   {isInjected && (
-                    <span className="text-[9px] font-bold tracking-widest uppercase text-text-main px-1.5 py-0.5 bg-text-main/10 rounded animate-pulse">
+                    <span className="text-[9px] font-bold tracking-widest uppercase text-text-main px-1.5 py-0.5 bg-text-main/10 rounded-full animate-pulse">
                       Injetado
                     </span>
                   )}
                   {!loc.bookId && (
-                    <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+                    <span className="text-[9px] font-bold tracking-widest uppercase text-accent px-1.5 py-0.5 bg-accent-soft rounded-full">
                       Universo
                     </span>
                   )}
@@ -91,7 +92,7 @@ export function LocationList({
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-border-subtle flex justify-between items-center">
+              <div className="w-full pt-4 border-t border-border-subtle flex justify-between items-center">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-text-muted italic">
                   {loc.symbolicMeaning || "Sem significado simbólico"}
                 </span>
@@ -99,7 +100,7 @@ export function LocationList({
                   →
                 </span>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

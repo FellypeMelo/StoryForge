@@ -1,6 +1,18 @@
 import { describe, it, expect } from "vitest";
 import { Cliffhanger, CliffhangerType } from "./cliffhanger";
 
+describe("CliffhangerType", () => {
+  it("resolves fromValue for valid types", () => {
+    expect(CliffhangerType.fromValue("pre-point")?.value).toBe("pre-point");
+    expect(CliffhangerType.fromValue("climactic")?.value).toBe("climactic");
+    expect(CliffhangerType.fromValue("post-point")?.value).toBe("post-point");
+  });
+
+  it("returns null fromValue for unknown type", () => {
+    expect(CliffhangerType.fromValue("desconhecido")).toBeNull();
+  });
+});
+
 describe("Cliffhanger", () => {
   it("creates a Pre-point cliffhanger", () => {
     const ch = Cliffhanger.create(CliffhangerType.PrePoint(), "To be continued...");

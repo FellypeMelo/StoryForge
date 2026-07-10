@@ -102,6 +102,11 @@ src-tauri/src/
 - Standard `cargo test` pattern; run from `src-tauri/`
 - Integration tests in `src-tauri/src/features/integration_tests.rs`
 
+### Live LLM E2E (mandatory, gated)
+- `src/__e2e__/live-llm.e2e.test.ts` exercises every AI point (adapter, circuit breaker, cliché extraction, premise generation/validation, character, prose, beat sheet) against a REAL llama.cpp server + GGUF model — not the `DummyLlmPort`.
+- Gated by `E2E_LLM=1`, so the normal `vitest run` skips it. Run it with `npm run test:e2e` (server already up) or `npm run test:e2e:server` (auto-starts the turboquant SYCL server). Runner: `scripts/e2e-llm.mjs`.
+- These tests caught (and drove fixes for) real-model output drift that `DummyLlmPort` masked. All LLM JSON parsing now goes through `src/application/shared/extract-json.ts` (`extractJson`/`asText`/`asTextArray`): tolerant of preamble/markdown-fences/trailing text and field-type drift (e.g. `critique` returned as an array). Keep new LLM parsers on these helpers, never bare `JSON.parse`.
+
 ## Domain Model (High-Level)
 
 - **Project** — Top-level container for a story

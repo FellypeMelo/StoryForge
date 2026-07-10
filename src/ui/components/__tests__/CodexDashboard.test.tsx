@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { CodexDashboard } from "../dashboard/CodexDashboard";
+import { ToastProvider } from "../shared/Toast";
 import { mockDb } from "../../../test/mock-db";
 
 describe("CodexDashboard Unit", () => {
@@ -10,12 +11,19 @@ describe("CodexDashboard Unit", () => {
     onBack: vi.fn(),
   };
 
+  const renderDashboard = () =>
+    render(
+      <ToastProvider>
+        <CodexDashboard {...mockProps} />
+      </ToastProvider>,
+    );
+
   beforeEach(() => {
     mockDb.reset();
   });
 
   it("should render all lore tabs", () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
 
     // Check for buttons in the nav
     expect(screen.getByRole("button", { name: /Personagens/i })).toBeInTheDocument();
@@ -27,7 +35,7 @@ describe("CodexDashboard Unit", () => {
   });
 
   it("should show characters tab by default after loading", async () => {
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
 
     // Should eventually show empty state (since mockDb is empty)
     await waitFor(() => {
@@ -40,7 +48,7 @@ describe("CodexDashboard Unit", () => {
       characters: [{ id: "c1", name: "Search Hero", project_id: mockProps.projectId }]
     });
 
-    render(<CodexDashboard {...mockProps} />);
+    renderDashboard();
 
     const searchInput = screen.getByPlaceholderText(/Pesquisar sabedoria.../i);
     fireEvent.change(searchInput, { target: { value: "Search" } });

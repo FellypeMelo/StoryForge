@@ -22,7 +22,7 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
         </div>
         <button
           onClick={onCreateNew}
-          className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
+          className="bg-text-main text-bg-base px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
         >
           Adicionar Evento
         </button>
@@ -45,13 +45,14 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
       </div>
       <div className="space-y-4">
         {events.map((event) => (
-          <div
+          <button
+            type="button"
             key={event.id.value}
             onClick={() => onSelect?.(event)}
-            className="group bg-bg-base border border-border-subtle p-6 rounded-lg flex gap-6 hover:border-text-main transition-all cursor-pointer relative"
+            className="group w-full text-left bg-bg-base border border-border-subtle p-6 rounded-xl flex gap-6 hover:border-text-main transition-all cursor-pointer relative"
           >
             {!event.bookId && (
-              <span className="absolute top-4 right-4 text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+              <span className="absolute top-4 right-4 text-[9px] font-bold tracking-widest uppercase text-accent px-1.5 py-0.5 bg-accent-soft rounded-full">
                 Universo
               </span>
             )}
@@ -64,7 +65,7 @@ export function TimelineList({ events, onSelect, onCreateNew }: TimelineListProp
               </h3>
               <p className="text-sm text-text-muted leading-relaxed">{event.description}</p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
@@ -90,7 +91,7 @@ export function RelationshipList({ relationships, onSelect, onCreateNew }: Relat
         </div>
         <button
           onClick={onCreateNew}
-          className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
+          className="bg-text-main text-bg-base px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
         >
           Adicionar Relacionamento
         </button>
@@ -113,19 +114,20 @@ export function RelationshipList({ relationships, onSelect, onCreateNew }: Relat
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {relationships.map((rel) => (
-          <div
+          <button
+            type="button"
             key={rel.id.value}
             onClick={() => onSelect?.(rel)}
-            className="bg-bg-hover/50 border border-border-subtle p-4 rounded-lg flex items-center gap-4 hover:border-text-main transition-all cursor-pointer relative"
+            className="w-full text-left bg-bg-hover/50 border border-border-subtle p-4 rounded-xl flex items-center gap-4 hover:border-text-main transition-all cursor-pointer relative"
           >
             <GitBranch size={18} className="text-text-muted shrink-0" />
             <span className="text-sm font-sans text-text-main flex-1">{rel.type}</span>
             {!rel.bookId && (
-              <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+              <span className="text-[9px] font-bold tracking-widest uppercase text-accent px-1.5 py-0.5 bg-accent-soft rounded-full">
                 Universo
               </span>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>
@@ -151,7 +153,7 @@ export function BlacklistList({ entries, onSelect, onCreateNew }: BlacklistListP
         </div>
         <button
           onClick={onCreateNew}
-          className="bg-text-main text-bg-base px-6 py-2.5 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
+          className="bg-text-main text-bg-base px-6 py-2.5 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
         >
           Adicionar Entrada
         </button>
@@ -174,19 +176,20 @@ export function BlacklistList({ entries, onSelect, onCreateNew }: BlacklistListP
       </div>
       <div className="flex flex-wrap gap-3">
         {entries.map((entry) => (
-          <div
+          <button
+            type="button"
             key={entry.id.value}
             onClick={() => onSelect?.(entry)}
-            className="bg-bg-hover border border-red-500/20 px-4 py-2 rounded-md flex items-center gap-3 hover:border-red-500 transition-all cursor-pointer"
+            className="text-left bg-bg-hover border border-danger/20 px-4 py-2 rounded-full flex items-center gap-3 hover:border-danger transition-all cursor-pointer"
           >
-            <Ban size={14} className="text-red-500" />
+            <Ban size={14} className="text-danger" />
             <span className="text-sm font-mono text-text-main">{entry.term}</span>
             {!entry.bookId && (
-              <span className="text-[9px] font-bold tracking-widest uppercase text-purple-500 px-1.5 py-0.5 bg-purple-500/10 rounded">
+              <span className="text-[9px] font-bold tracking-widest uppercase text-accent px-1.5 py-0.5 bg-accent-soft rounded-full">
                 Universo
               </span>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>

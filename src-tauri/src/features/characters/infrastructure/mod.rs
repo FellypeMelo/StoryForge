@@ -1,9 +1,9 @@
+use crate::domain::error::AppError;
+use crate::domain::result::AppResult;
 use crate::features::characters::domain::{
-    Character, CharacterId, CharacterRepository, OceanScores, ProjectId, BookId
+    BookId, Character, CharacterId, CharacterRepository, OceanScores, ProjectId,
 };
 use crate::infrastructure::sqlite::SqliteDatabase;
-use crate::domain::result::AppResult;
-use crate::domain::error::AppError;
 use rusqlite::{params, Row};
 
 impl CharacterRepository for SqliteDatabase {

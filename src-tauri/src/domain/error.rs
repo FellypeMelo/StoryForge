@@ -1,14 +1,14 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 #[derive(Debug, Error, Serialize, Deserialize)]
 pub enum AppError {
     #[error("Database error: {0}")]
     Database(String),
-    
+
     #[error("Not found: {0}")]
     NotFound(String),
-    
+
     #[error("Internal error: {0}")]
     Internal(String),
 
@@ -47,7 +47,7 @@ mod tests {
 
     #[test]
     fn test_error_conversion_io() {
-        let io_error = io::Error::new(io::ErrorKind::Other, "test io error");
+        let io_error = io::Error::other("test io error");
         let app_error: AppError = io_error.into();
         match app_error {
             AppError::Io(msg) => assert_eq!(msg, "test io error"),

@@ -40,6 +40,11 @@ describe("WorldRule Components", () => {
       fireEvent.click(screen.getByText(/Criar Regra/i));
       expect(onCreateNew).toHaveBeenCalled();
     });
+
+    it("should render rule cards as keyboard-accessible buttons", () => {
+      render(<WorldRuleList rules={[mockRule]} onSelect={vi.fn()} />);
+      expect(screen.getByRole("button", { name: /Toda magia exige/i })).toBeInTheDocument();
+    });
   });
 
   describe("WorldRuleForm", () => {

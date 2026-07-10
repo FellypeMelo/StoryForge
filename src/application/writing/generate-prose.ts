@@ -5,6 +5,7 @@ import { AiismDetector, type AiismScanResult } from "../../domain/aiism-detector
 import { AiismBlacklist } from "../../domain/aiism-blacklist";
 import { MruValidator } from "../../domain/mru-validator";
 import { EmotionPromptEnhancer } from "../../domain/emotion-prompt-enhancer";
+import { extractJson, asText } from "../shared/extract-json";
 
 export interface GenerateProseResult {
   isSuccess: boolean;
@@ -81,14 +82,19 @@ Respond as JSON:
   }
 
   private parseResponse(text: string): ParsedLlmResponse {
+    let raw: Record<string, unknown>;
     try {
-      const jsonMatch =
-        text.match(/```json\s*([\s\S]*?)\s*```/) ||
-        text.match(/```\s*([\s\S]*?)\s*```/);
-      const cleanJson = jsonMatch ? jsonMatch[1] : text;
-      return JSON.parse(cleanJson);
+      raw = extractJson<Record<string, unknown>>(text);
     } catch {
       throw new Error(`Failed to parse LLM response: ${text.substring(0, 100)}`);
     }
+    // Models drift on field types (critique as array) and casing; normalize to the schema.
+    const draft = asText(raw.draft ?? raw.Draft);
+    const finalVersion = asText(raw.finalVersion ?? raw.final_version ?? raw.FinalVersion);
+    return {
+      draft,
+      critique: asText(raw.critique ?? raw.Critique) || "Sem crítica fornecida pelo modelo.",
+      finalVersion: finalVersion || draft,
+    };
   }
 }

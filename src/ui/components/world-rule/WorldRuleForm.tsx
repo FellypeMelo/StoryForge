@@ -40,6 +40,7 @@ export function WorldRuleForm({ rule, onSave, onCancel }: WorldRuleFormProps) {
           <button
             type="button"
             onClick={onCancel}
+            aria-label="Fechar"
             className="p-2 hover:bg-bg-hover rounded-full cursor-pointer"
           >
             <X size={20} />
@@ -48,7 +49,7 @@ export function WorldRuleForm({ rule, onSave, onCancel }: WorldRuleFormProps) {
         </div>
         <button
           type="submit"
-          className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
+          className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer"
         >
           <Save size={16} /> Salvar Regra
         </button>
@@ -72,7 +73,7 @@ export function WorldRuleForm({ rule, onSave, onCancel }: WorldRuleFormProps) {
                 type="text"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none"
+                className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none"
               />
             </div>
             <div className="space-y-2">
@@ -85,7 +86,7 @@ export function WorldRuleForm({ rule, onSave, onCancel }: WorldRuleFormProps) {
                 type="number"
                 value={formData.hierarchy}
                 onChange={handleChange}
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none"
+                className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none"
               />
             </div>
           </div>
@@ -99,10 +100,10 @@ export function WorldRuleForm({ rule, onSave, onCancel }: WorldRuleFormProps) {
               value={formData.content}
               onChange={handleChange}
               rows={6}
-              className={`w-full bg-bg-hover border ${errors.content ? "border-red-500" : "border-border-subtle"} p-3 rounded text-text-main focus:border-text-main outline-none resize-none`}
+              className={`w-full bg-bg-hover border ${errors.content ? "border-danger" : "border-border-subtle"} p-3 rounded-lg text-text-main focus:border-text-main outline-none resize-none`}
               placeholder="Descreva a lei, regra mágica ou costume social..."
             />
-            {errors.content && <p className="text-[10px] text-red-500">{errors.content}</p>}
+            {errors.content && <p className="text-[10px] text-danger">{errors.content}</p>}
           </div>
         </div>
       </div>

@@ -36,12 +36,12 @@ export function TimelineEventForm({ event, onSave, onCancel }: TimelineEventForm
     <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <div className="flex justify-between items-center sticky top-0 bg-bg-base/80 backdrop-blur-md py-4 z-20 border-b border-border-subtle">
         <div className="flex items-center gap-4">
-          <button type="button" onClick={onCancel} className="p-2 hover:bg-bg-hover rounded-full cursor-pointer">
+          <button type="button" onClick={onCancel} aria-label="Fechar" className="p-2 hover:bg-bg-hover rounded-full cursor-pointer">
             <X size={20} />
           </button>
           <h2 className="text-xl font-serif text-text-main">Evento da Linha do Tempo</h2>
         </div>
-        <button type="submit" className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
+        <button type="submit" className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
           <Save size={16} /> Salvar Evento
         </button>
       </div>
@@ -62,7 +62,7 @@ export function TimelineEventForm({ event, onSave, onCancel }: TimelineEventForm
               value={formData.date}
               onChange={handleChange}
               placeholder="Ex: Ano 452 da Terceira Era, Primavera..."
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none"
             />
           </div>
           <div className="space-y-2">
@@ -73,10 +73,10 @@ export function TimelineEventForm({ event, onSave, onCancel }: TimelineEventForm
               value={formData.description}
               onChange={handleChange}
               rows={6}
-              className={`w-full bg-bg-hover border ${errors.description ? "border-red-500" : "border-border-subtle"} p-3 rounded text-text-main focus:border-text-main outline-none resize-none`}
+              className={`w-full bg-bg-hover border ${errors.description ? "border-danger" : "border-border-subtle"} p-3 rounded-lg text-text-main focus:border-text-main outline-none resize-none`}
               placeholder="O que aconteceu neste momento crucial?"
             />
-            {errors.description && <p className="text-[10px] text-red-500">{errors.description}</p>}
+            {errors.description && <p className="text-[10px] text-danger">{errors.description}</p>}
           </div>
         </div>
       </div>
@@ -136,12 +136,12 @@ export function RelationshipForm({ relationship, characters, onSave, onCancel }:
     <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <div className="flex justify-between items-center sticky top-0 bg-bg-base/80 backdrop-blur-md py-4 z-20 border-b border-border-subtle">
         <div className="flex items-center gap-4">
-          <button type="button" onClick={onCancel} className="p-2 hover:bg-bg-hover rounded-full cursor-pointer">
+          <button type="button" onClick={onCancel} aria-label="Fechar" className="p-2 hover:bg-bg-hover rounded-full cursor-pointer">
             <X size={20} />
           </button>
           <h2 className="text-xl font-serif text-text-main">Relacionamento</h2>
         </div>
-        <button type="submit" className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
+        <button type="submit" className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
           <Save size={16} /> Salvar Relacionamento
         </button>
       </div>
@@ -161,7 +161,7 @@ export function RelationshipForm({ relationship, characters, onSave, onCancel }:
                 name="characterAId"
                 value={formData.characterAId.value}
                 onChange={handleChange}
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none cursor-pointer"
+                className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none cursor-pointer"
               >
                 {characters.length === 0 && <option value="">Nenhum personagem encontrado</option>}
                 {characters.map(c => (
@@ -176,7 +176,7 @@ export function RelationshipForm({ relationship, characters, onSave, onCancel }:
                 name="characterBId"
                 value={formData.characterBId.value}
                 onChange={handleChange}
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none cursor-pointer"
+                className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none cursor-pointer"
               >
                 {characters.length === 0 && <option value="">Nenhum personagem encontrado</option>}
                 {characters.map(c => (
@@ -185,7 +185,7 @@ export function RelationshipForm({ relationship, characters, onSave, onCancel }:
               </select>
             </div>
           </div>
-          {errors.sameCharacter && <p className="text-[10px] text-red-500">{errors.sameCharacter}</p>}
+          {errors.sameCharacter && <p className="text-[10px] text-danger">{errors.sameCharacter}</p>}
 
           <div className="space-y-2">
             <label htmlFor="type" className="text-xs font-medium text-text-muted">Natureza do Vínculo</label>
@@ -196,9 +196,9 @@ export function RelationshipForm({ relationship, characters, onSave, onCancel }:
               value={formData.type}
               onChange={handleChange}
               placeholder="Ex: Rivais de infância, Amantes proibidos, Mestre e Aprendiz..."
-              className={`w-full bg-bg-hover border ${errors.type ? "border-red-500" : "border-border-subtle"} p-3 rounded text-text-main focus:border-text-main outline-none`}
+              className={`w-full bg-bg-hover border ${errors.type ? "border-danger" : "border-border-subtle"} p-3 rounded-lg text-text-main focus:border-text-main outline-none`}
             />
-            {errors.type && <p className="text-[10px] text-red-500">{errors.type}</p>}
+            {errors.type && <p className="text-[10px] text-danger">{errors.type}</p>}
           </div>
         </div>
       </div>
@@ -237,12 +237,12 @@ export function BlacklistEntryForm({ entry, onSave, onCancel }: BlacklistEntryFo
     <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
       <div className="flex justify-between items-center sticky top-0 bg-bg-base/80 backdrop-blur-md py-4 z-20 border-b border-border-subtle">
         <div className="flex items-center gap-4">
-          <button type="button" onClick={onCancel} className="p-2 hover:bg-bg-hover rounded-full cursor-pointer">
+          <button type="button" onClick={onCancel} aria-label="Fechar" className="p-2 hover:bg-bg-hover rounded-full cursor-pointer">
             <X size={20} />
           </button>
           <h2 className="text-xl font-serif text-text-main">Entrada da Lista Negra</h2>
         </div>
-        <button type="submit" className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
+        <button type="submit" className="flex items-center gap-2 bg-text-main text-bg-base px-6 py-2 rounded-lg font-sans font-bold text-sm hover:opacity-90 cursor-pointer">
           <Save size={16} /> Salvar Entrada
         </button>
       </div>
@@ -263,9 +263,9 @@ export function BlacklistEntryForm({ entry, onSave, onCancel }: BlacklistEntryFo
                 type="text"
                 value={formData.term}
                 onChange={handleChange}
-                className={`w-full bg-bg-hover border ${errors.term ? "border-red-500" : "border-border-subtle"} p-3 rounded text-text-main focus:border-text-main outline-none`}
+                className={`w-full bg-bg-hover border ${errors.term ? "border-danger" : "border-border-subtle"} p-3 rounded-lg text-text-main focus:border-text-main outline-none`}
               />
-              {errors.term && <p className="text-[10px] text-red-500">{errors.term}</p>}
+              {errors.term && <p className="text-[10px] text-danger">{errors.term}</p>}
             </div>
             <div className="space-y-2">
               <label htmlFor="category" className="text-xs font-medium text-text-muted">Categoria</label>
@@ -276,7 +276,7 @@ export function BlacklistEntryForm({ entry, onSave, onCancel }: BlacklistEntryFo
                 value={formData.category}
                 onChange={handleChange}
                 placeholder="Ex: Estilo, Trama, Mundo..."
-                className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none"
+                className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none"
               />
             </div>
           </div>
@@ -288,7 +288,7 @@ export function BlacklistEntryForm({ entry, onSave, onCancel }: BlacklistEntryFo
               value={formData.reason}
               onChange={handleChange}
               rows={4}
-              className="w-full bg-bg-hover border border-border-subtle p-3 rounded text-text-main focus:border-text-main outline-none resize-none"
+              className="w-full bg-bg-hover border border-border-subtle p-3 rounded-lg text-text-main focus:border-text-main outline-none resize-none"
               placeholder="Por que evitar este termo ou ideia?"
             />
           </div>

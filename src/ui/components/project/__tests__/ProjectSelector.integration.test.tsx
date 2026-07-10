@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { invoke } from "@tauri-apps/api/core";
 import { ProjectSelector } from "../ProjectSelector";
 import { mockDb } from "../../../../test/mock-db";
 import { getStandardSeed } from "../../../../test/seeds/standard-seed";
@@ -64,6 +65,21 @@ describe("ProjectSelector Integration", () => {
       expect(onSelectProject).toHaveBeenCalledWith(expect.any(String));
       expect(onSelectProject.mock.calls[0][0]).toMatch(/^[0-9a-f-]{36}$/i);
     });
+  });
+
+  it("should show an inline error with retry when loading projects fails", async () => {
+    mockDb.seed(getStandardSeed());
+    vi.mocked(invoke).mockRejectedValueOnce(new Error("db offline"));
+
+    render(<ProjectSelector onSelectProject={onSelectProject} />);
+
+    expect(await screen.findByText(/Não foi possível carregar seus universos/i)).toBeInTheDocument();
+    expect(screen.queryByText("A Forja das Sombras")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Tentar novamente/i }));
+
+    expect(await screen.findByText("A Forja das Sombras")).toBeInTheDocument();
+    expect(screen.queryByText(/Não foi possível carregar/i)).not.toBeInTheDocument();
   });
 
   it("should allow canceling project creation", async () => {

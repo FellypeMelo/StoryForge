@@ -8,9 +8,9 @@ describe("ClicheExtractionStep Integration", () => {
   const mockState = {
     genre: "",
     cliches: [],
-    seeds: [],
-    hybridPremises: [],
-    selectedPremise: null,
+    discipline: "",
+    premises: [],
+    selectedPremiseIndex: null,
     validationResult: null,
   };
   const updateState = vi.fn();
@@ -57,8 +57,8 @@ describe("ClicheExtractionStep Integration", () => {
       }));
     }, { timeout: 3000 });
 
-    const call = updateState.mock.calls.find(c => c[0].cliches);
-    expect(call[0].cliches).toContain("O Escolhido");
+    const call = updateState.mock.calls.find((c) => c[0].cliches);
+    expect(call?.[0].cliches).toContain("O Escolhido");
   });
 
   it("should show extracted cliches and continue", async () => {

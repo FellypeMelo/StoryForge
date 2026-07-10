@@ -3,6 +3,7 @@ import { IdeationState } from "./IdeationWizard";
 import { ExtractClichesUseCase } from "../../../application/ideation/extract-cliches";
 import { Genre } from "../../../domain/value-objects/genre";
 import { ProjectId } from "../../../domain/value-objects/project-id";
+import { LlmPort } from "../../../domain/ideation/ports/llm-port";
 import { DummyLlmPort } from "../../../infrastructure/llm/dummy-llm-port";
 import { TauriBlacklistRepository } from "../../../infrastructure/tauri/tauri-blacklist-repository";
 
@@ -11,6 +12,7 @@ interface ClicheExtractionStepProps {
   updateState: (updates: Partial<IdeationState>) => void;
   onNext: () => void;
   projectId: string;
+  llmPort?: LlmPort;
 }
 
 const GENRES = [
@@ -28,15 +30,17 @@ export function ClicheExtractionStep({
   updateState,
   onNext,
   projectId,
+  llmPort = new DummyLlmPort(),
 }: ClicheExtractionStepProps) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleExtract = async () => {
     if (!state.genre) return;
     setLoading(true);
+    setError(null);
 
     try {
-      const llmPort = new DummyLlmPort();
       const blacklistRepo = new TauriBlacklistRepository();
       const useCase = new ExtractClichesUseCase(llmPort, blacklistRepo);
 
@@ -45,8 +49,9 @@ export function ClicheExtractionStep({
       updateState({
         cliches: result.bannedTerms,
       });
-    } catch (error) {
-      console.error("Erro ao extrair clichês:", error);
+    } catch (err) {
+      console.error("Erro ao extrair clichês:", err);
+      setError("Falha ao consultar a IA. Verifique o provedor em Preferências e tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -91,6 +96,12 @@ export function ClicheExtractionStep({
               "Mapear Clichês"
             )}
           </button>
+
+          {error && (
+            <p role="alert" className="text-sm text-danger text-center">
+              {error}
+            </p>
+          )}
 
           {state.cliches.length > 0 && !loading && (
             <div className="w-full space-y-4 animate-in fade-in zoom-in duration-300">

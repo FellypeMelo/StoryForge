@@ -7,6 +7,19 @@ import { VoiceProfile, PhysicalTells } from "../../domain/voice-profile";
 import { CharacterRepository } from "../../domain/ports/character-repository";
 import { ProjectId } from "../../domain/value-objects/project-id";
 import { CharacterId } from "../../domain/value-objects/character-id";
+import { extractJson } from "../shared/extract-json";
+
+interface CharacterLlmData {
+  ocean: Record<"openness" | "conscientiousness" | "extraversion" | "agreeableness" | "neuroticism", OceanTraitScore>;
+  hauge: Record<"wound" | "belief" | "fear" | "identity" | "essence", string>;
+  voice: {
+    sentenceLength: string;
+    formality: string;
+    verbalTics: string[];
+    evasionMechanism: string;
+  };
+  tells: string[];
+}
 
 export class GenerateCharacterUseCase {
   constructor(
@@ -58,7 +71,7 @@ No preamble, no explanation. Just the JSON object.`;
     const response = await this.llmPort.complete(prompt, { temperature: 0.7 });
 
     try {
-      const data = JSON.parse(response.text);
+      const data = extractJson<CharacterLlmData>(response.text);
 
       const ocean = OceanProfile.create({
         openness: data.ocean.openness as OceanTraitScore,

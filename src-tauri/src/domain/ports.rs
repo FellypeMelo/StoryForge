@@ -1,7 +1,5 @@
 use crate::domain::result::AppResult;
-pub use crate::domain::value_objects::{
-    BookId, ProjectId,
-};
+pub use crate::domain::value_objects::{BookId, ProjectId};
 
 pub trait DatabasePort {
     fn is_healthy(&self) -> bool;
@@ -75,19 +73,35 @@ mod tests {
     fn test_generic_repository_usage() {
         struct MockRepo;
         impl Repository<Character, CharacterId> for MockRepo {
-            fn create(&self, _entity: &Character) -> AppResult<()> { Ok(()) }
-            fn get_by_id(&self, _id: &CharacterId) -> AppResult<Character> { 
-                Character::new(ProjectId("test".to_string()), None, "Test".to_string()) 
+            fn create(&self, _entity: &Character) -> AppResult<()> {
+                Ok(())
             }
-            fn update(&self, _entity: &Character) -> AppResult<()> { Ok(()) }
-            fn delete(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+            fn get_by_id(&self, _id: &CharacterId) -> AppResult<Character> {
+                Character::new(ProjectId("test".to_string()), None, "Test".to_string())
+            }
+            fn update(&self, _entity: &Character) -> AppResult<()> {
+                Ok(())
+            }
+            fn delete(&self, _id: &CharacterId) -> AppResult<()> {
+                Ok(())
+            }
         }
         impl ScopedRepository<Character, CharacterId> for MockRepo {
-            fn list_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
-            fn list_by_book(&self, _book_id: &BookId) -> AppResult<Vec<Character>> { Ok(vec![]) }
-            fn list_global(&self, _project_id: &ProjectId) -> AppResult<Vec<Character>> { Ok(vec![]) }
-            fn move_to_book(&self, _id: &CharacterId, _book_id: &BookId) -> AppResult<()> { Ok(()) }
-            fn move_to_project(&self, _id: &CharacterId) -> AppResult<()> { Ok(()) }
+            fn list_by_project(&self, _project_id: &ProjectId) -> AppResult<Vec<Character>> {
+                Ok(vec![])
+            }
+            fn list_by_book(&self, _book_id: &BookId) -> AppResult<Vec<Character>> {
+                Ok(vec![])
+            }
+            fn list_global(&self, _project_id: &ProjectId) -> AppResult<Vec<Character>> {
+                Ok(vec![])
+            }
+            fn move_to_book(&self, _id: &CharacterId, _book_id: &BookId) -> AppResult<()> {
+                Ok(())
+            }
+            fn move_to_project(&self, _id: &CharacterId) -> AppResult<()> {
+                Ok(())
+            }
         }
         let repo = MockRepo;
         assert!(repo.list_global(&ProjectId("test".to_string())).is_ok());

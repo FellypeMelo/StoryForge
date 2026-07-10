@@ -1,8 +1,8 @@
+use crate::domain::error::AppError;
+use crate::domain::ports::{EntityType, SearchPort, SearchResult};
+use crate::domain::result::AppResult;
 use crate::features::lore::domain::*;
 use crate::infrastructure::sqlite::SqliteDatabase;
-use crate::domain::result::AppResult;
-use crate::domain::error::AppError;
-use crate::domain::ports::{SearchResult, SearchPort, EntityType};
 use rusqlite::{params, Row};
 
 impl LocationRepository for SqliteDatabase {

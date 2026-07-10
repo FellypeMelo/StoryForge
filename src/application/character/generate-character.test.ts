@@ -38,6 +38,7 @@ describe("GenerateCharacterUseCase", () => {
     save: vi.fn().mockResolvedValue({ success: true, data: undefined }),
     findById: vi.fn(),
     findByProject: vi.fn(),
+    findByBook: vi.fn(),
     delete: vi.fn(),
   };
 
