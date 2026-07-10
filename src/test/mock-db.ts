@@ -316,6 +316,20 @@ export class MockDatabase {
       case "reindex_lore_vectors":
         return this.characters.length;
 
+      case "list_lore_index_rows":
+        return this.characters.map(c => ({ entity_id: c.id, text: c.name }));
+
+      case "store_lore_vectors":
+        return args.rows?.length ?? 0;
+
+      case "semantic_search_by_vector": {
+        const results: Array<{ entity_id: string; entity_type: string; snippet: string; score: number }> = [];
+        this.characters.forEach(c => {
+          results.push({ entity_id: c.id, entity_type: "character", snippet: c.name, score: 0 });
+        });
+        return results;
+      }
+
       case "health_check":
         return "ok";
       case "get_app_info":

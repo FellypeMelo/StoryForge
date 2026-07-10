@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { useToast } from "../shared/Toast";
 import { LocalStorageProviderConfigRepository } from "../../../infrastructure/local/local-storage-provider-config-repository";
 import { ProviderConfig } from "../../../domain/ports/provider-config-repository";
+import { LocalStorageEmbeddingConfigRepository } from "../../../infrastructure/local/local-storage-embedding-config-repository";
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -96,6 +97,7 @@ interface Draft {
 }
 
 const repo = new LocalStorageProviderConfigRepository();
+const embeddingRepo = new LocalStorageEmbeddingConfigRepository();
 
 function isValidUrl(value: string): boolean {
   try {
@@ -121,6 +123,11 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
+  const [embeddingEnabled, setEmbeddingEnabled] = useState(false);
+  const [embeddingBaseUrl, setEmbeddingBaseUrl] = useState("http://127.0.0.1:8080");
+  const [embeddingModel, setEmbeddingModel] = useState("");
+  const [embeddingError, setEmbeddingError] = useState<string | null>(null);
+
   useEffect(() => {
     const load = async () => {
       const all = await repo.listAll();
@@ -144,6 +151,15 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
       if (active) setChoice(active.providerId as RealProvider);
     };
     load();
+
+    const loadEmbedding = async () => {
+      const result = await embeddingRepo.load();
+      if (!result.success) return;
+      setEmbeddingEnabled(result.data.enabled);
+      setEmbeddingBaseUrl(result.data.baseUrl);
+      setEmbeddingModel(result.data.model);
+    };
+    loadEmbedding();
   }, []);
 
   const updateDraft = (id: RealProvider, patch: Partial<Draft>) => {
@@ -166,6 +182,7 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
 
   const handleSave = async () => {
     setFieldError(null);
+    setEmbeddingError(null);
 
     if (choice !== "dummy") {
       const meta = PROVIDERS.find((p) => p.id === choice)!;
@@ -174,6 +191,11 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
         setFieldError(err);
         return;
       }
+    }
+
+    if (embeddingEnabled && embeddingBaseUrl.trim() === "") {
+      setEmbeddingError("Informe a URL do servidor de embeddings.");
+      return;
     }
 
     setSaving(true);
@@ -190,6 +212,14 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
       const result = await repo.save(config);
       if (!result.success) failed = true;
     }
+
+    const embeddingResult = await embeddingRepo.save({
+      enabled: embeddingEnabled,
+      baseUrl: embeddingBaseUrl.trim(),
+      model: embeddingModel.trim(),
+    });
+    if (!embeddingResult.success) failed = true;
+
     setSaving(false);
 
     if (failed) {
@@ -330,6 +360,73 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
             </div>
 
             {fieldError && <p className="text-sm text-danger">{fieldError}</p>}
+          </div>
+        )}
+      </section>
+
+      <section className="space-y-6 max-w-xl">
+        <div className="space-y-1">
+          <h2 className="text-text-main font-bold tracking-widest uppercase text-xs">
+            Embeddings (Busca Semântica)
+          </h2>
+          <p className="text-sm text-text-muted leading-relaxed">
+            Ative para gerar embeddings reais em um servidor llama.cpp local. Quando desativado,
+            a busca semântica usa o modo simulado offline.
+          </p>
+        </div>
+
+        <label className="flex items-start gap-3 p-4 rounded-xl border border-border-subtle hover:bg-bg-hover transition-colors cursor-pointer has-[:checked]:border-border-default has-[:checked]:bg-accent-soft">
+          <input
+            type="checkbox"
+            checked={embeddingEnabled}
+            onChange={(e) => setEmbeddingEnabled(e.target.checked)}
+            className="mt-1 accent-[var(--sf-accent)]"
+            aria-label="Habilitar embeddings reais"
+          />
+          <span>
+            <span className="block text-sm font-medium text-text-main">
+              Habilitar embeddings reais
+            </span>
+            <span className="block text-xs text-text-muted mt-1">
+              Usa um servidor llama.cpp local para gerar vetores de busca semântica.
+            </span>
+          </span>
+        </label>
+
+        {embeddingEnabled && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="space-y-2">
+              <label
+                htmlFor="embedding-base-url"
+                className="block text-sm font-medium text-text-main"
+              >
+                URL do servidor
+              </label>
+              <input
+                id="embedding-base-url"
+                type="text"
+                value={embeddingBaseUrl}
+                onChange={(e) => setEmbeddingBaseUrl(e.target.value)}
+                placeholder="http://127.0.0.1:8080"
+                className="w-full px-4 py-2.5 rounded-lg bg-bg-surface border border-border-default text-text-main text-sm focus:border-accent transition-colors"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="embedding-model" className="block text-sm font-medium text-text-main">
+                Modelo
+              </label>
+              <input
+                id="embedding-model"
+                type="text"
+                value={embeddingModel}
+                onChange={(e) => setEmbeddingModel(e.target.value)}
+                placeholder="nomic-embed-text"
+                className="w-full px-4 py-2.5 rounded-lg bg-bg-surface border border-border-default text-text-main text-sm focus:border-accent transition-colors"
+              />
+            </div>
+
+            {embeddingError && <p className="text-sm text-danger">{embeddingError}</p>}
           </div>
         )}
 

@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { SettingsPage } from "./SettingsPage";
 import { ToastProvider } from "../shared/Toast";
 import { LocalStorageProviderConfigRepository } from "../../../infrastructure/local/local-storage-provider-config-repository";
+import { LocalStorageEmbeddingConfigRepository } from "../../../infrastructure/local/local-storage-embedding-config-repository";
 
 function renderPage(onBack = vi.fn(), onProviderChange = vi.fn()) {
   return render(
@@ -150,5 +151,76 @@ describe("SettingsPage", () => {
     const radio = await screen.findByLabelText(/Gemini/i);
     await waitFor(() => expect(radio).toBeChecked());
     expect(screen.getByLabelText("Chave de API")).toHaveValue("gk-existing");
+  });
+
+  describe("embeddings (busca semântica)", () => {
+    it("renderiza a seção de embeddings desabilitada por padrão", async () => {
+      renderPage();
+      expect(await screen.findByText(/Embeddings \(Busca Semântica\)/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Habilitar embeddings reais/i)).not.toBeChecked();
+      expect(screen.queryByLabelText(/URL do servidor/i)).not.toBeInTheDocument();
+    });
+
+    it("habilitar exibe os campos de URL e modelo", async () => {
+      renderPage();
+      fireEvent.click(await screen.findByLabelText(/Habilitar embeddings reais/i));
+
+      expect(screen.getByLabelText(/URL do servidor/i)).toBeInTheDocument();
+      expect(screen.getByLabelText("Modelo")).toBeInTheDocument();
+    });
+
+    it("habilita embeddings reais e persiste a configuração ao salvar", async () => {
+      const onProviderChange = vi.fn();
+      renderPage(vi.fn(), onProviderChange);
+
+      fireEvent.click(await screen.findByLabelText(/Habilitar embeddings reais/i));
+      fireEvent.change(screen.getByLabelText(/URL do servidor/i), {
+        target: { value: "http://127.0.0.1:8090" },
+      });
+      fireEvent.change(screen.getByLabelText("Modelo"), {
+        target: { value: "nomic-embed-text" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
+
+      await waitFor(async () => {
+        const repo = new LocalStorageEmbeddingConfigRepository();
+        const result = await repo.load();
+        if (!result.success) throw new Error("expected success");
+        expect(result.data.enabled).toBe(true);
+        expect(result.data.baseUrl).toBe("http://127.0.0.1:8090");
+        expect(result.data.model).toBe("nomic-embed-text");
+      });
+      expect(onProviderChange).toHaveBeenCalled();
+    });
+
+    it("URL vazia com embeddings habilitados bloqueia salvar", async () => {
+      renderPage();
+      fireEvent.click(await screen.findByLabelText(/Habilitar embeddings reais/i));
+      fireEvent.change(screen.getByLabelText(/URL do servidor/i), {
+        target: { value: "" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
+
+      expect(
+        await screen.findByText(/Informe a URL do servidor de embeddings/i),
+      ).toBeInTheDocument();
+
+      const repo = new LocalStorageEmbeddingConfigRepository();
+      const result = await repo.load();
+      if (!result.success) throw new Error("expected success");
+      expect(result.data.enabled).toBe(false);
+    });
+
+    it("carrega configuração de embeddings existente ao abrir", async () => {
+      const repo = new LocalStorageEmbeddingConfigRepository();
+      await repo.save({ enabled: true, baseUrl: "http://127.0.0.1:9999", model: "bge-m3" });
+
+      renderPage();
+
+      const toggle = await screen.findByLabelText(/Habilitar embeddings reais/i);
+      await waitFor(() => expect(toggle).toBeChecked());
+      expect(screen.getByLabelText(/URL do servidor/i)).toHaveValue("http://127.0.0.1:9999");
+      expect(screen.getByLabelText("Modelo")).toHaveValue("bge-m3");
+    });
   });
 });

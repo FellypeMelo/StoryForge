@@ -377,11 +377,14 @@ export function CodexDashboard({ projectId, bookId, onBack }: CodexDashboardProp
   const handleReindex = async () => {
     setIsReindexing(true);
     try {
-      const count = await invoke<number>("reindex_lore_vectors", {
-        projectId: currentProjectId,
-        bookId: scope === "book" ? bookId : null,
-      });
-      showToast(`Índice semântico atualizado: ${count} itens reindexados.`, "success");
+      const result = await semanticIndexService.reindex(
+        currentProjectId,
+        scope === "book" ? bookId : null,
+      );
+      if (!result.success) {
+        throw result.error;
+      }
+      showToast(`Índice semântico atualizado: ${result.data} itens reindexados.`, "success");
     } catch (error) {
       console.error("Failed to reindex semantic search:", error);
       showToast("Falha ao reindexar a busca semântica.", "error");
