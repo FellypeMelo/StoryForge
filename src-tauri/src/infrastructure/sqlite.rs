@@ -8,13 +8,18 @@ use rusqlite::{params, Connection, Result, Row};
 use std::path::Path;
 use std::sync::{Mutex, Once};
 
+/// Dimension of the deterministic offline `MockEmbeddingPort`. The offline
+/// mock path (`reindex_lore_vectors` / `semantic_search_lore`) always operates
+/// at this dimension, so it must reconcile `lore_vectors` to it before writing.
+pub const MOCK_EMBEDDING_DIM: usize = 1536;
+
 pub struct MockEmbeddingPort;
 
 impl EmbeddingPort for MockEmbeddingPort {
     fn generate_embedding(&self, text: &str) -> AppResult<Vec<f32>> {
-        let mut embedding = vec![0.0f32; 1536];
+        let mut embedding = vec![0.0f32; MOCK_EMBEDDING_DIM];
         for (i, char) in text.chars().enumerate() {
-            if i < 1536 {
+            if i < MOCK_EMBEDDING_DIM {
                 embedding[i] = (char as u32 as f32) / 255.0;
             }
         }
@@ -362,6 +367,11 @@ impl SqliteDatabase {
             .lock()
             .map_err(|e| AppError::Internal(e.to_string()))?;
 
+        // The mock path emits MOCK_EMBEDDING_DIM vectors. If a prior real-embedding
+        // run recreated lore_vectors at a different dimension, insert would fail —
+        // reconcile the table first (a reindex fully rebuilds it anyway).
+        self.ensure_vector_dim(&conn, MOCK_EMBEDDING_DIM)?;
+
         let mut sql =
             "SELECT entity_id, title, content FROM lore_search WHERE project_id = ?".to_string();
         if book_id.is_some() {
@@ -603,6 +613,21 @@ impl VectorSearchPort for SqliteDatabase {
             .connection
             .lock()
             .map_err(|e| AppError::Internal(e.to_string()))?;
+
+        // A vec0 MATCH errors if the query vector's dimension differs from the
+        // stored column. When the index was built for a different embedding
+        // source (real vs mock), degrade gracefully to "no hits" instead of
+        // erroring — the caller can trigger a reindex for this dimension.
+        let stored_dim: i64 = conn
+            .query_row(
+                "SELECT dim FROM vector_meta WHERE id = 1",
+                [],
+                |row: &Row| row.get(0),
+            )
+            .map_err(AppError::from)?;
+        if embedding.len() != stored_dim as usize {
+            return Ok(Vec::new());
+        }
 
         let mut sql = "
             SELECT v.entity_id, v.distance, s.type, s.title, s.content
@@ -916,6 +941,63 @@ mod tests {
         assert_eq!(first, 1);
         assert_eq!(second, 1);
         assert_eq!(count_lore_vectors(&db), 1);
+    }
+
+    #[test]
+    fn test_offline_reindex_recovers_after_real_embedding_dimension_change() {
+        // Regression: a real-embedding run recreates lore_vectors at 768; then the
+        // user disables real embeddings and the offline mock reindex must NOT crash
+        // with a dimension mismatch — it reconciles the table back to the mock dim.
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_real_to_mock_reindex.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-real-to-mock".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        // Real path: store a 768-dim vector -> lore_vectors recreated as float[768].
+        db.store_lore_vectors(vec![("char-1".to_string(), vec![0.4f32; 768])])
+            .expect("real store should succeed");
+        assert_eq!(vector_meta_dim(&db), 768);
+
+        // Offline mock path must succeed (previously crashed: inserting 1536 into float[768]).
+        let indexed = db
+            .reindex_lore_vectors(&project_id, None)
+            .expect("offline reindex must recover after a real-embedding dim change");
+        assert_eq!(indexed, 1);
+        assert_eq!(vector_meta_dim(&db), MOCK_EMBEDDING_DIM as i64);
+
+        // And the mock semantic search works again end-to-end.
+        let results = db
+            .semantic_search_lore(&project_id, None, "Nara a brave hunter", 5)
+            .expect("mock semantic search should succeed after recovery");
+        assert!(!results.is_empty());
+        assert_eq!(results[0].entity_id, "char-1");
+    }
+
+    #[test]
+    fn test_find_similar_returns_empty_on_dimension_mismatch() {
+        // A query vector whose dimension differs from the stored column must
+        // degrade to no hits rather than surfacing a vec0 MATCH error.
+        let dir = tempdir().expect("Failed to create temp dir");
+        let db_path = dir.path().join("test_dim_mismatch_empty.db");
+        let db = SqliteDatabase::new(&db_path).expect("Failed to create database");
+        db.run_migrations().expect("Failed to run migrations");
+
+        let project_id = ProjectId("proj-mismatch".to_string());
+        seed_lore_search_row(&db, "char-1", &project_id.0);
+
+        // Index built at 768 (real path).
+        db.store_lore_vectors(vec![("char-1".to_string(), vec![0.5f32; 768])])
+            .expect("store should succeed");
+        assert_eq!(vector_meta_dim(&db), 768);
+
+        // Query with a mock 1536-dim vector -> graceful empty, no error.
+        let results = db
+            .semantic_search_lore(&project_id, None, "Nara", 5)
+            .expect("dimension mismatch must not error");
+        assert!(results.is_empty());
     }
 
     #[test]

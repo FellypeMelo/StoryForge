@@ -370,8 +370,8 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
             Embeddings (Busca Semântica)
           </h2>
           <p className="text-sm text-text-muted leading-relaxed">
-            Ative para gerar embeddings reais em um servidor llama.cpp local. Quando desativado,
-            a busca semântica usa o modo simulado offline.
+            Ative para gerar embeddings reais em um servidor local. Quando desativado, a busca
+            semântica usa o modo simulado offline.
           </p>
         </div>
 
@@ -388,7 +388,7 @@ export function SettingsPage({ onBack, onProviderChange }: SettingsPageProps) {
               Habilitar embeddings reais
             </span>
             <span className="block text-xs text-text-muted mt-1">
-              Usa um servidor llama.cpp local para gerar vetores de busca semântica.
+              Usa um servidor de inferência local para gerar vetores de busca semântica.
             </span>
           </span>
         </label>

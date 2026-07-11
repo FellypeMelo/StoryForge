@@ -7,6 +7,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { LlamaCppAdapter } from "../infrastructure/llm/llama-cpp-adapter";
 import { OpenAiAdapter } from "../infrastructure/llm/openai-adapter";
+import { LlamaCppEmbeddingAdapter } from "../infrastructure/llm/llamacpp-embedding-adapter";
 import { LlmRouter } from "../infrastructure/llm/llm-router";
 import { CircuitBreakerDecorator } from "../infrastructure/llm/circuit-breaker-decorator";
 import { ExtractClichesUseCase } from "../application/ideation/extract-cliches";
@@ -196,6 +197,24 @@ describe.skipIf(!process.env.E2E_LLM)("E2E — StoryForge contra llama.cpp vivo"
       );
       expect(typeof r.text).toBe("string");
       expect(r.text.length).toBeGreaterThan(0);
+    },
+    TIMEOUT,
+  );
+
+  it(
+    "LlamaCppEmbeddingAdapter: embed() retorna vetor não vazio e de tamanho consistente",
+    async () => {
+      const embedder = new LlamaCppEmbeddingAdapter({ baseUrl: URL });
+
+      const first = await withRetry(() => embedder.embed("A cartógrafa toca a maré."));
+      const second = await withRetry(() =>
+        embedder.embed("Uma ilha que só existe quando ninguém a observa."),
+      );
+
+      expect(Array.isArray(first)).toBe(true);
+      expect(first.length).toBeGreaterThan(0);
+      expect(Array.isArray(second)).toBe(true);
+      expect(second.length).toBe(first.length);
     },
     TIMEOUT,
   );
