@@ -7,9 +7,43 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { WritingPage } from "./WritingPage";
 import { mockDb } from "../../../test/mock-db";
 import type { LlmPort, LlmResponse } from "../../../domain/ideation/ports/llm-port";
+
+// The prose surface is a TipTap contenteditable in production (jsdom can't drive
+// its selection APIs). These tests exercise WritingPage's logic — generate /
+// rewrite / MPS / analysis / autosave — so we stub the editor with a textarea
+// that honors the exact same contract (value / onChange / char-offset selection).
+vi.mock("./ProseEditor", () => ({
+  ProseEditor: ({
+    value,
+    onChange,
+    onSelectionChange,
+    ariaLabel = "Editor de prosa",
+    placeholder,
+  }: {
+    value: string;
+    onChange: (text: string) => void;
+    onSelectionChange: (start: number, end: number) => void;
+    ariaLabel?: string;
+    placeholder?: string;
+  }) => (
+    <textarea
+      aria-label={ariaLabel}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onSelect={(e) =>
+        onSelectionChange(
+          e.currentTarget.selectionStart,
+          e.currentTarget.selectionEnd,
+        )
+      }
+    />
+  ),
+}));
+
+import { WritingPage } from "./WritingPage";
 
 const RSIP_JSON = JSON.stringify({
   draft: "Rascunho gerado.",

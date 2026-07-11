@@ -134,3 +134,82 @@
     animation: fade-in-simple 0.3s ease forwards;
   }
 }
+
+/* TipTap prose surface — rich-text rendering on a plain-text-backed editor.
+   Uses design tokens only; restores list/heading visuals Tailwind's reset strips. */
+@layer components {
+  .prose-editor {
+    min-height: 300px;
+    caret-color: var(--sf-accent);
+  }
+
+  .prose-editor:focus {
+    outline: none;
+  }
+
+  .prose-editor p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--sf-text-muted);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .prose-editor h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0.6em 0 0.3em;
+  }
+
+  .prose-editor h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0.5em 0 0.3em;
+  }
+
+  .prose-editor h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.5em 0 0.3em;
+  }
+
+  .prose-editor p {
+    margin: 0 0 0.75em;
+  }
+
+  .prose-editor strong {
+    font-weight: 700;
+  }
+
+  .prose-editor em {
+    font-style: italic;
+  }
+
+  .prose-editor ul,
+  .prose-editor ol {
+    padding-left: 1.4em;
+    margin: 0 0 0.75em;
+  }
+
+  .prose-editor ul {
+    list-style: disc;
+  }
+
+  .prose-editor ol {
+    list-style: decimal;
+  }
+
+  .prose-editor blockquote {
+    border-left: 3px solid var(--sf-border-strong);
+    padding-left: 1em;
+    color: var(--sf-text-muted);
+    margin: 0 0 0.75em;
+  }
+
+  .prose-editor code {
+    font-family: var(--font-mono);
+    background: var(--sf-hover);
+    padding: 0.1em 0.3em;
+    border-radius: 0.25rem;
+  }
+}

@@ -17,6 +17,7 @@ import {
   ProseHighlight,
 } from "../../../application/writing/analyze-prose";
 import { WritingSidebar } from "./WritingSidebar";
+import { ProseEditor } from "./ProseEditor";
 import { RsipPanel, RsipResult } from "./RsipPanel";
 import { MultiPerspectivePanel } from "./MultiPerspectivePanel";
 import {
@@ -181,9 +182,8 @@ export function WritingPage({ llmPort, bookId, projectId, onBack }: WritingPageP
     return () => clearTimeout(timer);
   }, [content, draftKey]);
 
-  function handleSelect(event: React.SyntheticEvent<HTMLTextAreaElement>) {
-    const { selectionStart, selectionEnd } = event.currentTarget;
-    selectionRef.current = { start: selectionStart, end: selectionEnd };
+  function handleSelectionChange(start: number, end: number) {
+    selectionRef.current = { start, end };
   }
 
   async function handleGenerate() {
@@ -304,13 +304,11 @@ export function WritingPage({ llmPort, bookId, projectId, onBack }: WritingPageP
         />
 
         <main className="flex-1 p-4 overflow-y-auto">
-          <textarea
-            aria-label="Editor de prosa"
-            className="w-full h-full p-4 bg-bg-surface border border-border-subtle rounded-lg font-serif text-sm leading-relaxed text-text-main resize-none placeholder:text-text-muted focus:outline-none focus:border-border-default transition-colors"
-            placeholder="Comece a escrever..."
+          <ProseEditor
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onSelect={handleSelect}
+            onChange={setContent}
+            onSelectionChange={handleSelectionChange}
+            placeholder="Comece a escrever..."
           />
         </main>
 
