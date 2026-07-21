@@ -11,9 +11,12 @@
 
   --color-bg-base: var(--sf-bg);
   --color-bg-main: var(--sf-bg);
+  --color-bg-spine: var(--sf-spine);
   --color-bg-surface: var(--sf-surface);
+  --color-bg-surface-raised: var(--sf-surface-raised);
   --color-text-main: var(--sf-text-main);
   --color-text-muted: var(--sf-text-muted);
+  --color-text-faint: var(--sf-text-faint);
   --color-border-subtle: var(--sf-border);
   --color-border-default: var(--sf-border-strong);
   --color-bg-hover: var(--sf-hover);
@@ -21,46 +24,66 @@
   --color-accent-hover: var(--sf-accent-hover);
   --color-on-accent: var(--sf-on-accent);
   --color-accent-soft: var(--sf-accent-soft);
+  --color-accent-line: var(--sf-accent-line);
   --color-success: var(--sf-success);
   --color-danger: var(--sf-danger);
 
   /* Radius rule: controls (buttons/inputs) = radius-lg, surfaces (cards/modals) = radius-xl */
   --radius-control: 0.5rem;
   --radius-surface: 0.75rem;
+
+  /* Warm-tinted elevation. Shadow color swaps per theme via --sf-shadow. */
+  --shadow-warm-sm: 0 1px 2px var(--sf-shadow), 0 1px 1px var(--sf-shadow-soft);
+  --shadow-warm-md: 0 4px 14px -3px var(--sf-shadow), 0 2px 6px -3px var(--sf-shadow-soft);
+  --shadow-warm-lg: 0 18px 42px -12px var(--sf-shadow), 0 8px 18px -10px var(--sf-shadow-soft);
 }
 
 @layer base {
   :root {
-    --sf-bg: #fafaf9;
-    --sf-surface: #ffffff;
-    --sf-text-main: #1c1917;
-    --sf-text-muted: #57534e;
-    --sf-border: rgba(28, 25, 23, 0.08);
-    --sf-border-strong: rgba(28, 25, 23, 0.22);
-    --sf-hover: rgba(28, 25, 23, 0.04);
+    /* Light — warm paper & ink. A manuscript surface, not a spreadsheet. */
+    --sf-bg: #f7f5f0;
+    --sf-spine: #f2efe8;
+    --sf-surface: #fffefb;
+    --sf-surface-raised: #ffffff;
+    --sf-text-main: #211d18;
+    --sf-text-muted: #5c554c;
+    --sf-text-faint: #8f877c;
+    --sf-border: rgba(33, 29, 24, 0.09);
+    --sf-border-strong: rgba(33, 29, 24, 0.2);
+    --sf-hover: rgba(33, 29, 24, 0.045);
     --sf-accent: #b45309;
     --sf-accent-hover: #92400e;
-    --sf-on-accent: #ffffff;
+    --sf-on-accent: #fffdf9;
     --sf-accent-soft: rgba(180, 83, 9, 0.09);
+    --sf-accent-line: rgba(180, 83, 9, 0.55);
     --sf-success: #047857;
-    --sf-danger: #b91c1c;
+    --sf-danger: #b4331f;
+    --sf-shadow: rgba(74, 52, 28, 0.11);
+    --sf-shadow-soft: rgba(74, 52, 28, 0.06);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --sf-bg: #0c0a09;
-      --sf-surface: #1c1917;
-      --sf-text-main: #e7e5e4;
-      --sf-text-muted: #a8a29e;
-      --sf-border: rgba(231, 229, 228, 0.09);
-      --sf-border-strong: rgba(231, 229, 228, 0.28);
-      --sf-hover: rgba(231, 229, 228, 0.05);
+      /* Dark — warm ink. Deep, never pure black; the accent glows. */
+      --sf-bg: #0d0b09;
+      --sf-spine: #131010;
+      --sf-surface: #1a1613;
+      --sf-surface-raised: #221d19;
+      --sf-text-main: #ece7e0;
+      --sf-text-muted: #a8a19a;
+      --sf-text-faint: #78716a;
+      --sf-border: rgba(236, 231, 224, 0.09);
+      --sf-border-strong: rgba(236, 231, 224, 0.26);
+      --sf-hover: rgba(236, 231, 224, 0.055);
       --sf-accent: #f59e0b;
       --sf-accent-hover: #fbbf24;
-      --sf-on-accent: #1c1917;
-      --sf-accent-soft: rgba(245, 158, 11, 0.12);
+      --sf-on-accent: #1a1613;
+      --sf-accent-soft: rgba(245, 158, 11, 0.13);
+      --sf-accent-line: rgba(245, 158, 11, 0.6);
       --sf-success: #34d399;
-      --sf-danger: #f87171;
+      --sf-danger: #f0796a;
+      --sf-shadow: rgba(0, 0, 0, 0.55);
+      --sf-shadow-soft: rgba(0, 0, 0, 0.35);
     }
   }
 
@@ -68,9 +91,18 @@
     background-color: var(--sf-bg);
     color: var(--sf-text-main);
     font-family: var(--font-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
+  }
+
+  /* Literary text selection — warm ember wash instead of the OS blue. */
+  ::selection {
+    background: var(--sf-accent-soft);
+    color: var(--sf-text-main);
   }
 
   ::-webkit-scrollbar {
@@ -92,6 +124,7 @@
   *:focus-visible {
     outline: 2px solid var(--sf-accent);
     outline-offset: 2px;
+    border-radius: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -133,6 +166,32 @@
   .animate-fade-in {
     animation: fade-in-simple 0.3s ease forwards;
   }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-rise-in {
+    animation: rise-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Warm elevation as opt-in utilities (surfaces adopt without markup churn). */
+  .sf-elev-1 {
+    box-shadow: var(--shadow-warm-sm);
+  }
+  .sf-elev-2 {
+    box-shadow: var(--shadow-warm-md);
+  }
+  .sf-elev-3 {
+    box-shadow: var(--shadow-warm-lg);
+  }
 }
 
 /* TipTap prose surface — rich-text rendering on a plain-text-backed editor.
@@ -149,7 +208,7 @@
 
   .prose-editor p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
-    color: var(--sf-text-muted);
+    color: var(--sf-text-faint);
     float: left;
     height: 0;
     pointer-events: none;
@@ -158,12 +217,14 @@
   .prose-editor h1 {
     font-size: 1.5rem;
     font-weight: 700;
+    letter-spacing: -0.01em;
     margin: 0.6em 0 0.3em;
   }
 
   .prose-editor h2 {
     font-size: 1.25rem;
     font-weight: 700;
+    letter-spacing: -0.01em;
     margin: 0.5em 0 0.3em;
   }
 
@@ -200,14 +261,16 @@
   }
 
   .prose-editor blockquote {
-    border-left: 3px solid var(--sf-border-strong);
+    border-left: 3px solid var(--sf-accent-line);
     padding-left: 1em;
     color: var(--sf-text-muted);
+    font-style: italic;
     margin: 0 0 0.75em;
   }
 
   .prose-editor code {
     font-family: var(--font-mono);
+    font-size: 0.9em;
     background: var(--sf-hover);
     padding: 0.1em 0.3em;
     border-radius: 0.25rem;

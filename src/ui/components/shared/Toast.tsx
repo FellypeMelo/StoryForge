@@ -69,7 +69,7 @@ function ToastCard({ toast }: { toast: ToastItem }) {
   return (
     <div
       role={isError ? "alert" : undefined}
-      className="flex items-center gap-3 bg-bg-surface border border-border-subtle rounded-xl px-4 py-3 shadow-lg font-sans text-sm text-text-main animate-scale-fade"
+      className="flex items-center gap-3 bg-bg-surface-raised border border-border-subtle rounded-surface px-4 py-3 sf-elev-3 font-sans text-sm text-text-main animate-rise-in"
     >
       <Icon size={16} className={isError ? "text-danger" : "text-success"} aria-hidden />
       <span>{toast.message}</span>

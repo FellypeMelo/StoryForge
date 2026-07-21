@@ -49,7 +49,8 @@ export const SlideOver: React.FC<SlideOverProps> = ({ isOpen, onClose, title, ch
       {/* Backdrop with Fade */}
       <div
         data-testid="slideover-backdrop"
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-500 ease-in-out animate-in fade-in"
+        className="fixed inset-0 backdrop-blur-sm transition-opacity duration-500 ease-in-out animate-in fade-in"
+        style={{ background: "color-mix(in srgb, var(--sf-text-main) 38%, transparent)" }}
         onClick={onClose}
       />
 
@@ -57,11 +58,11 @@ export const SlideOver: React.FC<SlideOverProps> = ({ isOpen, onClose, title, ch
       <div
         ref={panelRef}
         data-testid="slideover-panel"
-        className="relative flex h-full w-full flex-col bg-bg-base shadow-2xl border-l border-border-subtle transition-all sm:max-w-xl animate-scale-fade"
+        className="relative flex h-full w-full flex-col bg-bg-surface sf-elev-3 border-l border-border-subtle transition-all sm:max-w-xl animate-scale-fade"
       >
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border-subtle bg-bg-base sticky top-0 z-10">
+          <div className="flex items-center justify-between p-6 border-b border-border-subtle bg-bg-surface sticky top-0 z-10">
             <h2 className="text-sm font-bold tracking-[0.1em] uppercase text-text-main">
               {title || "Detalhes"}
             </h2>

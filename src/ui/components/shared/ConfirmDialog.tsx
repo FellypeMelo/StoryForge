@@ -33,7 +33,8 @@ export function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-sans">
       <div
-        className="absolute inset-0 bg-black/40 animate-fade-in"
+        className="absolute inset-0 animate-fade-in backdrop-blur-[2px]"
+        style={{ background: "color-mix(in srgb, var(--sf-text-main) 42%, transparent)" }}
         onClick={onCancel}
         aria-hidden
       />
@@ -41,7 +42,7 @@ export function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative bg-bg-surface border border-border-subtle rounded-xl p-6 max-w-sm w-full shadow-xl animate-scale-fade"
+        className="relative bg-bg-surface-raised border border-border-subtle rounded-surface p-6 max-w-sm w-full sf-elev-3 animate-scale-fade"
       >
         <h2 id={titleId} className="text-lg font-serif font-bold text-text-main">
           {title}
